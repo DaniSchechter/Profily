@@ -3,11 +3,20 @@ package com.example.profily;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.profily.Schema.Post;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
 
 /**
@@ -15,6 +24,10 @@ import android.view.ViewGroup;
  */
 public class HomeFragment extends Fragment {
 
+    private RecyclerView RecyclerView;
+    private LinearLayoutManager LayoutManager;
+    private PostListAdapter adapter;
+    private Vector<Post> posts = new Vector<Post>(); //TODO remove
 
     public HomeFragment() {
         // Required empty public constructor
@@ -22,10 +35,41 @@ public class HomeFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        RecyclerView = view.findViewById(R.id.home_recycler_view);
+        RecyclerView.setHasFixedSize(true);
+
+        LayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.setLayoutManager(LayoutManager);
+
+        //TODO remove
+        for (int i=0; i<10; i++)
+        {
+            Post post = new Post();
+            post.setCaption("Caption number " + i);
+            List<String> commentIds = new LinkedList<String>();
+            commentIds.add("1");
+            commentIds.add("2");
+            commentIds.add("2");
+            post.setCommentsList(commentIds);
+            List<String> likes = new LinkedList<String>();
+            likes.add("11");
+            likes.add("22");
+            likes.add("23");
+            post.setLikedUsersList(likes);
+            post.setUserCreatorId("123123123");
+            posts.add(post);
+        }
+
+        adapter = new PostListAdapter(posts);
+        RecyclerView.setAdapter(adapter);
+
+
+        return view;
     }
 
 }
