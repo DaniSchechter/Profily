@@ -1,14 +1,15 @@
 package com.example.profily.Schema.Action;
 
 public final class LikeAction extends Action {
-    private static final ActionType type = ActionType.Like;
-    private static final String description = "liked your post";
+    private final ActionType type = ActionType.Like;
+    private final String description = "liked your post";
 
-    public static ActionType getType() {
+    public ActionType getType() {
         return type;
     }
 
-    public static String getDescription() {
+    @Override
+    public String getDescription() {
         return " " + description;
     }
 }

@@ -24,10 +24,10 @@ import java.util.Vector;
  */
 public class HomeFragment extends Fragment {
 
-    private RecyclerView RecyclerView;
-    private LinearLayoutManager LayoutManager;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager layoutManager;
     private PostListAdapter adapter;
-    private Vector<Post> posts = new Vector<Post>(); //TODO remove
+    private Vector<Post> posts = new Vector<>(); //TODO remove
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,23 +40,23 @@ public class HomeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        RecyclerView = view.findViewById(R.id.home_recycler_view);
-        RecyclerView.setHasFixedSize(true);
+        recyclerView = view.findViewById(R.id.home_recycler_view);
+        recyclerView.setHasFixedSize(true);
 
-        LayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView.setLayoutManager(LayoutManager);
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
 
         //TODO remove
         for (int i=0; i<10; i++)
         {
             Post post = new Post();
             post.setCaption("Caption number " + i);
-            List<String> commentIds = new LinkedList<String>();
+            List<String> commentIds = new LinkedList<>();
             commentIds.add("1");
             commentIds.add("2");
             commentIds.add("2");
             post.setCommentsList(commentIds);
-            List<String> likes = new LinkedList<String>();
+            List<String> likes = new LinkedList<>();
             likes.add("11");
             likes.add("22");
             likes.add("23");
@@ -66,7 +66,7 @@ public class HomeFragment extends Fragment {
         }
 
         adapter = new PostListAdapter(posts);
-        RecyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
 
 
         return view;
