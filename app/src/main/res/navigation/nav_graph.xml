@@ -60,7 +60,7 @@
     </fragment>
     <fragment
         android:id="@+id/commentsFragment"
-        android:name="com.example.profily.CommentsFragment"
+        android:name="com.example.profily.Comments.CommentsFragment"
         android:label="fragment_comments"
         tools:layout="@layout/fragment_comments" />
     <fragment
