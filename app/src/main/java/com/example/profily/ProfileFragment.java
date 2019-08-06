@@ -4,16 +4,50 @@ package com.example.profily;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.profily.Schema.Post;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ProfileFragment extends Fragment {
+
+    private Vector<Post> postsList = new Vector<>();
+    private Vector<String> followingList = new Vector<>();
+    private Vector<String> followersList = new Vector<>();
+
+    private PostListAdapter adapter;
+    private RecyclerView RecyclerView;
+
+
+    //Profile vars
+    private TextView profileUsername,profileDescription;
+    private ImageView profileImage;
+    private GridView profilePostsGrid;
+    private Button EditProfileBtn;
+
+
+    //counting vars
+    private TextView profileNumOfFollowers;
+    private TextView profileNumOfFollowing;
+    private TextView profileNumOfPosts;
+    private LinearLayoutManager LayoutManager;
 
 
     public ProfileFragment() {
@@ -25,7 +59,60 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        profileUsername = view.findViewById(R.id.profile_username);
+        profileDescription = view.findViewById(R.id.profile_description);
+        profileNumOfFollowers = view.findViewById(R.id.profile_followers_count);
+        profileNumOfFollowing = view.findViewById(R.id.profile_following_count);
+        profileNumOfPosts = view.findViewById(R.id.profile_posts_count);
+        profileImage = view.findViewById(R.id.profile_image);
+        EditProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
+
+        for(int i=0; i<6; i++)
+        {
+            followingList.add(i + "");
+            followersList.add("" + (i+20));
+        }
+
+        profileNumOfFollowers.setText("" + followersList.size());
+        profileNumOfFollowing.setText("" + followingList.size());
+        profileNumOfPosts.setText("" + postsList.size());
+        profileUsername.setText("Alex");
+        profileDescription.setText("Alex - some text");
+
+        RecyclerView = view.findViewById(R.id.home_recycler_view);
+        RecyclerView.setHasFixedSize(true);
+
+        LayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.setLayoutManager(LayoutManager);
+
+        //TODO remove
+        for (int i=0; i<10; i++)
+        {
+            Post post = new Post();
+            post.setCaption("Caption number " + i);
+            List<String> commentIds = new LinkedList<String>();
+            commentIds.add("1");
+            commentIds.add("2");
+            commentIds.add("2");
+            post.setCommentsList(commentIds);
+            List<String> likes = new LinkedList<String>();
+            likes.add("11");
+            likes.add("22");
+            likes.add("23");
+            post.setLikedUsersList(likes);
+            post.setUserCreatorId("123123123");
+            postsList.add(post);
+        }
+
+        profileNumOfPosts.setText("" + postsList.size());
+
+        adapter = new PostListAdapter(postsList);
+        RecyclerView.setAdapter(adapter);
+
+        return view;
     }
+
+
 
 }
