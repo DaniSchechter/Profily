@@ -1,5 +1,6 @@
 package com.example.profily.Home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         public PostRowViewHolder(@NonNull View itemView) {
 
             super(itemView);
-
             profileImage = itemView.findViewById(R.id.post_profile_image);
             mainImage = itemView.findViewById(R.id.post_main_image);
             username = itemView.findViewById(R.id.post_username);
@@ -63,6 +63,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             numOfLikes = itemView.findViewById(R.id.post_num_of_likes);
             caption = itemView.findViewById(R.id.post_caption);
             comments = itemView.findViewById(R.id.post_comments_link);
+
+            username.setOnClickListener(view -> {
+                Log.d("TAG", "" + getAdapterPosition());
+            });
         }
 
         public void bind(Post post){
@@ -72,5 +76,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             comments.setText("View all " + post.getCommentsList().size() + " comments");
         }
     }
+
+
 
 }
