@@ -4,15 +4,13 @@ package com.example.profily;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,22 +30,21 @@ public class ProfileFragment extends Fragment {
     private Vector<String> followingList = new Vector<>();
     private Vector<String> followersList = new Vector<>();
 
-    private PostListAdapter adapter;
-    private RecyclerView RecyclerView;
+    private ImageGridAdapter adapter;
+    private RecyclerView recyclerView;
 
 
     //Profile vars
     private TextView profileUsername,profileDescription;
     private ImageView profileImage;
-    private GridView profilePostsGrid;
-    private Button EditProfileBtn;
+    private Button editProfileBtn;
 
 
     //counting vars
     private TextView profileNumOfFollowers;
     private TextView profileNumOfFollowing;
     private TextView profileNumOfPosts;
-    private LinearLayoutManager LayoutManager;
+    private GridLayoutManager layoutManager;
 
 
     public ProfileFragment() {
@@ -66,7 +63,7 @@ public class ProfileFragment extends Fragment {
         profileNumOfFollowing = view.findViewById(R.id.profile_following_count);
         profileNumOfPosts = view.findViewById(R.id.profile_posts_count);
         profileImage = view.findViewById(R.id.profile_image);
-        EditProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
+        editProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
 
         for(int i=0; i<6; i++)
         {
@@ -80,11 +77,12 @@ public class ProfileFragment extends Fragment {
         profileUsername.setText("Alex");
         profileDescription.setText("Alex - some text");
 
-        RecyclerView = view.findViewById(R.id.home_recycler_view);
-        RecyclerView.setHasFixedSize(true);
+        recyclerView = view.findViewById(R.id.home_recycler_view);
+        recyclerView.setHasFixedSize(true);
 
-        LayoutManager = new LinearLayoutManager(getActivity());
-        RecyclerView.setLayoutManager(LayoutManager);
+        layoutManager = new GridLayoutManager(getActivity(), 3);
+        layoutManager.isAutoMeasureEnabled();
+        recyclerView.setLayoutManager(layoutManager);
 
         //TODO remove
         for (int i=0; i<10; i++)
@@ -107,8 +105,8 @@ public class ProfileFragment extends Fragment {
 
         profileNumOfPosts.setText("" + postsList.size());
 
-        adapter = new PostListAdapter(postsList);
-        RecyclerView.setAdapter(adapter);
+        adapter = new ImageGridAdapter(postsList);
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
