@@ -5,11 +5,11 @@ import java.util.Date;
 
 public class DateTimeUtils {
 
-    public static String getFormatedElapsedTime(Date from) {
-        return getFormatedElapsedTime(from, new Date());
+    public static String getFormattedElapsedTime(Date from) {
+        return getFormattedElapsedTime(from, new Date());
     }
 
-    public static String getFormatedElapsedTime(Date from, Date to) {
+    public static String getFormattedElapsedTime(Date from, Date to) {
         long elapsedTime = to.getTime() - from.getTime();
 
         // Seconds
@@ -25,20 +25,24 @@ public class DateTimeUtils {
         // Hours
         long hours = minutes / 60;
         if (hours < 24) {
-            return "" + hours + " hours";
+            return "" + hours + " hour" + getPluralForm(hours);
         }
         // Days
         long days = hours / 24;
         if (days < 31) {
-            return "" + days + " days";
+            return "" + days + " day" + getPluralForm(days);
         }
         // Months
         long months = days / 31;
         if (months < 12) {
-            return "" + months + " months";
+            return "" + months + " month" + getPluralForm(months);
         }
         // Years
         long years = months / 12;
-        return "" + years + " years";
+        return "" + years + " year" + getPluralForm(years);
+    }
+
+    private static String getPluralForm(long number) {
+        return number > 1 ? "s" : "";
     }
 }

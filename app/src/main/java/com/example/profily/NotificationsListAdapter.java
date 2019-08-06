@@ -62,7 +62,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         public void bind(Notification notification){
             triggeringUserUsername.setText("Triggering User # " + notification.getTriggeringUserId()); // TODO change
             description.setText(notification.getAction().getDescription());
-            actionElapsedTime.setText(DateTimeUtils.getFormatedElapsedTime(notification.getActionDateTime()));
+            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
         }
     }
 }
