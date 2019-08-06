@@ -17,6 +17,7 @@ import android.widget.EditText;
 
 import com.example.profily.R;
 import com.example.profily.Schema.User;
+import com.example.profily.User.UserListAdapter;
 
 import java.util.Locale;
 import java.util.Vector;
@@ -30,7 +31,7 @@ public class SearchFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
-    private SearchListAdapter adapter;
+    private UserListAdapter adapter;
     private Vector<User> searchedUsers = new Vector<>(); //TODO remove
 
     private EditText searchBox;
@@ -68,7 +69,7 @@ public class SearchFragment extends Fragment {
         searchedUsers.add(u3);
 
 
-        adapter = new SearchListAdapter(searchedUsers);
+        adapter = new UserListAdapter(searchedUsers);
         recyclerView.setAdapter(adapter);
 
 
@@ -122,7 +123,7 @@ public class SearchFragment extends Fragment {
     private void updateUsersList(){
         Log.d("TAG", "updateUsersList: updating users list");
 
-        adapter = new SearchListAdapter(searchedUsers);
+        adapter = new UserListAdapter(searchedUsers);
 
         recyclerView.setAdapter(adapter);
 
