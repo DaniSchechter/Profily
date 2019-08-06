@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
@@ -64,16 +65,23 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             caption = itemView.findViewById(R.id.post_caption);
             comments = itemView.findViewById(R.id.post_comments_link);
 
-            username.setOnClickListener(view -> {
-                Log.d("TAG", "" + getAdapterPosition());
-            });
+
         }
 
         public void bind(Post post){
-            username.setText(post.getUserCreatorId()); //TODO change to the creators name
+            username.setText("username " + post.getUserCreatorId()); //TODO change to the creators name
             numOfLikes.setText(post.getLikedUsersList().size() + " likes");
             caption.setText(post.getCaption());
             comments.setText("View all " + post.getCommentsList().size() + " comments");
+
+
+            username.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    HomeFragmentDirections.actionHomeFragmentToProfileFragment(
+                            post.getUserCreatorId()
+                    )
+                )
+            );
         }
     }
 
