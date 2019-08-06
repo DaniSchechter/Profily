@@ -48,10 +48,18 @@
         <action
             android:id="@+id/action_profileFragment_to_commentsFragment"
             app:destination="@id/commentsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_post"
+            app:destination="@id/post" />
     </fragment>
     <fragment
         android:id="@+id/commentsFragment"
         android:name="com.example.profily.CommentsFragment"
         android:label="fragment_comments"
         tools:layout="@layout/fragment_comments" />
+    <fragment
+        android:id="@+id/post"
+        android:name="com.example.profily.Post.Post"
+        android:label="fragment_post"
+        tools:layout="@layout/fragment_post" />
 </navigation>
