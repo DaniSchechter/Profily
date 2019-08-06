@@ -1,4 +1,4 @@
-package com.example.profily;
+package com.example.profily.Profile;
 
 
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.profily.R;
 import com.example.profily.Schema.Post;
 
 import java.util.LinkedList;

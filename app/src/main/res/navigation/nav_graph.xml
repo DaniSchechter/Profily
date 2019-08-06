@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.profily.HomeFragment"
+        android:name="com.example.profily.Home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_upload_image" />
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.example.profily.NotificationsFragment"
+        android:name="com.example.profily.Notifications.NotificationsFragment"
         android:label="fragment_notifications"
         tools:layout="@layout/fragment_notifications" >
         <action
@@ -42,7 +42,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.profily.ProfileFragment"
+        android:name="com.example.profily.Profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action

@@ -1,4 +1,4 @@
-package com.example.profily;
+package com.example.profily.Home;
 
 
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.profily.R;
 import com.example.profily.Schema.Post;
 
 import java.util.LinkedList;

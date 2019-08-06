@@ -1,4 +1,4 @@
-package com.example.profily;
+package com.example.profily.Notifications;
 
 
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.profily.R;
 import com.example.profily.Schema.Action.CommentAction;
 import com.example.profily.Schema.Action.LikeAction;
 import com.example.profily.Schema.Action.SubscriptionAction;

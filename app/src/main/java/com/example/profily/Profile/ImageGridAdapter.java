@@ -1,4 +1,4 @@
-package com.example.profily;
+package com.example.profily.Profile;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.R;
 import com.example.profily.Schema.Post;
 
 import java.util.Vector;

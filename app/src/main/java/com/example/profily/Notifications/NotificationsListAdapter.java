@@ -1,4 +1,4 @@
-package com.example.profily;
+package com.example.profily.Notifications;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.R;
 import com.example.profily.Schema.Notification;
 import com.example.profily.Utils.DateTimeUtils;
 
