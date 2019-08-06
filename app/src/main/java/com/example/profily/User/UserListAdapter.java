@@ -44,22 +44,22 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
 
     static class UserRowViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView searchedhUserImage;
-        TextView searchedUserUsername;
+        ImageView userImage;
+        TextView userUsername;
 
         public UserRowViewHolder(@NonNull View itemView) {
 
             super(itemView);
 
-            searchedhUserImage = itemView.findViewById(R.id.searched_user_user_image);
-            searchedUserUsername = itemView.findViewById(R.id.searched_user_user_username);
+            userImage = itemView.findViewById(R.id.searched_user_user_image);
+            userUsername = itemView.findViewById(R.id.searched_user_user_username);
         }
 
         public void bind(User user){
 
             Log.d("TAG:" , user.toString());
             String str = user.getUsername();
-            searchedUserUsername.setText(str); // TODO change
+            userUsername.setText(str); // TODO change
         }
     }
 }
