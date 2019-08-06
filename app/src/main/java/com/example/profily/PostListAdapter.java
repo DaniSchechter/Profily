@@ -1,6 +1,5 @@
 package com.example.profily;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
     @Override
     public PostRowViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_row, parent, false);
-        return  new PostRowViewHolder(view);
+        return new PostRowViewHolder(view);
     }
 
     @Override
