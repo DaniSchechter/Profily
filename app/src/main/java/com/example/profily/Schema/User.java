@@ -1,11 +1,15 @@
 package com.example.profily.Schema;
 
+import java.util.List;
+
 public class User {
     private String id;
     private String profileImageURL;
     private String username;
     private String password;
     private String description;
+
+    private List<String> following;
 
     public String getId() {
         return id;
@@ -45,5 +49,13 @@ public class User {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<String> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<String> following) {
+        this.following = following;
     }
 }
