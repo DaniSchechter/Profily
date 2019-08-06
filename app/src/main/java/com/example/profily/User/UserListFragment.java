@@ -1,4 +1,4 @@
-package com.example.profily.Search;
+package com.example.profily.User;
 
 
 import android.os.Bundle;
