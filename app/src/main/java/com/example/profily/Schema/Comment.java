@@ -1,5 +1,7 @@
 package com.example.profily.Schema;
 
+import java.util.Date;
+
 public class Comment {
     private String id;
     private String content;
@@ -7,6 +9,16 @@ public class Comment {
     // FK References
     private String userId;
     private String postId;
+
+    public Date getActionDateTime() {
+        return actionDateTime;
+    }
+
+    public void setActionDateTime(Date actionDateTime) {
+        this.actionDateTime = actionDateTime;
+    }
+
+    private Date actionDateTime;
 
     public String getId() {
         return id;
