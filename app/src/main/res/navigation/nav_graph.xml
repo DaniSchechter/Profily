@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_searchFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_UserListFragment"
+            app:destination="@id/UserListFragment" />
     </fragment>
     <fragment
         android:id="@+id/uploadImageFragment"
@@ -49,6 +52,9 @@
             android:id="@+id/action_profileFragment_to_commentsFragment"
             app:destination="@id/commentsFragment" />
         <action
+            android:id="@+id/action_profileFragment_to_UserListFragment"
+            app:destination="@id/UserListFragment" />
+        <action
             android:id="@+id/action_profileFragment_to_post"
             app:destination="@id/post" />
     </fragment>
@@ -57,6 +63,11 @@
         android:name="com.example.profily.CommentsFragment"
         android:label="fragment_comments"
         tools:layout="@layout/fragment_comments" />
+    <fragment
+        android:id="@+id/UserListFragment"
+        android:name="com.example.profily.User.UserListFragment"
+        android:label="fragment_user_list"
+        tools:layout="@layout/fragment_user_list" />
     <fragment
         android:id="@+id/post"
         android:name="com.example.profily.Post.Post"

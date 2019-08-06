@@ -1,4 +1,4 @@
-package com.example.profily.Search;
+package com.example.profily.User;
 
 
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import java.util.Vector;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class UserListFragment extends Fragment {
 
 
     private RecyclerView recyclerView;
@@ -34,9 +34,7 @@ public class SearchFragment extends Fragment {
     private UserListAdapter adapter;
     private Vector<User> searchedUsers = new Vector<>(); //TODO remove
 
-    private EditText searchBox;
-
-    public SearchFragment() {
+    public UserListFragment() {
         // Required empty public constructor
     }
 
@@ -69,65 +67,12 @@ public class SearchFragment extends Fragment {
         searchedUsers.add(u3);
 
 
-
         adapter = new UserListAdapter(searchedUsers);
         recyclerView.setAdapter(adapter);
-
-
-        searchBox = view.findViewById(R.id.search_text);
-        setSearchTextListener();
 
         return view;
     }
 
-    private void setSearchTextListener(){
-        searchBox.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                String text = searchBox.getText().toString().toLowerCase(Locale.getDefault());
-                searchForMatch(text);
-            }
-        });
-    }
-
-
-    private void searchForMatch(String keyword){
-        Log.d("TAG: got new word: ", keyword);
-        //update the users list view
-        if(keyword.length() ==0){
-
-        }
-        else{
-            Vector <User> newUsers = new Vector<>();
-            for (User user: searchedUsers)
-            {
-                if (user.getUsername().contains(keyword)){
-                    updateUsersList();
-                }
-            }
-            Log.d("TAG: new user list ", newUsers.toString());
-
-            searchedUsers = newUsers;
-        }
-    }
-
-    private void updateUsersList(){
-        Log.d("TAG", "updateUsersList: updating users list");
-
-        adapter = new UserListAdapter(searchedUsers);
-
-        recyclerView.setAdapter(adapter);
-
-    }
 
 }
