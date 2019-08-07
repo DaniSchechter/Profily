@@ -69,8 +69,18 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
 
             if(notification.getAction().getType() == Action.ActionType.Subscription) {
                 effectedUserImage.setImageDrawable(null);
+            } else {
+                // Navigate to the effected post, if it is not a subscription action
+                effectedUserImage.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                        NotificationsFragmentDirections.actionNotificationsFragmentToPost(
+                                notification.getEffectedPostId()
+                        )
+                    )
+                );
             }
 
+            // Navigate to Triggering user's profile
             triggeringUserImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToProfileFragment(
