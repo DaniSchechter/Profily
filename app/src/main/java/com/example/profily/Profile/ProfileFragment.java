@@ -88,6 +88,7 @@ public class ProfileFragment extends Fragment {
         for (int i=0; i<10; i++)
         {
             Post post = new Post();
+            post.setId("" + i);
             post.setCaption("Caption number " + i);
             List<String> commentIds = new LinkedList<String>();
             commentIds.add("1");
@@ -108,7 +109,7 @@ public class ProfileFragment extends Fragment {
         adapter = new ImageGridAdapter(postsList);
         recyclerView.setAdapter(adapter);
 
-        if (getArguments().size()!=0)
+        if (getArguments() != null && getArguments().size()!=0)
         {
             String userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
         }

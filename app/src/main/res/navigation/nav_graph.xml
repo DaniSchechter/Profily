@@ -72,5 +72,9 @@
         <action
             android:id="@+id/action_post_to_commentsFragment"
             app:destination="@id/commentsFragment" />
+
+        <argument
+            android:name="postId"
+            app:argType="string" />
     </fragment>
 </navigation>
