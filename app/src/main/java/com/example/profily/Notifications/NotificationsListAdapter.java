@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
+import com.example.profily.Schema.Action.Action;
 import com.example.profily.Schema.Notification;
 import com.example.profily.Utils.DateTimeUtils;
 
@@ -65,6 +66,10 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             triggeringUserUsername.setText("Triggering User # " + notification.getTriggeringUserId()); // TODO change
             description.setText(notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
+
+            if(notification.getAction().getType() == Action.ActionType.Subscription) {
+                effectedUserImage.setImageDrawable(null);
+            }
 
             triggeringUserImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(

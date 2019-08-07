@@ -6,6 +6,7 @@ public abstract class Action {
         Like, Comment, Subscription
     }
 
+    public abstract ActionType getType();
     public abstract String getDescription();
 }
 
