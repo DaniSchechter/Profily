@@ -8,6 +8,9 @@ public class Follow {
     private List<String> following;
     private List<String> followers;
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     private String getUserId()
     {
