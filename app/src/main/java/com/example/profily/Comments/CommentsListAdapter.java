@@ -46,8 +46,8 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
     static class CommentRowViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView commenterImage;
-        TextView commenterUsername;
+        ImageView commentatorImage;
+        TextView commentatorUsername;
         TextView commentDescription;
         TextView actionElapsedTime;
 
@@ -55,8 +55,8 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
             super(itemView);
 
-            commenterImage = itemView.findViewById(R.id.comment_commenter_image);
-            commenterUsername = itemView.findViewById(R.id.comment_commenter_username);
+            commentatorImage = itemView.findViewById(R.id.comment_commentator_image);
+            commentatorUsername = itemView.findViewById(R.id.comment_commentator_username);
             commentDescription = itemView.findViewById(R.id.comment_description);
             actionElapsedTime = itemView.findViewById(R.id.comment_elapsed_time);
 
@@ -64,11 +64,11 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
         public void bind(Comment comment) {
 
-            commenterUsername.setText("username " + comment.getUserId()); // TODO change
+            commentatorUsername.setText("username " + comment.getUserId()); // TODO change
             commentDescription.setText(comment.getContent());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getActionDateTime()));
 
-            commenterUsername.setOnClickListener(
+            commentatorUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     CommentsFragmentDirections.actionCommentsFragmentToProfileFragment(
                         comment.getUserId()
@@ -76,7 +76,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
                 )
             );
 
-            commenterImage.setOnClickListener(
+            commentatorImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     CommentsFragmentDirections.actionCommentsFragmentToProfileFragment(
                             comment.getUserId()
