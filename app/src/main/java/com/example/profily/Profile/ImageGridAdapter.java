@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
@@ -53,6 +54,13 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
 
         public void bind(Post post){
             // TODO user the post's image
+            image.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    ProfileFragmentDirections.actionProfileFragmentToPost(
+                            post.getId()
+                    )
+                )
+            );
         }
     }
 }

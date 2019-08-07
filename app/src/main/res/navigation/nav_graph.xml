@@ -67,5 +67,9 @@
         android:id="@+id/post"
         android:name="com.example.profily.Post.Post"
         android:label="fragment_post"
-        tools:layout="@layout/fragment_post" />
+        tools:layout="@layout/fragment_post" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
 </navigation>
