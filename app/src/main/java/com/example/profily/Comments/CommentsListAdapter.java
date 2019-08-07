@@ -1,6 +1,5 @@
 package com.example.profily.Comments;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
@@ -46,8 +46,8 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
     static class CommentRowViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView commentUserImage;
-        TextView commentUserUsername;
+        ImageView commenterImage;
+        TextView commenterUsername;
         TextView commentDescription;
         TextView actionElapsedTime;
 
@@ -55,8 +55,8 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
             super(itemView);
 
-            commentUserImage = itemView.findViewById(R.id.comment_commenter_image);
-            commentUserUsername = itemView.findViewById(R.id.comment_commenter_username);
+            commenterImage = itemView.findViewById(R.id.comment_commenter_image);
+            commenterUsername = itemView.findViewById(R.id.comment_commenter_username);
             commentDescription = itemView.findViewById(R.id.comment_description);
             actionElapsedTime = itemView.findViewById(R.id.comment_elapsed_time);
 
@@ -64,9 +64,25 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
         public void bind(Comment comment) {
 
-            commentUserUsername.setText("username " + comment.getUserId()); // TODO change
+            commenterUsername.setText("username " + comment.getUserId()); // TODO change
             commentDescription.setText(comment.getContent());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getActionDateTime()));
+
+            commenterUsername.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    CommentsFragmentDirections.actionCommentsFragmentToProfileFragment(
+                        comment.getUserId()
+                    )
+                )
+            );
+
+            commenterImage.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    CommentsFragmentDirections.actionCommentsFragmentToProfileFragment(
+                            comment.getUserId()
+                    )
+                )
+            );
         }
     }
 }
