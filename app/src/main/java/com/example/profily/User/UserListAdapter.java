@@ -8,10 +8,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.Home.HomeFragmentDirections;
 import com.example.profily.R;
 import com.example.profily.Schema.User;
+import com.example.profily.Search.SearchFragmentDirections;
 
 import java.util.Vector;
 
@@ -57,9 +60,24 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
 
         public void bind(User user){
 
-            Log.d("TAG:" , user.toString());
             String str = user.getUsername();
             userUsername.setText(str); // TODO change
+
+            userUsername.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                        SearchFragmentDirections.actionSearchFragmentToProfileFragment(
+                                user.getId()
+                        )
+                )
+            );
+
+            userImage.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                            SearchFragmentDirections.actionSearchFragmentToProfileFragment(
+                                    user.getId()
+                            )
+                    )
+            );
         }
     }
 }
