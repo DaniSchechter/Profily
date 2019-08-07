@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
@@ -64,6 +65,22 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             triggeringUserUsername.setText("Triggering User # " + notification.getTriggeringUserId()); // TODO change
             description.setText(notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
+
+            triggeringUserImage.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    NotificationsFragmentDirections.actionNotificationsFragmentToProfileFragment(
+                        notification.getTriggeringUserId()
+                    )
+                )
+            );
+
+            triggeringUserUsername.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    NotificationsFragmentDirections.actionNotificationsFragmentToProfileFragment(
+                            notification.getTriggeringUserId()
+                    )
+                )
+            );
         }
     }
 }
