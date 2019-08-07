@@ -82,6 +82,14 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
                     )
                 )
             );
+
+            comments.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                            HomeFragmentDirections.actionHomeFragmentToCommentsFragment(
+                                    post.getId()
+                            )
+                    )
+            );
         }
     }
 

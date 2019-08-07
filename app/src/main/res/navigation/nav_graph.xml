@@ -49,9 +49,6 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profileFragment_to_commentsFragment"
-            app:destination="@id/commentsFragment" />
-        <action
             android:id="@+id/action_profileFragment_to_post"
             app:destination="@id/post" />
         <argument
@@ -62,10 +59,18 @@
         android:id="@+id/commentsFragment"
         android:name="com.example.profily.Comments.CommentsFragment"
         android:label="fragment_comments"
-        tools:layout="@layout/fragment_comments" />
+        tools:layout="@layout/fragment_comments" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/post"
         android:name="com.example.profily.Post.Post"
         android:label="fragment_post"
-        tools:layout="@layout/fragment_post" />
+        tools:layout="@layout/fragment_post" >
+        <action
+            android:id="@+id/action_post_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
+    </fragment>
 </navigation>

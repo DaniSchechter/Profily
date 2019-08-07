@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.example.profily.R;
 import com.example.profily.Schema.Comment;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
@@ -32,14 +33,12 @@ public class CommentsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    Comment c1 = new Comment();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
+        View view = inflater.inflate(R.layout.fragment_comments, container, false);
 
-        recyclerView = view.findViewById(R.id.notifications_recycler_view);
+        recyclerView = view.findViewById(R.id.comments_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -51,21 +50,31 @@ public class CommentsFragment extends Fragment {
         c1.setActionDateTime(new GregorianCalendar(2017, 6, 21, 8, 23, 45).getTime());
         c1.setContent("comment1");
         c1.setUserId("1");
+        comments.add(c1);
 
         // -------------------------------------
         Comment c2 = new Comment();
-        c2.setActionDateTime(new GregorianCalendar(2019, 8, 6, 20, 36, 00).getTime());
+        c2.setActionDateTime(new GregorianCalendar(2019, Calendar.AUGUST, 6, 20, 36, 0).getTime());
         c2.setContent("comment2");
         c2.setUserId("2");
+        comments.add(c2);
+
 
         // -------------------------------------
         Comment c3 = new Comment();
-        c3.setActionDateTime(new GregorianCalendar(2019, 8, 0, 0, 0, 0).getTime());
+        c3.setActionDateTime(new GregorianCalendar(2019, Calendar.AUGUST, 1, 0, 0, 0).getTime());
         c3.setContent("comment3");
         c3.setUserId("3");
+        comments.add(c3);
+
 
         adapter = new CommentsListAdapter(comments);
         recyclerView.setAdapter(adapter);
+
+        if (getArguments()!= null && getArguments().size()!=0)
+        {
+            String postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
+        }
 
 
         return view;
