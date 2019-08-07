@@ -3,6 +3,7 @@ package com.example.profily.Comments;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,16 +35,8 @@ public class CommentsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comments, container, false);
-
-        recyclerView = view.findViewById(R.id.comments_recycler_view);
-        recyclerView.setHasFixedSize(true);
-
-        layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         //TODO remove
         // -------------------------------------
         Comment c1 = new Comment();
@@ -66,7 +59,18 @@ public class CommentsFragment extends Fragment {
         c3.setContent("comment3");
         c3.setUserId("3");
         comments.add(c3);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_comments, container, false);
+
+        recyclerView = view.findViewById(R.id.comments_recycler_view);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
 
         adapter = new CommentsListAdapter(comments);
         recyclerView.setAdapter(adapter);
