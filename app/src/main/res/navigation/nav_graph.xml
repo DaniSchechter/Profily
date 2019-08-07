@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@+id/profileFragment" />
         <action
             android:id="@+id/action_homeFragment_to_commentsFragment"
             app:destination="@id/commentsFragment" />
@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_profileFragment_to_post"
             app:destination="@id/post" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/commentsFragment"

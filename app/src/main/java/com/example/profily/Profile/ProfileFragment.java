@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,6 +107,12 @@ public class ProfileFragment extends Fragment {
 
         adapter = new ImageGridAdapter(postsList);
         recyclerView.setAdapter(adapter);
+
+        if (getArguments().size()!=0)
+        {
+            String userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
+        }
+
 
         return view;
     }

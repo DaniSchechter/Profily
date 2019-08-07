@@ -36,6 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="@+id/post_profile_image"
         app:layout_constraintStart_toEndOf="@+id/post_profile_image"
         app:layout_constraintTop_toTopOf="@+id/post_profile_image"

@@ -1,5 +1,6 @@
 package com.example.profily.Home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
@@ -54,7 +56,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         public PostRowViewHolder(@NonNull View itemView) {
 
             super(itemView);
-
             profileImage = itemView.findViewById(R.id.post_profile_image);
             mainImage = itemView.findViewById(R.id.post_main_image);
             username = itemView.findViewById(R.id.post_username);
@@ -63,14 +64,27 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             numOfLikes = itemView.findViewById(R.id.post_num_of_likes);
             caption = itemView.findViewById(R.id.post_caption);
             comments = itemView.findViewById(R.id.post_comments_link);
+
+
         }
 
         public void bind(Post post){
-            username.setText(post.getUserCreatorId()); //TODO change to the creators name
+            username.setText("username " + post.getUserCreatorId()); //TODO change to the creators name
             numOfLikes.setText(post.getLikedUsersList().size() + " likes");
             caption.setText(post.getCaption());
             comments.setText("View all " + post.getCommentsList().size() + " comments");
+
+
+            username.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    HomeFragmentDirections.actionHomeFragmentToProfileFragment(
+                            post.getUserCreatorId()
+                    )
+                )
+            );
         }
     }
+
+
 
 }
