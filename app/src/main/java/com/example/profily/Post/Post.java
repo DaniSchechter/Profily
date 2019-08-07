@@ -27,7 +27,13 @@ public class Post extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post, container, false);
+        View view =  inflater.inflate(R.layout.fragment_post, container, false);
+
+        if (getArguments() != null && getArguments().size()!=0)
+        {
+            String postId = PostArgs.fromBundle(getArguments()).getPostId();
+        }
+        return view;
     }
 
 }
