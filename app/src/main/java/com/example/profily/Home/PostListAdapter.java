@@ -74,6 +74,13 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             caption.setText(post.getCaption());
             comments.setText("View all " + post.getCommentsList().size() + " comments");
 
+            profileImage.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    HomeFragmentDirections.actionHomeFragmentToProfileFragment(
+                            post.getUserCreatorId()
+                    )
+                )
+            );
 
             username.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
