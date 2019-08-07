@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/comment_commenter_image"
+        android:id="@+id/comment_commentator_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
@@ -18,15 +18,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/comment_commenter_username"
+        android:id="@+id/comment_commentator_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="UserName"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/comment_commenter_image"
-        app:layout_constraintTop_toTopOf="@+id/comment_commenter_image" />
+        app:layout_constraintStart_toEndOf="@+id/comment_commentator_image"
+        app:layout_constraintTop_toTopOf="@+id/comment_commentator_image" />
 
     <TextView
         android:id="@+id/comment_description"
@@ -40,8 +40,8 @@
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/comment_commenter_image"
-        app:layout_constraintTop_toBottomOf="@+id/comment_commenter_username" />
+        app:layout_constraintStart_toEndOf="@+id/comment_commentator_image"
+        app:layout_constraintTop_toBottomOf="@+id/comment_commentator_username" />
 
     <TextView
         android:id="@+id/comment_elapsed_time"
@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="4W"
-        app:layout_constraintStart_toEndOf="@+id/comment_commenter_username"
-        app:layout_constraintTop_toTopOf="@+id/comment_commenter_username" />
+        app:layout_constraintStart_toEndOf="@+id/comment_commentator_username"
+        app:layout_constraintTop_toTopOf="@+id/comment_commentator_username" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
