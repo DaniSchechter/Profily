@@ -3,6 +3,7 @@ package com.example.profily.Profile;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +54,29 @@ public class ProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //TODO remove
+        for (int i=0; i<10; i++)
+        {
+            Post post = new Post();
+            post.setId("" + i);
+            post.setCaption("Caption number " + i);
+            List<String> commentIds = new LinkedList<String>();
+            commentIds.add("1");
+            commentIds.add("2");
+            commentIds.add("2");
+            post.setCommentsList(commentIds);
+            List<String> likes = new LinkedList<String>();
+            likes.add("11");
+            likes.add("22");
+            likes.add("23");
+            post.setLikedUsersList(likes);
+            post.setUserCreatorId("123123123");
+            postsList.add(post);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,26 +109,6 @@ public class ProfileFragment extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 3);
         layoutManager.isAutoMeasureEnabled();
         recyclerView.setLayoutManager(layoutManager);
-
-        //TODO remove
-        for (int i=0; i<10; i++)
-        {
-            Post post = new Post();
-            post.setId("" + i);
-            post.setCaption("Caption number " + i);
-            List<String> commentIds = new LinkedList<String>();
-            commentIds.add("1");
-            commentIds.add("2");
-            commentIds.add("2");
-            post.setCommentsList(commentIds);
-            List<String> likes = new LinkedList<String>();
-            likes.add("11");
-            likes.add("22");
-            likes.add("23");
-            post.setLikedUsersList(likes);
-            post.setUserCreatorId("123123123");
-            postsList.add(post);
-        }
 
         profileNumOfPosts.setText("" + postsList.size());
 
