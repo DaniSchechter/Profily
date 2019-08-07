@@ -1,5 +1,6 @@
 package com.example.profily.Comments;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
     public CommentsListAdapter(Vector<Comment> commentsList) {
         this.commentsList = commentsList;
+
     }//TODO maybe to delete
 
     @NonNull
@@ -32,8 +34,8 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CommentRowViewHolder holder, int position) {
-        Comment user = commentsList.elementAt(position);
-        holder.bind(user);
+        Comment comment = commentsList.elementAt(position);
+        holder.bind(comment);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
             commentUserImage = itemView.findViewById(R.id.comment_commenter_image);
             commentUserUsername = itemView.findViewById(R.id.comment_commenter_username);
             commentDescription = itemView.findViewById(R.id.comment_description);
-            actionElapsedTime = itemView.findViewById(R.id.notifications_elapsed_time);
+            actionElapsedTime = itemView.findViewById(R.id.comment_elapsed_time);
 
         }
 

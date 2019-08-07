@@ -63,6 +63,7 @@ public class HomeFragment extends Fragment {
             likes.add("23");
             post.setLikedUsersList(likes);
             post.setUserCreatorId("" + i);
+            post.setId("" + i);
 
             posts.add(post);
         }
