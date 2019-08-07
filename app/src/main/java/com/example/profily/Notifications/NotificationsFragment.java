@@ -57,6 +57,7 @@ public class NotificationsFragment extends Fragment {
                         .getTime()
         );
         n1.setEffectedUserId("1");
+        n1.setEffectedPostId("1");
         n1.setNotificationId("1");
         n1.setTriggeringUserId("2");
         // -------------------------------------
@@ -67,6 +68,7 @@ public class NotificationsFragment extends Fragment {
                         .getTime()
         );
         n2.setEffectedUserId("3");
+        n2.setEffectedPostId("2");
         n2.setNotificationId("2");
         n2.setTriggeringUserId("45");
         // -------------------------------------
@@ -77,6 +79,7 @@ public class NotificationsFragment extends Fragment {
                         .getTime()
         );
         n3.setEffectedUserId("2");
+        n3.setEffectedPostId("3");
         n3.setNotificationId("3");
         n3.setTriggeringUserId("1");
 

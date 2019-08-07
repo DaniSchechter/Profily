@@ -11,6 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
+import com.example.profily.Schema.Action.Action;
 import com.example.profily.Schema.Notification;
 import com.example.profily.Utils.DateTimeUtils;
 
@@ -66,6 +67,20 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             description.setText(notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
 
+            if(notification.getAction().getType() == Action.ActionType.Subscription) {
+                effectedUserImage.setImageDrawable(null);
+            } else {
+                // Navigate to the effected post, if it is not a subscription action
+                effectedUserImage.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                        NotificationsFragmentDirections.actionNotificationsFragmentToPost(
+                                notification.getEffectedPostId()
+                        )
+                    )
+                );
+            }
+
+            // Navigate to Triggering user's profile
             triggeringUserImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToProfileFragment(

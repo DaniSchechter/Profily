@@ -10,6 +10,7 @@ public class Notification {
     private Action action;
     private String triggeringUserId;
     private String effectedUserId;
+    private String effectedPostId;
     private Date actionDateTime;
 
     public String getNotificationId() {
@@ -42,6 +43,14 @@ public class Notification {
 
     public void setEffectedUserId(String effectedUserId) {
         this.effectedUserId = effectedUserId;
+    }
+
+    public String getEffectedPostId() {
+        return effectedPostId;
+    }
+
+    public void setEffectedPostId(String effectedPostId) {
+        this.effectedPostId = effectedPostId;
     }
 
     public Date getActionDateTime() {
