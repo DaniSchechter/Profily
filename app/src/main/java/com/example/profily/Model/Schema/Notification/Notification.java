@@ -1,6 +1,6 @@
-package com.example.profily.Schema;
+package com.example.profily.Model.Schema.Notification;
 
-import com.example.profily.Schema.Action.Action;
+import com.example.profily.Model.Schema.Action.Action;
 
 import java.util.Date;
 

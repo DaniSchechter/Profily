@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.profily.R;
-import com.example.profily.Schema.User;
+import com.example.profily.Model.Schema.User.User;
 import com.example.profily.User.UserListAdapter;
 
 import java.util.Locale;

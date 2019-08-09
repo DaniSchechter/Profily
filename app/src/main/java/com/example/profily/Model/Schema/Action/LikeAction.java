@@ -1,4 +1,4 @@
-package com.example.profily.Schema.Action;
+package com.example.profily.Model.Schema.Action;
 
 public final class LikeAction extends Action {
     private final ActionType type = ActionType.Like;

@@ -11,7 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
-import com.example.profily.Schema.Comment;
+import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Utils.DateTimeUtils;
 
 import java.util.Vector;

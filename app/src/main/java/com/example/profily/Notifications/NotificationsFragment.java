@@ -13,10 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.profily.R;
-import com.example.profily.Schema.Action.CommentAction;
-import com.example.profily.Schema.Action.LikeAction;
-import com.example.profily.Schema.Action.SubscriptionAction;
-import com.example.profily.Schema.Notification;
+import com.example.profily.Model.Schema.Action.CommentAction;
+import com.example.profily.Model.Schema.Action.LikeAction;
+import com.example.profily.Model.Schema.Action.SubscriptionAction;
+import com.example.profily.Model.Schema.Notification.Notification;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

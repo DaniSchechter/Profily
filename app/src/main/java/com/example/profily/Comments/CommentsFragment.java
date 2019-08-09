@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.profily.R;
-import com.example.profily.Schema.Comment;
+import com.example.profily.Model.Schema.Comment.Comment;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

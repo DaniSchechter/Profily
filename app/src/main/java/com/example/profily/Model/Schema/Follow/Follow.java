@@ -1,4 +1,4 @@
-package com.example.profily.Schema;
+package com.example.profily.Model.Schema.Follow;
 
 import java.util.List;
 

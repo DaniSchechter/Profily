@@ -1,6 +1,4 @@
-package com.example.profily.Schema;
-
-import java.util.List;
+package com.example.profily.Model.Schema.User;
 
 public class User {
     private String id;

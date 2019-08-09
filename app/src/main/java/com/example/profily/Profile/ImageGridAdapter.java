@@ -10,7 +10,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
-import com.example.profily.Schema.Post;
+import com.example.profily.Model.Schema.Post.Post;
 
 import java.util.Vector;
 
