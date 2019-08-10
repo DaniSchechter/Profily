@@ -12,17 +12,17 @@ import java.util.List;
 public interface PostDao {
 
     // Get
-    @Query("SELECT * FROM posts WHERE wasDeleted = 0")
+    @Query("SELECT * FROM posts WHERE wasDeleted = 0 ORDER BY createdDate Desc")
     List<Post> getAllPosts();
 
     @Query("SELECT * FROM posts WHERE postId = :postId AND wasDeleted = 0")
     Post getPostById(String postId);
 
-    @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0")
+    @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 ORDER BY createdDate Desc")
     List<Post> getAllPostsByUserId(String userId);
 
     @Query("SELECT * FROM posts WHERE wasDeleted = 0 AND userCreatorId IN " +
-           "(SELECT following FROM follow_relation WHERE userId = :userId)")
+           "(SELECT following FROM follow_relation WHERE userId = :userId) ORDER BY createdDate Desc")
     List<Post> getAllFollowingPosts(String userId);
 
     // Insert

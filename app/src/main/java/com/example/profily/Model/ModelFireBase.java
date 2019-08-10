@@ -1,5 +1,7 @@
 package com.example.profily.Model;
 
+  import android.util.Log;
+
   import androidx.annotation.Nullable;
 
   import com.example.profily.Model.Schema.Post.Post;
@@ -25,7 +27,7 @@ public class ModelFireBase {
 
 
     public void getAllPosts(final Model.GetAllPostsListener listener) {
-        db.collection("posts").addSnapshotListener(
+        db.collection("posts").orderBy("createdDate").addSnapshotListener(
             (queryDocumentSnapshots, fireBaseException) -> {
                 LinkedList<Post> data = new LinkedList<>();
                 if (fireBaseException != null) {
@@ -35,6 +37,7 @@ public class ModelFireBase {
                 if (queryDocumentSnapshots != null) {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Post post = doc.toObject(Post.class);
+                        Log.d("TAG", post.toString());
                         data.add(post);
                     }
                     listener.onComplete(data);
