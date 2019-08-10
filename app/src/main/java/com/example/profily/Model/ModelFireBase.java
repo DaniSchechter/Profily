@@ -24,8 +24,8 @@ public class ModelFireBase {
     }
 
 
-    public void getAllPosts(final Model.GetAllPostsListener listener) {
-        db.collection("posts").addSnapshotListener(
+    public void getAllPosts(final int numOfPosts, final Model.GetAllPostsListener listener) {
+        db.collection("posts").startAt().limit(numOfPosts).addSnapshotListener(
             (queryDocumentSnapshots, fireBaseException) -> {
                 LinkedList<Post> data = new LinkedList<>();
                 if (fireBaseException != null) {
