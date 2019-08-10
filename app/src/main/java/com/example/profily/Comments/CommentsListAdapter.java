@@ -10,15 +10,17 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Utils.DateTimeUtils;
 
+import java.util.List;
 import java.util.Vector;
 
 public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapter.CommentRowViewHolder> {
 
-    private Vector<Comment> commentsList; //TODO maybe to delete
+    private List<Comment> commentsList; //TODO maybe to delete
 
     public CommentsListAdapter(Vector<Comment> commentsList) {
         this.commentsList = commentsList;
@@ -34,13 +36,18 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CommentRowViewHolder holder, int position) {
-        Comment comment = commentsList.elementAt(position);
+        Comment comment = commentsList.get(position);
         holder.bind(comment);
     }
 
     @Override
     public int getItemCount() {
         return commentsList.size();
+    }
+
+    void setComments(List<Comment> commentsList){
+        this.commentsList = commentsList;
+        notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
 
 
@@ -66,7 +73,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
             commentatorUsername.setText("username " + comment.getUserId()); // TODO change
             commentDescription.setText(comment.getContent());
-            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getActionDateTime()));
+            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getCreatedDate()));
 
             commentatorUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
