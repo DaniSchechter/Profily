@@ -1,14 +1,11 @@
 package com.example.profily.Model;
 
-  import androidx.annotation.Nullable;
-
+  import android.util.Log;
   import com.example.profily.Model.Schema.Post.Post;
-  import com.google.firebase.firestore.EventListener;
   import com.google.firebase.firestore.FirebaseFirestore;
-  import com.google.firebase.firestore.FirebaseFirestoreException;
   import com.google.firebase.firestore.FirebaseFirestoreSettings;
+  import com.google.firebase.firestore.Query;
   import com.google.firebase.firestore.QueryDocumentSnapshot;
-  import com.google.firebase.firestore.QuerySnapshot;
 
   import java.util.LinkedList;
 
@@ -24,8 +21,8 @@ public class ModelFireBase {
     }
 
 
-    public void getAllPosts(final Model.GetAllPostsListener listener) {
-        db.collection("posts").addSnapshotListener(
+    public void getAllPosts(final int numOfPosts, final Model.GetAllPostsListener listener) {
+        db.collection("posts").orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
             (queryDocumentSnapshots, fireBaseException) -> {
                 LinkedList<Post> data = new LinkedList<>();
                 if (fireBaseException != null) {
@@ -35,6 +32,7 @@ public class ModelFireBase {
                 if (queryDocumentSnapshots != null) {
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Post post = doc.toObject(Post.class);
+                        Log.d("TAG", post.toString());
                         data.add(post);
                     }
                     listener.onComplete(data);

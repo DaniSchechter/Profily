@@ -4,11 +4,7 @@ package com.example.profily.Home;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Post.Post;
-
-import java.util.Vector;
 
 
 /**
@@ -33,6 +27,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private PostListAdapter adapter;
+    private ImageView loadMorePostsBtn;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -57,6 +53,10 @@ public class HomeFragment extends Fragment {
 
         //TODO add logic for something like pagination
         homeViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
+
+        loadMorePostsBtn = view.findViewById(R.id.add_more_posts_btn);
+
+        loadMorePostsBtn.setOnClickListener(viewOnClick -> homeViewModel.loadMorePosts());
 
         return view;
     }
