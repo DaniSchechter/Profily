@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.profily.R;
-import com.example.profily.Schema.User;
+import com.example.profily.Model.Schema.User.User;
 import com.example.profily.User.UserListAdapter;
 
 import java.util.Locale;
@@ -44,23 +44,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO remove
-        // -------------------------------------
-        User u1 = new User();
-        u1.setId("1");
-        u1.setUsername("Alex");
-        // -------------------------------------
-        User u2 = new User();
-        u2.setId("2");
-        u2.setUsername("Danon");
-        // -------------------------------------
-        User u3 = new User();
-        u3.setId("3");
-        u3.setUsername("Teleh");
 
-        searchedUsers.add(u1);
-        searchedUsers.add(u2);
-        searchedUsers.add(u3);
     }
 
     @Override

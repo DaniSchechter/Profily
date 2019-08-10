@@ -1,6 +1,5 @@
 package com.example.profily.User;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.profily.Home.HomeFragmentDirections;
 import com.example.profily.R;
-import com.example.profily.Schema.User;
+import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Search.SearchFragmentDirections;
 
 import java.util.Vector;
@@ -66,7 +64,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
             userUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                         SearchFragmentDirections.actionSearchFragmentToProfileFragment(
-                                user.getId()
+                                user.getUserId()
                         )
                 )
             );
@@ -74,7 +72,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
             userImage.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
                             SearchFragmentDirections.actionSearchFragmentToProfileFragment(
-                                    user.getId()
+                                    user.getUserId()
                             )
                     )
             );

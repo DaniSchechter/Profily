@@ -1,5 +1,6 @@
 package com.example.profily;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -11,6 +12,7 @@ import androidx.navigation.Navigation;
 public class MainActivity extends AppCompatActivity {
 
     private NavController navController;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(menuItem.getItemId());
                 return true;
         });
+        context = this.getApplicationContext();
 
     }
 

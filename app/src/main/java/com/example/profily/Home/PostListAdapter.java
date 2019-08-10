@@ -1,6 +1,5 @@
 package com.example.profily.Home;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +11,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.R;
-import com.example.profily.Schema.Post;
+import com.example.profily.Model.Schema.Post.Post;
 
-import java.util.Vector;
+import java.util.List;
+
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRowViewHolder> {
 
-    private Vector<Post> postsList; //TODO maybe to delete
-
-    public PostListAdapter(Vector<Post> postsList) {
-        this.postsList = postsList;
-    }//TODO maybe to delete
+    private List<Post> postsList; // Cached copy of posts
 
     @NonNull
     @Override
@@ -33,13 +29,25 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
     @Override
     public void onBindViewHolder(@NonNull PostRowViewHolder holder, int position) {
-        Post post = postsList.elementAt(position);
-        holder.bind(post);
+        if (postsList != null) {
+            holder.bind(postsList.get(position));
+        } else {
+            // TODO show spinner
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return postsList.size();
+        if (postsList != null) {
+            return postsList.size();
+        }
+        return 0;
+    }
+
+    void setPosts(List<Post> postsList){
+        this.postsList = postsList;
+        notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
 
     static class PostRowViewHolder extends RecyclerView.ViewHolder {
@@ -69,7 +77,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         }
 
         public void bind(Post post){
-            username.setText("username " + post.getUserCreatorId()); //TODO change to the creators name
+            username.setText(post.getUserCreatorId()); //TODO change to the creators name
             numOfLikes.setText(post.getLikedUsersList().size() + " likes");
             caption.setText(post.getCaption());
             comments.setText("View all " + post.getCommentsList().size() + " comments");
@@ -93,7 +101,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             comments.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
                             HomeFragmentDirections.actionHomeFragmentToCommentsFragment(
-                                    post.getId()
+                                    post.getPostId()
                             )
                     )
             );
