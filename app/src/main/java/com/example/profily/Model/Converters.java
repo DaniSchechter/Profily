@@ -31,17 +31,4 @@ public class Converters {
     public static Long dateToLong(Date date) {
         return date == null ? null : date.getTime();
     }
-
-
-    @TypeConverter
-    public static Calendar strToDate(String timestamp) {
-        Calendar cal = new GregorianCalendar();
-        cal.setTimeInMillis(NumberUtils.parseHexLong(timestamp)*1000);
-        return cal;
-    }
-
-    @TypeConverter
-    public static String dateTostr(Calendar date) {
-        return "" + date.getTimeInMillis()/1000;
-    }
 }
