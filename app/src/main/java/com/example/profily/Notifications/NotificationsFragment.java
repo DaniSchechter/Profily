@@ -40,44 +40,7 @@ public class NotificationsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO remove
-        // -------------------------------------
-        Notification n1 = new Notification();
-        n1.setAction(new LikeAction());
-        n1.setActionDateTime(
-                new GregorianCalendar(2019, Calendar.JULY, 5, 22, 30, 3)
-                        .getTime()
-        );
-        n1.setEffectedUserId("1");
-        n1.setEffectedPostId("1");
-        n1.setNotificationId("1");
-        n1.setTriggeringUserId("2");
-        // -------------------------------------
-        Notification n2 = new Notification();
-        n2.setAction(new SubscriptionAction());
-        n2.setActionDateTime(
-                new GregorianCalendar(2019, Calendar.AUGUST, 4, 22, 49, 3)
-                        .getTime()
-        );
-        n2.setEffectedUserId("3");
-        n2.setEffectedPostId("2");
-        n2.setNotificationId("2");
-        n2.setTriggeringUserId("45");
-        // -------------------------------------
-        Notification n3 = new Notification();
-        n3.setAction(new CommentAction());
-        n3.setActionDateTime(
-                new GregorianCalendar(2019, Calendar.AUGUST, 5, 22, 54, 0)
-                        .getTime()
-        );
-        n3.setEffectedUserId("2");
-        n3.setEffectedPostId("3");
-        n3.setNotificationId("3");
-        n3.setTriggeringUserId("1");
 
-        notifications.add(n1);
-        notifications.add(n2);
-        notifications.add(n3);
     }
 
     @Override

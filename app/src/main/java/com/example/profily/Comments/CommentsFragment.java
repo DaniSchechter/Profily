@@ -37,28 +37,7 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO remove
-        // -------------------------------------
-        Comment c1 = new Comment();
-        c1.setActionDateTime(new GregorianCalendar(2017, 6, 21, 8, 23, 45).getTime());
-        c1.setContent("comment1");
-        c1.setUserId("1");
-        comments.add(c1);
 
-        // -------------------------------------
-        Comment c2 = new Comment();
-        c2.setActionDateTime(new GregorianCalendar(2019, Calendar.AUGUST, 6, 20, 36, 0).getTime());
-        c2.setContent("comment2");
-        c2.setUserId("2");
-        comments.add(c2);
-
-
-        // -------------------------------------
-        Comment c3 = new Comment();
-        c3.setActionDateTime(new GregorianCalendar(2019, Calendar.AUGUST, 1, 0, 0, 0).getTime());
-        c3.setContent("comment3");
-        c3.setUserId("3");
-        comments.add(c3);
     }
 
     @Override

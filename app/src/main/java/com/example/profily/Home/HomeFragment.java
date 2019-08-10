@@ -6,6 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,8 +20,6 @@ import android.view.ViewGroup;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Vector;
 
 
@@ -26,38 +28,14 @@ import java.util.Vector;
  */
 public class HomeFragment extends Fragment {
 
+    private HomeViewModel homeViewModel;
+
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private PostListAdapter adapter;
-    private Vector<Post> posts = new Vector<>(); //TODO remove
 
     public HomeFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //TODO remove
-        for (int i=0; i<10; i++)
-        {
-            Post post = new Post();
-            post.setCaption("Caption number " + i);
-            List<String> commentIds = new LinkedList<>();
-            commentIds.add("1");
-            commentIds.add("2");
-            commentIds.add("2");
-            post.setCommentsList(commentIds);
-            List<String> likes = new LinkedList<>();
-            likes.add("11");
-            likes.add("22");
-            likes.add("23");
-            post.setLikedUsersList(likes);
-            post.setUserCreatorId("" + i);
-            post.setId("" + i);
-
-            posts.add(post);
-        }
     }
 
     @Override
@@ -72,8 +50,13 @@ public class HomeFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new PostListAdapter(posts);
+        adapter = new PostListAdapter();
         recyclerView.setAdapter(adapter);
+
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+
+        //TODO add logic for something like pagination
+        homeViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
 
         return view;
     }

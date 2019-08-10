@@ -64,7 +64,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
             userUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                         SearchFragmentDirections.actionSearchFragmentToProfileFragment(
-                                user.getId()
+                                user.getUserId()
                         )
                 )
             );
@@ -72,7 +72,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
             userImage.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
                             SearchFragmentDirections.actionSearchFragmentToProfileFragment(
-                                    user.getId()
+                                    user.getUserId()
                             )
                     )
             );

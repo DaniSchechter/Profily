@@ -1,19 +1,29 @@
 package com.example.profily.Model.Schema.User;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "users")
 public class User {
-    private String id;
+
+    @PrimaryKey()
+    @NonNull
+    private final String userId;
+
     private String profileImageURL;
     private String username;
     private String password;
     private String description;
 
 
-    public String getId() {
-        return id;
+
+    public User(String userId) {
+        this.userId = userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getUserId() {
+        return userId;
     }
 
     public String getProfileImageURL() {

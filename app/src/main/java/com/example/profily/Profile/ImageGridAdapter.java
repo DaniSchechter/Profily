@@ -57,7 +57,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
             image.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     ProfileFragmentDirections.actionProfileFragmentToPost(
-                            post.getId()
+                            post.getPostId()
                     )
                 )
             );

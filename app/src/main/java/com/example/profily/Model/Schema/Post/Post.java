@@ -1,10 +1,28 @@
 package com.example.profily.Model.Schema.Post;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.example.profily.Model.Converters;
+import com.example.profily.Model.Schema.User.User;
+
 import java.util.List;
 
+@Entity(tableName = "posts")
+@TypeConverters(Converters.class)
 public class Post {
-    private String id;
+
+    @PrimaryKey()
+    @NonNull
+    private String postId;
+
+    @ForeignKey(entity = User.class, parentColumns = {"userId"}, childColumns = {"userCreatorId"})
     private String userCreatorId;
+
     private String imageURL;
     private String caption;
 
@@ -12,12 +30,28 @@ public class Post {
     private List<String> likedUsersList;
     private List<String> commentsList;
 
-    public String getId() {
-        return id;
+    // Control Fields
+    private Boolean wasDeleted;
+
+    @Ignore
+    public Post(String postId, String userCreatorId, String imageURL, String caption, List<String> likedUsersList, List<String> commentsList, Boolean wasDeleted) {
+        this.postId = postId;
+        this.userCreatorId = userCreatorId;
+        this.imageURL = imageURL;
+        this.caption = caption;
+        this.likedUsersList = likedUsersList;
+        this.commentsList = commentsList;
+        this.wasDeleted = wasDeleted;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Post(){}
+
+    public void setPostId(@NonNull String postId) {
+        this.postId = postId;
+    }
+
+    public String getPostId() {
+        return postId;
     }
 
     public String getUserCreatorId() {
@@ -60,4 +94,11 @@ public class Post {
         this.commentsList = commentsList;
     }
 
+    public Boolean getWasDeleted() {
+        return wasDeleted;
+    }
+
+    public void setWasDeleted(Boolean wasDeleted) {
+        this.wasDeleted = wasDeleted;
+    }
 }
