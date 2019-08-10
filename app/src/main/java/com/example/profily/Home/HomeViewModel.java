@@ -25,11 +25,10 @@ public class HomeViewModel extends ViewModel {
         return this.postsListLiveData;
     }
 
-    public LiveData<List<Post>> loadMorePosts() {
+    public void loadMorePosts() {
 
         this.numOfPosts += delta;
         Model.instance.getAllPosts( numOfPosts, postsList -> this.postsListLiveData.setValue(postsList));
-        return this.postsListLiveData;
     }
 
 }

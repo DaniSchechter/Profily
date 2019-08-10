@@ -56,13 +56,7 @@ public class HomeFragment extends Fragment {
 
         loadMorePostsBtn = view.findViewById(R.id.add_more_posts_btn);
 
-        loadMorePostsBtn.setOnClickListener(viewOnClick -> {
-                    homeViewModel.loadMorePosts().observe(
-                            HomeFragment.this, list -> adapter.setPosts(list)
-                    );
-                }
-
-        );
+        loadMorePostsBtn.setOnClickListener(viewOnClick -> homeViewModel.loadMorePosts());
 
         return view;
     }
