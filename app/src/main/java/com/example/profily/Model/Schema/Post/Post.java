@@ -10,6 +10,8 @@ import androidx.room.TypeConverters;
 import com.example.profily.Model.Converters;
 import com.example.profily.Model.Schema.User.User;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Entity(tableName = "posts")
@@ -33,8 +35,12 @@ public class Post {
     // Control Fields
     private Boolean wasDeleted;
 
+    private Date createdDate;
+
     @Ignore
-    public Post(String postId, String userCreatorId, String imageURL, String caption, List<String> likedUsersList, List<String> commentsList, Boolean wasDeleted) {
+    public Post(String postId, String userCreatorId, String imageURL, String caption,
+                List<String> likedUsersList, List<String> commentsList, Boolean wasDeleted,
+                Date createdDate) {
         this.postId = postId;
         this.userCreatorId = userCreatorId;
         this.imageURL = imageURL;
@@ -42,6 +48,7 @@ public class Post {
         this.likedUsersList = likedUsersList;
         this.commentsList = commentsList;
         this.wasDeleted = wasDeleted;
+        this.createdDate = createdDate;
     }
 
     public Post(){}
@@ -100,5 +107,13 @@ public class Post {
 
     public void setWasDeleted(Boolean wasDeleted) {
         this.wasDeleted = wasDeleted;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }

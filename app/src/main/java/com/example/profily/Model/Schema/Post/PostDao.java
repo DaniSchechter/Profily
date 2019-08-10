@@ -12,18 +12,18 @@ import java.util.List;
 public interface PostDao {
 
     // Get
-    @Query("SELECT * FROM posts WHERE wasDeleted = 0 LIMIT :count")
-    List<Post> getAllPosts(int count);
+    @Query("SELECT * FROM posts WHERE wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
+    List<Post> getAllPosts(int limit);
 
     @Query("SELECT * FROM posts WHERE postId = :postId AND wasDeleted = 0")
     Post getPostById(String postId);
 
-    @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 LIMIT :count")
-    List<Post> getAllPostsByUserId(String userId, int count);
+    @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
+    List<Post> getAllPostsByUserId(String userId, int limit);
 
     @Query("SELECT * FROM posts WHERE wasDeleted = 0 AND userCreatorId IN " +
-           "(SELECT following FROM follow_relation WHERE userId = :userId) LIMIT :count")
-    List<Post> getAllFollowingPosts(String userId, int count);
+           "(SELECT following FROM follow_relation WHERE userId = :userId) ORDER BY createdDate Desc LIMIT :limit")
+    List<Post> getAllFollowingPosts(String userId, int limit);
 
     // Insert
     @Insert(onConflict = OnConflictStrategy.REPLACE)

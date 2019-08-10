@@ -42,13 +42,13 @@ public class PostAsyncDao{
 
     }
 
-    public static void addPostsAndFetch(List<Post> postsList, final Model.GetAllPostsListener listener) {
+    public static void addPostsAndFetch(final int numOfPosts, List<Post> postsList, final Model.GetAllPostsListener listener) {
         new AsyncTask<List<Post>, Void, List<Post>>(){
 
             @Override
             protected List<Post> doInBackground(List<Post>... posts) {
                 ModelSql.getInstance().postDao().insertPosts(posts[0]);
-                return ModelSql.getInstance().postDao().getAllPosts(10);
+                return ModelSql.getInstance().postDao().getAllPosts(numOfPosts);
             }
 
             @Override

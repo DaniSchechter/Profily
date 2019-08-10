@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,21 +21,28 @@ public class Model {
     private Model() {
         modelFirebase = new ModelFireBase();
 
-        List<Post> posts = new LinkedList<Post>();
-            for (int i = 10; i < 22; i++) {
-                Post p = new Post(
-                        "lite" + i,
-                        "Creator lite" + i,
-                        "imageUrl",
-                        "caption " + i,
-                        Arrays.asList("1", "2", "3"),
-                        Arrays.asList("4", "5"),
-                        false
-                );
+//        List<Post> posts = new LinkedList<Post>();
+//        for (int i = 10; i < 22; i++) {
+//            Post p = new Post(
+//                    "lite" + i,
+//                    "Creator lite" + i,
+//                    "imageUrl",
+//                    "caption " + i,
+//                    Arrays.asList("1", "2", "3"),
+//                    Arrays.asList("4", "5"),
+//                    false,
+//                    new Date()
+//            );
+//            addAllPosts(p);
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 //                posts.add(p);
-                addAllPosts(p);
-            }
+//            }
 //            addAllPosts(posts);
+//        }
     }
 
     /*
@@ -59,7 +68,7 @@ public class Model {
             // Get the newest data from the cloud
             modelFirebase.getAllPosts(numOfPosts, cloudPosts -> {
                 // Update local DB
-                PostAsyncDao.addPostsAndFetch(cloudPosts, posts -> listener.onComplete(posts));
+                PostAsyncDao.addPostsAndFetch(numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
             });
         });
         //PostAsyncDao.getAllPosts(listener);
@@ -70,14 +79,14 @@ public class Model {
         //modelFirebase.addPost(post, listener);
     }
 
-    public void addAllPosts(Post postsList) {
-//        PostAsyncDao.addPosts(postsList);
-        modelFirebase.addPost(postsList, new AddPostListener() {
-            @Override
-            public void onComplete(boolean success) {
-
-            }
-        });
+    public void addAllPosts(List<Post> postsList) {
+        PostAsyncDao.addPosts(postsList);
+//        modelFirebase.addPost(postsList, new AddPostListener() {
+//            @Override
+//            public void onComplete(boolean success) {
+//
+//            }
+//        });
     }
 
     public void addPostById(Post post) {
