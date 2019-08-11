@@ -36,6 +36,8 @@ public class Notification {
 
     private Date actionDateTime;
 
+    private Boolean wasDeleted;
+
 
 
     public Notification(String notificationId) {
@@ -84,6 +86,14 @@ public class Notification {
 
     public void setActionDateTime(Date actionDateTime) {
         this.actionDateTime = actionDateTime;
+    }
+
+    public Boolean getWasDeleted() {
+        return wasDeleted;
+    }
+
+    public void setWasDeleted(Boolean wasDeleted) {
+        this.wasDeleted = wasDeleted;
     }
 }
 
