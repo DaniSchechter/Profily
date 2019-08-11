@@ -80,6 +80,19 @@ public class Model {
     }
 
 
+    /*
+    -----------------------
+    USERS
+    -----------------------
+     */
+
+    public String getConnectedUserId() {
+        return modelFirebase.getConnectedUserId();
+    }
+
+    public void logOut() {
+        modelFirebase.logOut();
+    }
 
 //    public interface SaveImageListener{
 //        void onComplete(String url);
