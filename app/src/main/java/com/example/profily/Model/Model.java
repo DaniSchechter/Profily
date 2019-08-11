@@ -3,6 +3,7 @@ package com.example.profily.Model;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
 import com.example.profily.Model.Schema.Notification.Notification;
+import com.example.profily.Model.Schema.Notification.NotificationAsyncDao;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 
@@ -148,6 +149,25 @@ public class Model {
 
     public interface GetAllNotificationsListener {
         void onComplete(List<Notification> notifications);
+    }
+
+    public interface AddNotificationListener {
+        void onComplete(boolean success);
+    }
+
+    public void getAllNotification(final String userId, final int numOfNotifications, final GetAllNotificationsListener listener) {
+
+        // Get already cached data
+        NotificationAsyncDao.getAllNotifications(userId, numOfNotifications, cachedNotifications -> {
+            // Present it to the user
+            listener.onComplete(cachedNotifications);
+            // Get the newest data from the cloud
+            modelFirebase.getAllNotifications(userId, numOfNotifications, cloudNotifications -> {
+                // Update local DB
+                NotificationAsyncDao.addNotificationsAndFetch(userId, numOfNotifications, cloudNotifications, notifications ->
+                        listener.onComplete(notifications));
+            });
+        });
     }
 
 
