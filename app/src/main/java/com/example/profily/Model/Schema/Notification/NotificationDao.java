@@ -12,9 +12,9 @@ import java.util.List;
 public interface NotificationDao {
 
     // Get
-    @Query("SELECT * FROM notifications WHERE notificationId = :notificationId " +
+    @Query("SELECT * FROM notifications WHERE effectedUserId = :userId " +
             "AND wasDeleted = 0 ORDER BY actionDateTime desc LIMIT :limit")
-    List<Notification> getAllNotifications(String notificationId, int limit);
+    List<Notification> getAllNotifications(String userId, int limit);
 
     // Insert
     @Insert(onConflict = OnConflictStrategy.REPLACE)

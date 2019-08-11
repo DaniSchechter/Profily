@@ -1,17 +1,11 @@
 package com.example.profily.Model;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
+import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Model {
@@ -143,29 +137,18 @@ public class Model {
                 CommentAsyncDao.addCommentsAndFetch(postId, numOfComments, cloudComments, comments -> listener.onComplete(comments));
             });
         });
-        //CommentAsyncDao.getAllComments(listener);
     }
 
-    public void getCommentById(String commentId) {
-//        CommentAsyncDao.addComments(commentsList);
-        //modelFirebase.addComment(comment, listener);
+
+    /*
+    -----------------------
+    NOTIFICATIONS
+    -----------------------
+     */
+
+    public interface GetAllNotificationsListener {
+        void onComplete(List<Notification> notifications);
     }
-
-    public void addAllComments(Comment commentsList) {
-//        CommentAsyncDao.addComments(commentsList);
-        modelFirebase.addComment(commentsList, new AddCommentListener() {
-            @Override
-            public void onComplete(boolean success) {
-
-            }
-        });
-    }
-
-    public void addCommentById(Comment comment) {
-//        CommentAsyncDao.addComments(commentsList);
-        //modelFirebase.addComment(comment, listener);
-    }
-
 
 
 //    public interface SaveImageListener{
