@@ -155,7 +155,7 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void getAllNotification(final String userId, final int numOfNotifications, final GetAllNotificationsListener listener) {
+    public void getAllNotifications(final String userId, final int numOfNotifications, final GetAllNotificationsListener listener) {
 
         // Get already cached data
         NotificationAsyncDao.getAllNotifications(userId, numOfNotifications, cachedNotifications -> {
