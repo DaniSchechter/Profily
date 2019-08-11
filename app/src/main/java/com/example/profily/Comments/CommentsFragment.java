@@ -14,12 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.profily.Home.HomeViewModel;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Comment.Comment;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Vector;
 
 
@@ -59,15 +55,9 @@ public class CommentsFragment extends Fragment {
         adapter = new CommentsListAdapter(comments);
         recyclerView.setAdapter(adapter);
 
-        String postId = null;
-
         if (getArguments()!= null && getArguments().size()!=0)
         {
-            postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
-        }
-
-        if (postId != null)
-        {
+            String postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
 
             commentsViewModel = ViewModelProviders.of(this).get(CommentsViewModel.class);
             commentsViewModel.getComments(postId);
@@ -80,7 +70,6 @@ public class CommentsFragment extends Fragment {
             String finalPostId = postId;
             loadMoreCommentsBtn.setOnClickListener(viewOnClick -> commentsViewModel.loadMoreComments(finalPostId));
         }
-
 
         return view;
     }
