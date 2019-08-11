@@ -1,8 +1,12 @@
 package com.example.profily;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.profily.Authentication.AuthenticationActivity;
+import com.example.profily.Model.Model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +21,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Model.instance.getConnectedUserId() == null)
+        {
+            displayAuthenticationActivity(false);
+        }
+
         setContentView(R.layout.activity_main);
 
         navController = Navigation.findNavController(this, R.id.main_nav_host);
@@ -28,7 +38,14 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         });
         context = this.getApplicationContext();
+    }
 
+    public void displayAuthenticationActivity(Boolean andFinish) {
+        Intent intent = new Intent(MainActivity.this, AuthenticationActivity.class);
+        startActivity(intent);
+        if (andFinish) {
+            finish();
+        }
     }
 
 }

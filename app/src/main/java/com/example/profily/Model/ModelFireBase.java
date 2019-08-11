@@ -4,6 +4,8 @@ package com.example.profily.Model;
 
   import com.example.profily.Model.Schema.Comment.Comment;
   import com.example.profily.Model.Schema.Post.Post;
+  import com.google.firebase.auth.FirebaseAuth;
+  import com.google.firebase.auth.FirebaseUser;
   import com.google.firebase.firestore.FirebaseFirestore;
   import com.google.firebase.firestore.FirebaseFirestoreSettings;
   import com.google.firebase.firestore.Query;
@@ -14,32 +16,35 @@ package com.example.profily.Model;
 public class ModelFireBase {
 
     FirebaseFirestore db;
+    FirebaseAuth mAuth;
 
     public ModelFireBase() {
         db = FirebaseFirestore.getInstance();
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(false).build();
         db.setFirestoreSettings(settings);
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     // =========== POSTS ===========
 
     public void getAllPosts(final int numOfPosts, final Model.GetAllPostsListener listener) {
         db.collection("posts").orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
-            (queryDocumentSnapshots, fireBaseException) -> {
-                LinkedList<Post> data = new LinkedList<>();
-                if (fireBaseException != null) {
-                    listener.onComplete(data);
-                    return;
-                }
-                if (queryDocumentSnapshots != null) {
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Post post = doc.toObject(Post.class);
-                        data.add(post);
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    LinkedList<Post> data = new LinkedList<>();
+                    if (fireBaseException != null) {
+                        listener.onComplete(data);
+                        return;
                     }
-                    listener.onComplete(data);
+                    if (queryDocumentSnapshots != null) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Post post = doc.toObject(Post.class);
+                            data.add(post);
+                        }
+                        listener.onComplete(data);
+                    }
                 }
-            }
         );
     }
 
@@ -48,7 +53,7 @@ public class ModelFireBase {
         db.collection("posts")
                 .document(post.getPostId())
                 .set(post)
-                .addOnCompleteListener( task -> listener.onComplete(task.isSuccessful()));
+                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
     }
 
     // =========== COMMENTS ===========
@@ -77,6 +82,20 @@ public class ModelFireBase {
         db.collection("comments")
                 .document(comment.getCommentId())
                 .set(comment)
-                .addOnCompleteListener( task -> listener.onComplete(task.isSuccessful()));
+                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
+
+    }
+
+    public String getConnectedUserId ()
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            return null;
+        }
+        return user.getUid();
+    }
+
+    public void logOut () {
+        mAuth.signOut();
     }
 }

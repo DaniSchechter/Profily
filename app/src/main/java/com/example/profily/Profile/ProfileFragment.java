@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.profily.MainActivity;
+import com.example.profily.Model.Model;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
@@ -40,7 +44,7 @@ public class ProfileFragment extends Fragment {
     private TextView profileUsername,profileDescription;
     private ImageView profileImage;
     private Button editProfileBtn;
-
+    private ImageButton logoutButton;
 
     //counting vars
     private TextView profileNumOfFollowers;
@@ -71,18 +75,21 @@ public class ProfileFragment extends Fragment {
         profileNumOfPosts = view.findViewById(R.id.profile_posts_count);
         profileImage = view.findViewById(R.id.profile_image);
         editProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
+        logoutButton = view.findViewById(R.id.profile_logout);
 
-        for(int i=0; i<6; i++)
-        {
-            followingList.add(i + "");
-            followersList.add("" + (i+20));
-        }
+
 
         profileNumOfFollowers.setText("" + followersList.size());
         profileNumOfFollowing.setText("" + followingList.size());
         profileNumOfPosts.setText("" + postsList.size());
         profileUsername.setText("Alex");
+        // TODO add if user.description is "", add default description
         profileDescription.setText("Alex - some text");
+        profileNumOfPosts.setText("" + postsList.size());
+        logoutButton.setOnClickListener(view1 -> {
+            Model.instance.logOut();
+            ((MainActivity)getActivity()).displayAuthenticationActivity(true);
+        });
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -90,8 +97,6 @@ public class ProfileFragment extends Fragment {
         layoutManager = new GridLayoutManager(getActivity(), 3);
         layoutManager.isAutoMeasureEnabled();
         recyclerView.setLayoutManager(layoutManager);
-
-        profileNumOfPosts.setText("" + postsList.size());
 
         adapter = new ImageGridAdapter(postsList);
         recyclerView.setAdapter(adapter);

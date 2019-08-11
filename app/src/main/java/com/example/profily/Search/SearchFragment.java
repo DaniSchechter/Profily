@@ -90,7 +90,6 @@ public class SearchFragment extends Fragment {
 
 
     private void searchForMatch(String keyword){
-        Log.d("TAG: got new word: ", keyword);
         //update the users list view
         if(keyword.length() ==0){
 
@@ -103,14 +102,12 @@ public class SearchFragment extends Fragment {
                     updateUsersList();
                 }
             }
-            Log.d("TAG: new user list ", newUsers.toString());
 
             searchedUsers = newUsers;
         }
     }
 
     private void updateUsersList(){
-        Log.d("TAG", "updateUsersList: updating users list");
 
         adapter = new UserListAdapter(searchedUsers);
 
