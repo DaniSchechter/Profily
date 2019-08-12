@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Comment.Comment;
-import java.util.Vector;
 
 
 /**
@@ -28,7 +26,6 @@ public class CommentsFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private CommentsListAdapter adapter;
-    private Vector<Comment> comments = new Vector<>(); //TODO remove
     private ImageView loadMoreCommentsBtn;
 
     public CommentsFragment() {
@@ -52,7 +49,7 @@ public class CommentsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CommentsListAdapter(comments);
+        adapter = new CommentsListAdapter();
         recyclerView.setAdapter(adapter);
 
         if (getArguments()!= null && getArguments().size()!=0)
