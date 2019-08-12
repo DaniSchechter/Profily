@@ -86,9 +86,21 @@ public class Model {
         //PostAsyncDao.getAllPosts(listener);
     }
 
-    public void getPostById(String postId) {
-//        PostAsyncDao.addPosts(postsList);
-        //modelFirebase.addPost(post, listener);
+    public interface  GetPostByIdListener{
+        void onComplete(Post post);
+    }
+
+    public void getPostById(String postId, final GetPostByIdListener listener) {
+        // Get already cached data
+        PostAsyncDao.getPostById(postId, cachedPost -> {
+            // Present it to the user
+            listener.onComplete(cachedPost);
+            // Get the newest data from the cloud
+            modelFirebase.getPostById(postId, cloudPost -> {
+                // Update local DB
+                PostAsyncDao.addPostAndFetch(cloudPost, post -> listener.onComplete(post));
+            });
+        });
     }
 
     public void addAllPosts(List<Post> postsList) {
@@ -114,7 +126,7 @@ public class Model {
      */
 
     public String getConnectedUserId() {
-        return modelFirebase.getConnectedUserId();
+        return modelFirebase.getUserById();
     }
 
     public void logOut() {
@@ -224,5 +236,30 @@ public class Model {
             }
         });
         UserAsyncDao.addUser(user);
+    }
+
+    public interface GetConnectedUserListener{
+        void onComplete(User user);
+    }
+
+    public void getUserById(String userId, final GetConnectedUserListener listener) {
+
+        // Get already cached data
+        UserAsyncDao.getUserById(userId, cachedUser -> {
+            // Present it to the user
+            if (cachedUser != null){
+                listener.onComplete(cachedUser);
+            }
+            // Get the newest data from the cloud
+            modelFirebase.getUserById(userId, cloudUser -> {
+                // Update local DB
+                UserAsyncDao.addUserDetailsAndFetch(userId, cloudUser, posts -> listener.onComplete(posts));
+            });
+        });
+        //PostAsyncDao.getAllPosts(listener);
+    }
+
+    public interface GetPostCountListener{
+        void onComplete(Integer numOfPosts);
     }
 }

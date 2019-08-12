@@ -29,6 +29,26 @@ public class UserAsyncDao {
         }.execute();
     }
 
+    public static void addUserDetailsAndFetch(final String userId, final User user, final Model.GetConnectedUserListener listener)
+    {
+        new AsyncTask<User, Void, User>(){
+
+            @Override
+            protected User doInBackground(User... users) {
+                ModelSql.getInstance().userDao().insertUser(users[0]);
+                return ModelSql.getInstance().userDao().getUserById(userId);
+            }
+
+            @Override
+            protected void onPostExecute(User user) {
+                super.onPostExecute(user);
+                if (listener != null) {
+                    listener.onComplete(user);
+                }
+            }
+        }.execute(user);
+    }
+
     public static void addUserPostsAndFetch(final String postId, final int numOfPosts, List<Post> postsList, final Model.GetAllUserPostsListener listener) {
         new AsyncTask<List<Post>, Void, List<Post>>() {
 
@@ -70,5 +90,43 @@ public class UserAsyncDao {
                 return null;
             }
         }.execute(user);
+    }
+
+    public static void getUserById(String userId,final Model.GetConnectedUserListener listener)
+    {
+        new AsyncTask<String, Void, User>(){
+
+            @Override
+            protected User doInBackground(String... strings) {
+                return ModelSql.getInstance().userDao().getUserById(userId);
+            }
+
+            @Override
+            protected void onPostExecute(User user) {
+                super.onPostExecute(user);
+                if (listener != null) {
+                    listener.onComplete(user);
+                }
+            }
+        }.execute();
+    }
+
+    public static void getPostCount(String userId, final Model.GetPostCountListener listener)
+    {
+        new AsyncTask<String, Void, Integer>(){
+
+            @Override
+            protected Integer doInBackground(String... strings) {
+                return ModelSql.getInstance().userDao().getPostCount(userId);
+            }
+
+            @Override
+            protected void onPostExecute(Integer numOfPosts) {
+                super.onPostExecute(numOfPosts);
+                if (listener != null) {
+                    listener.onComplete(numOfPosts);
+                }
+            }
+        }.execute();
     }
 }

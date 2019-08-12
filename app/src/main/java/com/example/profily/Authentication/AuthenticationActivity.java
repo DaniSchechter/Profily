@@ -100,6 +100,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            addUser(user);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -191,17 +192,6 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
-//            Intent intent = new Intent();
-//
-//            if (isSignUp)
-//            {
-//                intent.putExtra("signType", "signUp");
-//            }
-//            else{
-//                intent.putExtra("signType", "logIn");
-//            }
-////            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            setResult(RESULT_OK, intent);
             this.finish();
         }
         else {
@@ -245,5 +235,19 @@ public class AuthenticationActivity extends AppCompatActivity {
         usernameInput.setVisibility(View.VISIBLE);
         firstNameInput.setVisibility(View.VISIBLE);
         lastNameInput.setVisibility(View.VISIBLE);
+    }
+
+    private void addUser(FirebaseUser fbUser)
+    {
+        User user = new User(
+                fbUser.getUid(),
+                "",
+                usernameInput.getText().toString(),
+                "",
+                firstNameInput.getText().toString(),
+                lastNameInput.getText().toString()
+        );
+
+        Model.instance.addUser(user);
     }
 }

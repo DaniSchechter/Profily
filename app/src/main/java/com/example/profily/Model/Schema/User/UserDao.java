@@ -15,6 +15,12 @@ public interface UserDao {
     @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
     List<Post> getAllUserPosts(String userId, int limit);
 
+    @Query("SELECT * FROM users WHERE userId = :userId")
+    User getUserById(String userId);
+
+    @Query("SELECT count(*) from posts where userCreatorId = :userId")
+    int getPostCount(String userId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertUser(User user);
 
