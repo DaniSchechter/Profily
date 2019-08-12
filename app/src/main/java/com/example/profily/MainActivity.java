@@ -3,6 +3,7 @@ package com.example.profily;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.profily.Authentication.AuthenticationActivity;
 import com.example.profily.Model.Model;
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("TAG", "on create");
+
         super.onCreate(savedInstanceState);
         context = this.getApplicationContext();
 
@@ -39,12 +42,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void displayAuthenticationActivity(Boolean andFinish) {
+    public void displayAuthenticationActivity(Boolean clearBackStack) {
         Intent intent = new Intent(MainActivity.this, AuthenticationActivity.class);
+        if (clearBackStack) {
+            clearBackStack();
+        }
         startActivity(intent);
-        if (andFinish) {
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("TAG", "on restart");
+        if (Model.instance.getConnectedUserId() == null) {
+            Log.d("TAG", "finishing");
+
             finish();
+        } else {
+            Log.d("TAG", "start destination id:  " + navController.getGraph().getStartDestination());
+            navController.navigate(navController.getGraph().getStartDestination());
         }
     }
 
+    private void clearBackStack() {
+        Log.d("TAG", "Clearing back stack");
+        Boolean stackNotEmpty;
+        do {
+            stackNotEmpty = navController.popBackStack();
+        } while(stackNotEmpty);
+    }
 }
