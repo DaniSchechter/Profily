@@ -1,8 +1,8 @@
 package com.example.profily.Model;
 
-  import android.util.Log;
 
   import com.example.profily.Model.Schema.Comment.Comment;
+  import com.example.profily.Model.Schema.Notification.Notification;
   import com.example.profily.Model.Schema.Post.Post;
   import com.example.profily.Model.Schema.User.User;
   import com.google.firebase.auth.FirebaseAuth;
@@ -87,7 +87,7 @@ public class ModelFireBase {
 
     }
 
-    // =========== USER ===========
+    // =========== USERS ===========
 
     public String getConnectedUserId ()
     {
@@ -100,6 +100,40 @@ public class ModelFireBase {
 
     public void logOut () {
         mAuth.signOut();
+    }
+
+    // =========== NOTIFICATIONS ===========
+
+    public void getAllNotifications(final String userId, final int numOfNotifications, final Model.GetAllNotificationsListener listener) {
+        db.collection("notifications")
+                .whereEqualTo("effectedUserId", userId)
+                .orderBy("actionDateTime", Query.Direction.DESCENDING)
+                .limit(numOfNotifications)
+                .addSnapshotListener(
+                        (queryDocumentSnapshots, fireBaseException) -> {
+                                LinkedList<Notification> data = new LinkedList<>();
+                                if (fireBaseException != null) {
+                                    listener.onComplete(data);
+                                    return;
+                                }
+                                if (queryDocumentSnapshots != null) {
+                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                        Notification notification = doc.toObject(Notification.class);
+                                        data.add(notification);
+                                    }
+                                    listener.onComplete(data);
+                                }
+                        }
+                );
+    }
+
+
+    public void addNotification(Notification notification, final Model.AddNotificationListener listener) {
+        db.collection("notifications")
+                .document(notification.getNotificationId())
+                .set(notification)
+                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
+
     }
 
     // =========== PROFILE ===========

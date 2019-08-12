@@ -14,17 +14,12 @@ import com.example.profily.R;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Utils.DateTimeUtils;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapter.CommentRowViewHolder> {
 
-    private List<Comment> commentsList; //TODO maybe to delete
-
-    public CommentsListAdapter(Vector<Comment> commentsList) {
-        this.commentsList = commentsList;
-
-    }//TODO maybe to delete
+    private List<Comment> commentsList = new LinkedList<>();
 
     @NonNull
     @Override

@@ -1,17 +1,20 @@
 package com.example.profily.Model;
 
-import androidx.lifecycle.LiveData;
+import android.util.Log;
 
+import com.example.profily.Model.Schema.Action.Action;
+import com.example.profily.Model.Schema.Action.CommentAction;
+import com.example.profily.Model.Schema.Action.LikeAction;
+import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
+import com.example.profily.Model.Schema.Notification.Notification;
+import com.example.profily.Model.Schema.Notification.NotificationAsyncDao;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Model.Schema.User.UserAsyncDao;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,33 +27,6 @@ public class Model {
 
     private Model() {
         modelFirebase = new ModelFireBase();
-//
-//        List<User> users = new LinkedList<>();
-//        User user = new User("ZmVbTYnQaPbIdEsNeUrzUU4HK5f2", "a", "danon", "111111", "this is danon");
-//        users.add(user);
-//        addUser(users);
-//        List<Comment> comments = new LinkedList<Comment>();
-//        for (int i = 23; i < 32; i++) {
-//            Comment p = new Comment(
-//                    "comment" + i,
-//                    "good post, post" + i,
-//                    "userCreator" + i,
-//                    "lite" + i,
-//                    false,
-//                    new Date()
-//            );
-//            comments.add(p);
-//        }
-//        addAllComments(comments);
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-////                posts.add(p);
-////            }
-////            addAllPosts(posts);
-//        }
     }
 
     /*
@@ -154,12 +130,6 @@ public class Model {
                 CommentAsyncDao.addCommentsAndFetch(postId, numOfComments, cloudComments, comments -> listener.onComplete(comments));
             });
         });
-        //CommentAsyncDao.getAllComments(listener);
-    }
-
-    public void getCommentById(String commentId) {
-//        CommentAsyncDao.addComments(commentsList);
-        //modelFirebase.addComment(comment, listener);
     }
 
     public void addAllComments(List<Comment> commentsList) {
@@ -172,12 +142,42 @@ public class Model {
 //        });
     }
 
-    public void addCommentById(Comment comment) {
-//        CommentAsyncDao.addComments(commentsList);
-        //modelFirebase.addComment(comment, listener);
+    /*
+    -----------------------
+    NOTIFICATIONS
+    -----------------------
+     */
+
+    public interface GetAllNotificationsListener {
+        void onComplete(List<Notification> notifications);
     }
 
+    public interface AddNotificationListener {
+        void onComplete(boolean success);
+    }
 
+    public void getAllNotifications(final String userId, final int numOfNotifications, final GetAllNotificationsListener listener) {
+
+        // Get already cached data
+        NotificationAsyncDao.getAllNotifications(userId, numOfNotifications, cachedNotifications -> {
+            // Present it to the user
+            listener.onComplete(cachedNotifications);
+            // Get the newest data from the cloud
+            modelFirebase.getAllNotifications(userId, numOfNotifications, cloudNotifications -> {
+                // Update local DB
+                NotificationAsyncDao.addNotificationsAndFetch(userId, numOfNotifications, cloudNotifications, notifications ->
+                        listener.onComplete(notifications));
+            });
+        });
+    }
+
+    public void addAllNotifications(List<Notification> notificationsList) {
+//        NotificationAsyncDao.addNotifications(notificationsList);
+        for(Notification n: notificationsList){
+            modelFirebase.addNotification(n, result -> Log.d("TAG", String.valueOf(result)));
+        }
+
+    }
 
 //    public interface SaveImageListener{
 //        void onComplete(String url);

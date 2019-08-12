@@ -15,15 +15,12 @@ import com.example.profily.Model.Schema.Action.Action;
 import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Utils.DateTimeUtils;
 
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 public class NotificationsListAdapter extends RecyclerView.Adapter<NotificationsListAdapter.NotificationRowViewHolder>  {
 
-    private Vector<Notification> notificationsList; //TODO maybe to delete
-
-    public NotificationsListAdapter(Vector<Notification> notificationsList) {
-        this.notificationsList = notificationsList;
-    }//TODO maybe to delete
+    private List<Notification> notificationsList = new LinkedList<>();
 
     @NonNull
     @Override
@@ -34,8 +31,13 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
 
     @Override
     public void onBindViewHolder(@NonNull NotificationRowViewHolder holder, int position) {
-        Notification notification = notificationsList.elementAt(position);
+        Notification notification = notificationsList.get(position);
         holder.bind(notification);
+    }
+
+    void setNotifications(List<Notification> notificationsList){
+        this.notificationsList = notificationsList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -63,13 +65,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         }
 
         public void bind(Notification notification){
-            triggeringUserUsername.setText("Triggering User # " + notification.getTriggeringUserId()); // TODO change
+            triggeringUserUsername.setText(notification.getTriggeringUserId()); // TODO change
             description.setText(notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
 
             if(notification.getAction().getType() == Action.ActionType.Subscription) {
-                effectedUserImage.setImageDrawable(null);
+                effectedUserImage.setVisibility(View.GONE);
             } else {
+                effectedUserImage.setVisibility(View.VISIBLE); ;
                 // Navigate to the effected post, if it is not a subscription action
                 effectedUserImage.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
