@@ -2,6 +2,7 @@ package com.example.profily.Model.Schema.User;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
@@ -9,7 +10,7 @@ public class User {
 
     @PrimaryKey()
     @NonNull
-    private final String userId;
+    private String userId;
 
     private String profileImageURL;
     private String username;
@@ -17,13 +18,23 @@ public class User {
     private String description;
 
 
+    public User() { }
 
-    public User(String userId) {
+    @Ignore
+    public User(@NonNull String userId, String profileImageURL, String username, String password, String description) {
         this.userId = userId;
+        this.profileImageURL = profileImageURL;
+        this.username = username;
+        this.password = password;
+        this.description = description;
     }
 
     public String getUserId() {
         return userId;
+    }
+
+    public void setUserId(@NonNull String userId) {
+        this.userId = userId;
     }
 
     public String getProfileImageURL() {

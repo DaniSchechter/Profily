@@ -6,6 +6,8 @@ import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
+import com.example.profily.Model.Schema.User.User;
+import com.example.profily.Model.Schema.User.UserAsyncDao;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,19 +24,24 @@ public class Model {
 
     private Model() {
         modelFirebase = new ModelFireBase();
-
-//        List<Post> posts = new LinkedList<Post>();
-//        for (int i = 10; i < 22; i++) {
+//
+//        List<User> users = new LinkedList<>();
+//        User user = new User("ZmVbTYnQaPbIdEsNeUrzUU4HK5f2", "a", "danon", "111111", "this is danon");
+//        users.add(user);
+//        addUser(users);
+//        List<Comment> comments = new LinkedList<Comment>();
+//        for (int i = 23; i < 32; i++) {
 //            Comment p = new Comment(
 //                    "comment" + i,
 //                    "good post, post" + i,
-//                    "userCreator"+i,
+//                    "userCreator" + i,
 //                    "lite" + i,
 //                    false,
 //                    new Date()
 //            );
-//
-//            addAllComments(p);
+//            comments.add(p);
+//        }
+//        addAllComments(comments);
 //            try {
 //                Thread.sleep(1000);
 //            } catch (InterruptedException e) {
@@ -58,6 +65,10 @@ public class Model {
 
     public interface AddPostListener {
         void onComplete(boolean success);
+    }
+
+    public interface GetUserNameByIdListener{
+        void onComplete(String username);
     }
 
     public void getAllPosts(final int numOfPosts, final GetAllPostsListener listener) {
@@ -151,14 +162,14 @@ public class Model {
         //modelFirebase.addComment(comment, listener);
     }
 
-    public void addAllComments(Comment commentsList) {
-//        CommentAsyncDao.addComments(commentsList);
-        modelFirebase.addComment(commentsList, new AddCommentListener() {
-            @Override
-            public void onComplete(boolean success) {
-
-            }
-        });
+    public void addAllComments(List<Comment> commentsList) {
+        CommentAsyncDao.addComments(commentsList);
+//        modelFirebase.addComment(commentsList, new AddCommentListener() {
+//            @Override
+//            public void onComplete(boolean success) {
+//
+//            }
+//        });
     }
 
     public void addCommentById(Comment comment) {
@@ -176,4 +187,42 @@ public class Model {
 //    }
 
 
+    /*
+    -----------------------
+    PROFILE
+    -----------------------
+     */
+
+    public interface GetAllUserPostsListener {
+        void onComplete(List<Post> posts);
+    }
+
+    public void getAllUserPosts(String userId, final int numOfPosts, final GetAllUserPostsListener listener) {
+
+        // Get already cached data
+        UserAsyncDao.getAllUserPosts(userId, numOfPosts, cachedPosts -> {
+            // Present it to the user
+            listener.onComplete(cachedPosts);
+            // Get the newest data from the cloud
+            modelFirebase.getAllUserPosts(userId, numOfPosts, cloudPosts -> {
+                // Update local DB
+                UserAsyncDao.addUserPostsAndFetch(userId, numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
+            });
+        });
+        //PostAsyncDao.getAllPosts(listener);
+    }
+
+    public interface AddUserListener{
+        void onComplete(boolean success);
+    }
+
+    public void addUser(List<User> users){
+        UserAsyncDao.addUsers(users);
+//        modelFirebase.addUser(user, new AddUserListener() {
+//            @Override
+//            public void onComplete(boolean success) {
+//
+//            }
+//        });
+    }
 }
