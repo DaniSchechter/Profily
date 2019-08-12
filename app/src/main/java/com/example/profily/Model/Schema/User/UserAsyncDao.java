@@ -62,13 +62,13 @@ public class UserAsyncDao {
 
     public static void addUser(User user)
     {
-        new AsyncTask<List<Post>, Void, Void>(){
+        new AsyncTask<User, Void, Void>(){
 
             @Override
-            protected Void doInBackground(List<Post>... posts) {
-                ModelSql.getInstance().userDao().insertUser(user);
+            protected Void doInBackground(User... users) {
+                ModelSql.getInstance().userDao().insertUser(users[0]);
                 return null;
             }
-        }.execute();
+        }.execute(user);
     }
 }

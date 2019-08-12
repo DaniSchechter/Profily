@@ -11,22 +11,24 @@ public class User {
     @PrimaryKey()
     @NonNull
     private String userId;
-
     private String profileImageURL;
     private String username;
-    private String password;
     private String description;
+    private String firstName;
+    private String lastName;
 
 
     public User() { }
 
     @Ignore
-    public User(@NonNull String userId, String profileImageURL, String username, String password, String description) {
+    public User(@NonNull String userId, String profileImageURL, String username, String description,
+                String firstName, String lastName) {
         this.userId = userId;
         this.profileImageURL = profileImageURL;
         this.username = username;
-        this.password = password;
         this.description = description;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getUserId() {
@@ -53,19 +55,27 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() { //TODO remove unnecessary getters and setters
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

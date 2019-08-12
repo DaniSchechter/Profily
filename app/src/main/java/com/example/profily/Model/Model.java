@@ -216,13 +216,13 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void addUser(List<User> users){
-        UserAsyncDao.addUsers(users);
-//        modelFirebase.addUser(user, new AddUserListener() {
-//            @Override
-//            public void onComplete(boolean success) {
-//
-//            }
-//        });
+    public void addUser(User user){
+        modelFirebase.addUser(user, new AddUserListener() {
+            @Override
+            public void onComplete(boolean success) {
+
+            }
+        });
+        UserAsyncDao.addUser(user);
     }
 }

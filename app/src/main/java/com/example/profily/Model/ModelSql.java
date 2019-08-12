@@ -18,7 +18,7 @@ import com.example.profily.Model.Schema.User.UserDao;
 
 
 
-@Database(entities = {User.class, Post.class, Comment.class, Follow.class, Notification.class}, version = 31, exportSchema = false)
+@Database(entities = {User.class, Post.class, Comment.class, Follow.class, Notification.class}, version = 32, exportSchema = false)
 public abstract class ModelSql extends RoomDatabase {
     private static ModelSql instance;
 

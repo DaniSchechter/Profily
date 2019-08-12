@@ -1,6 +1,7 @@
 package com.example.profily.Authentication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -16,6 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.profily.MainActivity;
+import com.example.profily.Model.Model;
+import com.example.profily.Model.Schema.User.User;
+import com.example.profily.Model.Schema.User.UserAsyncDao;
 import com.example.profily.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -186,6 +191,17 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
+//            Intent intent = new Intent();
+//
+//            if (isSignUp)
+//            {
+//                intent.putExtra("signType", "signUp");
+//            }
+//            else{
+//                intent.putExtra("signType", "logIn");
+//            }
+////            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            setResult(RESULT_OK, intent);
             this.finish();
         }
         else {
@@ -204,8 +220,11 @@ public class AuthenticationActivity extends AppCompatActivity {
         changeMethodLink.setText("Sign up");
         submitButton.setText("Log In");
         changeMethodLink.setOnClickListener(view -> displaySignup());
-        submitButton.setOnClickListener(view -> signIn(
-                emailInput.getText().toString(), passwordInput.getText().toString())
+        submitButton.setOnClickListener(view -> {signIn(
+                emailInput.getText().toString(),
+                passwordInput.getText().toString());
+//                finish();
+            }
         );
         passwordVerificationInput.setVisibility(View.GONE);
         usernameInput.setVisibility(View.GONE);
@@ -227,6 +246,4 @@ public class AuthenticationActivity extends AppCompatActivity {
         firstNameInput.setVisibility(View.VISIBLE);
         lastNameInput.setVisibility(View.VISIBLE);
     }
-
-
 }

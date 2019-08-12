@@ -3,11 +3,13 @@ package com.example.profily;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.profily.Authentication.AuthenticationActivity;
 import com.example.profily.Model.Model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -47,4 +49,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 3){
+//            if(resultCode == RESULT_OK){
+//                String signType = data.getStringExtra("signType");
+//                if (signType.equals("signUp")){
+//                    Log.d("TAG", "is sign up");
+//                }
+//                else{
+//                    Log.d("TAG", "is not sign up");
+//                }
+//            }
+//        }
+//        else{
+//            Log.d("TAG", "" + requestCode);
+//        }
+//    }
 }

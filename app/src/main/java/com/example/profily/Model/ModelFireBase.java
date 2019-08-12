@@ -124,7 +124,7 @@ public class ModelFireBase {
     }
 
     public void addUser(User user, final Model.AddUserListener listener) {
-        db.collection("posts")
+        db.collection("users")
                 .document(user.getUserId())
                 .set(user)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
