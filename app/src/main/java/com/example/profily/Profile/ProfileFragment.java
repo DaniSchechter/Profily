@@ -5,10 +5,12 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.profily.Comments.CommentsViewModel;
 import com.example.profily.MainActivity;
 import com.example.profily.Model.Model;
 import com.example.profily.R;
@@ -33,6 +36,7 @@ import java.util.Vector;
 public class ProfileFragment extends Fragment {
 
     private Vector<Post> postsList = new Vector<>();
+    private ProfileViewModel profileViewModel;
     private Vector<String> followingList = new Vector<>();
     private Vector<String> followersList = new Vector<>();
 
@@ -45,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private ImageView profileImage;
     private Button editProfileBtn;
     private ImageButton logoutButton;
+    private ImageView loadMorePostsBtn;
 
     //counting vars
     private TextView profileNumOfFollowers;
@@ -101,10 +106,29 @@ public class ProfileFragment extends Fragment {
         adapter = new ImageGridAdapter(postsList);
         recyclerView.setAdapter(adapter);
 
+        String userId = null;
         if (getArguments() != null && getArguments().size()!=0)
         {
-            String userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
+            userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
+            Log.d("TAG", userId);
         }
+
+        if (userId == null)
+        {
+            userId = Model.instance.getConnectedUserId();
+        }
+
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        profileViewModel.getPosts(userId);
+
+        //TODO add logic for something like pagination
+        profileViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
+
+        loadMorePostsBtn = view.findViewById(R.id.add_more_posts_to_profile_btn);
+
+        String finaluserId = userId;
+        loadMorePostsBtn.setOnClickListener(viewOnClick -> profileViewModel.loadMorePosts(finaluserId));
+
 
 
         return view;

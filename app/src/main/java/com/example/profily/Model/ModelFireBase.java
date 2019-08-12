@@ -4,6 +4,7 @@ package com.example.profily.Model;
 
   import com.example.profily.Model.Schema.Comment.Comment;
   import com.example.profily.Model.Schema.Post.Post;
+  import com.example.profily.Model.Schema.User.User;
   import com.google.firebase.auth.FirebaseAuth;
   import com.google.firebase.auth.FirebaseUser;
   import com.google.firebase.firestore.FirebaseFirestore;
@@ -86,6 +87,8 @@ public class ModelFireBase {
 
     }
 
+    // =========== USER ===========
+
     public String getConnectedUserId ()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -97,5 +100,33 @@ public class ModelFireBase {
 
     public void logOut () {
         mAuth.signOut();
+    }
+
+    // =========== PROFILE ===========
+
+    public void getAllUserPosts(String userId, final int numOfPosts, final Model.GetAllUserPostsListener listener) {
+        db.collection("posts").whereEqualTo("userCreatorId", userId).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    LinkedList<Post> data = new LinkedList<>();
+                    if (fireBaseException != null) {
+                        listener.onComplete(data);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Post post = doc.toObject(Post.class);
+                            data.add(post);
+                        }
+                        listener.onComplete(data);
+                    }
+                }
+        );
+    }
+
+    public void addUser(User user, final Model.AddUserListener listener) {
+        db.collection("posts")
+                .document(user.getUserId())
+                .set(user)
+                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
     }
 }

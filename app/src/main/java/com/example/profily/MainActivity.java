@@ -3,7 +3,6 @@ package com.example.profily;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.profily.Authentication.AuthenticationActivity;
 import com.example.profily.Model.Model;
@@ -21,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this.getApplicationContext();
 
         if (Model.instance.getConnectedUserId() == null)
         {
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(menuItem.getItemId());
                 return true;
         });
-        context = this.getApplicationContext();
     }
 
     public void displayAuthenticationActivity(Boolean andFinish) {

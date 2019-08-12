@@ -9,15 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
+import java.util.List;
 import java.util.Vector;
 
 
 public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.ImageCellViewHolder> {
 
-    private Vector<Post> postsList; //TODO maybe to delete
+    private List<Post> postsList; //TODO maybe to delete
 
     public ImageGridAdapter(Vector<Post> postsList) {
         this.postsList = postsList;
@@ -32,13 +34,18 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
 
     @Override
     public void onBindViewHolder(@NonNull ImageCellViewHolder holder, int position) {
-        Post post = postsList.elementAt(position);
+        Post post = postsList.get(position);
         holder.bind(post);
     }
 
     @Override
     public int getItemCount() {
         return postsList.size();
+    }
+
+    void setPosts(List<Post> postsList){
+        this.postsList = postsList;
+        notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
 
     static class ImageCellViewHolder extends RecyclerView.ViewHolder {
