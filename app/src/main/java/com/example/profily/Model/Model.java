@@ -1,5 +1,11 @@
 package com.example.profily.Model;
 
+import android.util.Log;
+
+import com.example.profily.Model.Schema.Action.Action;
+import com.example.profily.Model.Schema.Action.CommentAction;
+import com.example.profily.Model.Schema.Action.LikeAction;
+import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
 import com.example.profily.Model.Schema.Notification.Notification;
@@ -7,6 +13,8 @@ import com.example.profily.Model.Schema.Notification.NotificationAsyncDao;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Model {
@@ -18,27 +26,40 @@ public class Model {
     private Model() {
         modelFirebase = new ModelFireBase();
 
-//        List<Post> posts = new LinkedList<Post>();
-//        for (int i = 10; i < 22; i++) {
-//            Comment p = new Comment(
-//                    "comment" + i,
-//                    "good post, post" + i,
-//                    "userCreator"+i,
-//                    "lite" + i,
-//                    false,
-//                    new Date()
+//        List<Notification> notifications = new LinkedList<>();
+//        for (int i = 0; i < 20; i++) {
+//            Action a;
+//            String user;
+//            if (i%3 == 0) {
+//                a = new LikeAction();
+//            } else if (i%3 == 1) {
+//                a = new CommentAction();
+//            } else {
+//                a = new SubscriptionAction();
+//            }
+//            if(i<15) {
+//                 user = "ZmVbTYnQaPbIdEsNeUrzUU4HK5f2";
+//            }
+//            else {
+//                user = "stamUser";
+//            }
+//            Notification n = new Notification(
+//                    "Notification #" + i,
+//                    a,
+//                    "Triggering #"+i,
+//                    user,
+//                    "Post #" + i,
+//                    new Date(),
+//                    false
 //            );
-//
-//            addAllComments(p);
+//            notifications.add(n);
 //            try {
 //                Thread.sleep(1000);
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-////                posts.add(p);
-////            }
-////            addAllPosts(posts);
 //        }
+//        addAllNotifications(notifications);
     }
 
     /*
@@ -170,6 +191,13 @@ public class Model {
         });
     }
 
+    public void addAllNotifications(List<Notification> notificationsList) {
+//        NotificationAsyncDao.addNotifications(notificationsList);
+        for(Notification n: notificationsList){
+            modelFirebase.addNotification(n, result -> Log.d("TAG", String.valueOf(result)));
+        }
+
+    }
 
 //    public interface SaveImageListener{
 //        void onComplete(String url);

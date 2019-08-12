@@ -1,5 +1,8 @@
 package com.example.profily.Model;
 
+  import android.util.Log;
+
+  import com.example.profily.Model.Schema.Action.Action;
   import com.example.profily.Model.Schema.Comment.Comment;
   import com.example.profily.Model.Schema.Notification.Notification;
   import com.example.profily.Model.Schema.Post.Post;
@@ -10,6 +13,7 @@ package com.example.profily.Model;
   import com.google.firebase.firestore.Query;
   import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+  import java.util.HashMap;
   import java.util.LinkedList;
 
 public class ModelFireBase {
@@ -126,10 +130,10 @@ public class ModelFireBase {
     }
 
 
-    public void addNotification(Notification notifiaction, final Model.AddNotificationListener listener) {
+    public void addNotification(Notification notification, final Model.AddNotificationListener listener) {
         db.collection("notifications")
-                .document(notifiaction.getNotificationId())
-                .set(notifiaction)
+                .document(notification.getNotificationId())
+                .set(notification)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
 
     }

@@ -1,18 +1,25 @@
 package com.example.profily.Model.Schema.Notification;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import com.example.profily.Model.Converters;
 import com.example.profily.Model.Schema.Action.Action;
+import com.example.profily.Model.Schema.Action.CommentAction;
+import com.example.profily.Model.Schema.Action.LikeAction;
+import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Post.Post;
 
 import java.util.Date;
+import java.util.HashMap;
 
 @Entity(tableName = "notifications")
 @TypeConverters(Converters.class)
@@ -20,7 +27,7 @@ public class Notification {
 
     @PrimaryKey()
     @NonNull
-    private final String notificationId;
+    private String notificationId;
 
     @Embedded
     private Action action;
@@ -38,14 +45,25 @@ public class Notification {
 
     private Boolean wasDeleted;
 
-
-
-    public Notification(String notificationId) {
+    @Ignore
+    public Notification(@NonNull String notificationId, Action action, String triggeringUserId, String effectedUserId, String effectedPostId, Date actionDateTime, Boolean wasDeleted) {
         this.notificationId = notificationId;
+        this.action = action;
+        this.triggeringUserId = triggeringUserId;
+        this.effectedUserId = effectedUserId;
+        this.effectedPostId = effectedPostId;
+        this.actionDateTime = actionDateTime;
+        this.wasDeleted = wasDeleted;
     }
+
+    public Notification() { }
 
     public String getNotificationId() {
         return notificationId;
+    }
+
+    public void setNotificationId(@NonNull String notificationId) {
+        this.notificationId = notificationId;
     }
 
     public Action getAction() {

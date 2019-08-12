@@ -2,13 +2,11 @@ package com.example.profily.Model;
 
 import androidx.room.TypeConverter;
 
-import com.google.android.gms.common.util.NumberUtils;
+import com.example.profily.Model.Schema.Action.Action;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class Converters {
@@ -30,5 +28,33 @@ public class Converters {
     @TypeConverter
     public static Long dateToLong(Date date) {
         return date == null ? null : date.getTime();
+    }
+
+    @TypeConverter
+    public static String ActionToString(Action.ActionType actionType) {
+        if (actionType == null) {
+            return null;
+        }
+        if (actionType == Action.ActionType.Comment) {
+            return Action.ActionType.Comment.toString();
+        } else if (actionType == Action.ActionType.Like) {
+            return Action.ActionType.Like.toString();
+        } else {
+            return Action.ActionType.Subscription.toString();
+        }
+    }
+
+    @TypeConverter
+    public static Action.ActionType stringToAction(String actionType) {
+        if (actionType == null) {
+            return null;
+        }
+        if (actionType.equals(Action.ActionType.Comment.toString())) {
+            return Action.ActionType.Comment;
+        } else if (actionType.equals(Action.ActionType.Like.toString())) {
+            return Action.ActionType.Like;
+        } else {
+            return Action.ActionType.Subscription;
+        }
     }
 }

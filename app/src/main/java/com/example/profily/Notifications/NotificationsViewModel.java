@@ -2,15 +2,16 @@ package com.example.profily.Notifications;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.Notification.Notification;
 
 import java.util.List;
 
-public class NotificationsViewModel {
+public class NotificationsViewModel extends ViewModel {
     private MutableLiveData<List<Notification>> notificationsListLiveData;
-    String currentUser;
+    private String currentUser;
     private static final int delta = 10;
     private int numOfNotifications = 10;
 
