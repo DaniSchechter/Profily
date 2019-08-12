@@ -12,6 +12,8 @@ import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Model.Schema.Notification.NotificationAsyncDao;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
+import com.example.profily.Model.Schema.User.User;
+import com.example.profily.Model.Schema.User.UserAsyncDao;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -25,41 +27,6 @@ public class Model {
 
     private Model() {
         modelFirebase = new ModelFireBase();
-
-//        List<Notification> notifications = new LinkedList<>();
-//        for (int i = 0; i < 20; i++) {
-//            Action a;
-//            String user;
-//            if (i%3 == 0) {
-//                a = new LikeAction();
-//            } else if (i%3 == 1) {
-//                a = new CommentAction();
-//            } else {
-//                a = new SubscriptionAction();
-//            }
-//            if(i<15) {
-//                 user = "ZmVbTYnQaPbIdEsNeUrzUU4HK5f2";
-//            }
-//            else {
-//                user = "stamUser";
-//            }
-//            Notification n = new Notification(
-//                    "Notification #" + i,
-//                    a,
-//                    "Triggering #"+i,
-//                    user,
-//                    "Post #" + i,
-//                    new Date(),
-//                    false
-//            );
-//            notifications.add(n);
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        addAllNotifications(notifications);
     }
 
     /*
@@ -74,6 +41,10 @@ public class Model {
 
     public interface AddPostListener {
         void onComplete(boolean success);
+    }
+
+    public interface GetUserNameByIdListener{
+        void onComplete(String username);
     }
 
     public void getAllPosts(final int numOfPosts, final GetAllPostsListener listener) {
@@ -161,6 +132,15 @@ public class Model {
         });
     }
 
+    public void addAllComments(List<Comment> commentsList) {
+        CommentAsyncDao.addComments(commentsList);
+//        modelFirebase.addComment(commentsList, new AddCommentListener() {
+//            @Override
+//            public void onComplete(boolean success) {
+//
+//            }
+//        });
+    }
 
     /*
     -----------------------
@@ -207,4 +187,42 @@ public class Model {
 //    }
 
 
+    /*
+    -----------------------
+    PROFILE
+    -----------------------
+     */
+
+    public interface GetAllUserPostsListener {
+        void onComplete(List<Post> posts);
+    }
+
+    public void getAllUserPosts(String userId, final int numOfPosts, final GetAllUserPostsListener listener) {
+
+        // Get already cached data
+        UserAsyncDao.getAllUserPosts(userId, numOfPosts, cachedPosts -> {
+            // Present it to the user
+            listener.onComplete(cachedPosts);
+            // Get the newest data from the cloud
+            modelFirebase.getAllUserPosts(userId, numOfPosts, cloudPosts -> {
+                // Update local DB
+                UserAsyncDao.addUserPostsAndFetch(userId, numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
+            });
+        });
+        //PostAsyncDao.getAllPosts(listener);
+    }
+
+    public interface AddUserListener{
+        void onComplete(boolean success);
+    }
+
+    public void addUser(List<User> users){
+        UserAsyncDao.addUsers(users);
+//        modelFirebase.addUser(user, new AddUserListener() {
+//            @Override
+//            public void onComplete(boolean success) {
+//
+//            }
+//        });
+    }
 }

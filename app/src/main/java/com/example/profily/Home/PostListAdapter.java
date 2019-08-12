@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
@@ -77,7 +78,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         }
 
         public void bind(Post post){
-            username.setText(post.getUserCreatorId()); //TODO change to the creators name
+            PostAsyncDao.getUserNameById(post.getUserCreatorId(), name -> {
+                username.setText(name);
+            });
             numOfLikes.setText(post.getLikedUsersList().size() + " likes");
             caption.setText(post.getCaption());
             comments.setText("View all " + post.getCommentsList().size() + " comments");
