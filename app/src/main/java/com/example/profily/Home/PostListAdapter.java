@@ -1,5 +1,6 @@
 package com.example.profily.Home;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,10 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
+import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
@@ -19,7 +22,7 @@ import java.util.List;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRowViewHolder> {
 
-    private List<Post> postsList; // Cached copy of posts
+    private List<PostLikeWrapper> postsList; // Cached copy of posts
 
     @NonNull
     @Override
@@ -46,7 +49,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         return 0;
     }
 
-    void setPosts(List<Post> postsList){
+    void setPosts(List<PostLikeWrapper> postsList){
         this.postsList = postsList;
         notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
@@ -77,18 +80,25 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
         }
 
-        public void bind(Post post){
-            PostAsyncDao.getUserNameById(post.getUserCreatorId(), name -> {
+        public void bind(PostLikeWrapper post){
+            PostAsyncDao.getUserNameById(post.post.getUserCreatorId(), name -> {
                 username.setText(name);
             });
-            numOfLikes.setText(post.getLikedUsersList().size() + " likes");
-            caption.setText(post.getCaption());
-            comments.setText("View all " + post.getCommentsList().size() + " comments");
+            numOfLikes.setText("3"); // TODO CHANGE TO A REAL NUMBER
+            caption.setText(post.post.getCaption());
+            comments.setText("View all 9999 comments");// TODO CHANGE TO A REAL NUMBER
+
+            if(post.likeIdForCurrentUser() == null)
+            {
+                likedImage.setImageResource(R.drawable.ic_heart_white);
+            } else {
+                likedImage.setImageResource(R.drawable.ic_heart_red);
+            }
 
             profileImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     HomeFragmentDirections.actionHomeFragmentToProfileFragment(
-                            post.getUserCreatorId()
+                            post.post.getUserCreatorId()
                     )
                 )
             );
@@ -96,18 +106,24 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             username.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     HomeFragmentDirections.actionHomeFragmentToProfileFragment(
-                            post.getUserCreatorId()
+                            post.post.getUserCreatorId()
                     )
                 )
             );
 
             comments.setOnClickListener(
-                    Navigation.createNavigateOnClickListener(
-                            HomeFragmentDirections.actionHomeFragmentToCommentsFragment(
-                                    post.getPostId()
-                            )
-                    )
+                Navigation.createNavigateOnClickListener(
+                        HomeFragmentDirections.actionHomeFragmentToCommentsFragment(
+                                post.post.getPostId()
+                        )
+                )
             );
+
+            likedImage.setOnClickListener(view -> {
+                Log.d("TAG", "liked");
+            });
+
+
         }
     }
 

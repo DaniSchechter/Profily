@@ -1,12 +1,16 @@
 package com.example.profily.Model;
 
 
+  import android.util.Log;
+
   import com.example.profily.Model.Schema.Comment.Comment;
+  import com.example.profily.Model.Schema.Like.Like;
   import com.example.profily.Model.Schema.Notification.Notification;
   import com.example.profily.Model.Schema.Post.Post;
   import com.example.profily.Model.Schema.User.User;
   import com.google.firebase.auth.FirebaseAuth;
   import com.google.firebase.auth.FirebaseUser;
+  import com.google.firebase.firestore.DocumentReference;
   import com.google.firebase.firestore.FirebaseFirestore;
   import com.google.firebase.firestore.FirebaseFirestoreSettings;
   import com.google.firebase.firestore.Query;
@@ -54,6 +58,64 @@ public class ModelFireBase {
         db.collection("posts")
                 .document(post.getPostId())
                 .set(post)
+                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
+    }
+
+    // =========== LIKES ===========
+
+    public void likeByUser(String postId, String userId, Model.FindLikeListener listener) {
+        db.collection("likes")
+                .whereEqualTo("postId", postId)
+                .whereEqualTo("likingUserId", userId)
+                .addSnapshotListener(
+                        (queryDocumentSnapshots, fireBaseException) -> {
+                                if (fireBaseException != null) {
+                                    listener.onComplete(null);
+                                    Log.d("TAG", "exception");
+                                    return;
+                                }
+                                if (queryDocumentSnapshots != null) {
+                                    if (queryDocumentSnapshots.size() == 0) {
+                                        listener.onComplete(null);
+                                    }
+                                    if (queryDocumentSnapshots.size() > 1) {
+                                        Log.w("TAG",
+                                                "found more than one like record for userId " + userId
+                                                        + ", postId " + postId);
+                                        listener.onComplete(null);
+                                    }
+
+                                    // Will run only once
+                                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                        Like like = doc.toObject(Like.class);
+                                        listener.onComplete(like.getLikeId());
+                                    }
+                                }
+                        }
+                );
+    }
+
+    public void like(String postId, String userId, Model.LikeOperationListener listener) {
+        db.collection("likes")
+                .add(new Like(postId, userId))
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        listener.onComplete(null);
+                        return;
+                    }
+                    DocumentReference result = task.getResult();
+                    if (result == null) {
+                        listener.onComplete(null);
+                        return;
+                    }
+                    listener.onComplete(result.getId());
+                });
+    }
+
+    public void unlike(String likeId, Model.UnlikeOperationListener listener) {
+        db.collection("likes")
+                .document(likeId)
+                .delete()
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
     }
 

@@ -10,9 +10,7 @@ import androidx.room.TypeConverters;
 import com.example.profily.Model.Converters;
 import com.example.profily.Model.Schema.User.User;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Entity(tableName = "posts")
 @TypeConverters(Converters.class)
@@ -28,10 +26,6 @@ public class Post {
     private String imageURL;
     private String caption;
 
-    // FK References
-    private List<String> likedUsersList;
-    private List<String> commentsList;
-
     // Control Fields
     private Boolean wasDeleted;
 
@@ -39,14 +33,11 @@ public class Post {
 
     @Ignore
     public Post(String postId, String userCreatorId, String imageURL, String caption,
-                List<String> likedUsersList, List<String> commentsList, Boolean wasDeleted,
-                Date createdDate) {
+                Boolean wasDeleted, Date createdDate) {
         this.postId = postId;
         this.userCreatorId = userCreatorId;
         this.imageURL = imageURL;
         this.caption = caption;
-        this.likedUsersList = likedUsersList;
-        this.commentsList = commentsList;
         this.wasDeleted = wasDeleted;
         this.createdDate = createdDate;
     }
@@ -83,22 +74,6 @@ public class Post {
 
     public void setCaption(String caption) {
         this.caption = caption;
-    }
-
-    public List<String> getLikedUsersList() {
-        return likedUsersList;
-    }
-
-    public void setLikedUsersList(List<String> likedUsersList) {
-        this.likedUsersList = likedUsersList;
-    }
-
-    public List<String> getCommentsList() {
-        return commentsList;
-    }
-
-    public void setCommentsList(List<String> commentsList) {
-        this.commentsList = commentsList;
     }
 
     public Boolean getWasDeleted() {

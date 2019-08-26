@@ -52,7 +52,10 @@ public class HomeFragment extends Fragment {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
 
         //TODO add logic for something like pagination
-        homeViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
+        homeViewModel.getPostsList().observe(this, list -> {
+
+            adapter.setPosts(list);
+        } );
 
         loadMorePostsBtn = view.findViewById(R.id.add_more_posts_btn);
 
