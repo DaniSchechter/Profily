@@ -1,6 +1,5 @@
 package com.example.profily.Model;
 
-
   import com.example.profily.Model.Schema.Comment.Comment;
   import com.example.profily.Model.Schema.Notification.Notification;
   import com.example.profily.Model.Schema.Post.Post;
@@ -49,6 +48,23 @@ public class ModelFireBase {
         );
     }
 
+    public void getPostById(final String postId, final Model.GetPostByIdListener listener) {
+        db.collection("posts")
+                .whereEqualTo("postId", postId).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    Post post = new Post();
+                    if (fireBaseException != null) {
+                        listener.onComplete(post);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        post = queryDocumentSnapshots.getDocuments().get(0).toObject(Post.class);
+                        listener.onComplete(post);
+                    }
+                }
+        );
+    }
+
 
     public void addPost(Post post, final Model.AddPostListener listener) {
         db.collection("posts")
@@ -89,7 +105,25 @@ public class ModelFireBase {
 
     // =========== USERS ===========
 
-    public String getConnectedUserId ()
+    public void getUserById(String userId, final Model.GetConnectedUserListener listener)
+    {
+        db.collection("users")
+                .whereEqualTo("userId", userId).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    User user = new User();
+                    if (fireBaseException != null) {
+                        listener.onComplete(user);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        user = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class);
+                        listener.onComplete(user);
+                    }
+                }
+        );
+    }
+
+    public String getUserById ()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -158,7 +192,7 @@ public class ModelFireBase {
     }
 
     public void addUser(User user, final Model.AddUserListener listener) {
-        db.collection("posts")
+        db.collection("users")
                 .document(user.getUserId())
                 .set(user)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));

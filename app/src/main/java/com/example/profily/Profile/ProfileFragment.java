@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +18,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.profily.Comments.CommentsViewModel;
 import com.example.profily.MainActivity;
 import com.example.profily.Model.Model;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Vector;
 
 
@@ -86,15 +82,7 @@ public class ProfileFragment extends Fragment {
 
         profileNumOfFollowers.setText("" + followersList.size());
         profileNumOfFollowing.setText("" + followingList.size());
-        profileNumOfPosts.setText("" + postsList.size());
-        profileUsername.setText("Alex");
-        // TODO add if user.description is "", add default description
-        profileDescription.setText("Alex - some text");
-        profileNumOfPosts.setText("" + postsList.size());
-        logoutButton.setOnClickListener(view1 -> {
-            Model.instance.logOut();
-            ((MainActivity)getActivity()).displayAuthenticationActivity(true);
-        });
+
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -110,7 +98,7 @@ public class ProfileFragment extends Fragment {
         if (getArguments() != null && getArguments().size()!=0)
         {
             userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
-            Log.d("TAG", userId);
+            Log.d("TAGUSER", userId);
         }
 
         if (userId == null)
@@ -120,9 +108,23 @@ public class ProfileFragment extends Fragment {
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         profileViewModel.getPosts(userId);
+        profileViewModel.populateUserDetails(userId);
+
+        logoutButton.setOnClickListener(view1 -> {
+            Model.instance.logOut();
+            ((MainActivity)getActivity()).displayAuthenticationActivity(false);
+        });
+
+        profileViewModel.getUser().observe(this, userData->{
+            profileUsername.setText(userData.getUsername());
+            profileDescription.setText(userData.getDescription());
+        });
 
         //TODO add logic for something like pagination
-        profileViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
+        profileViewModel.getPostsList().observe(this, list -> {
+            adapter.setPosts(list);
+            profileNumOfPosts.setText("" + list.size());
+        } );
 
         loadMorePostsBtn = view.findViewById(R.id.add_more_posts_to_profile_btn);
 

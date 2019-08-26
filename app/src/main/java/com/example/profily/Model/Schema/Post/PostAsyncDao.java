@@ -30,6 +30,24 @@ public class PostAsyncDao{
 
     }
 
+    public static void getPostById(final String postId, final Model.GetPostByIdListener listener){
+        new AsyncTask<String,Void,Post>(){
+
+            @Override
+            protected Post doInBackground(String... strings) {
+                return ModelSql.getInstance().postDao().getPostById(strings[0]);
+            }
+
+            @Override
+            protected void onPostExecute(Post data) {
+                super.onPostExecute(data);
+                if (listener != null) {
+                    listener.onComplete(data);
+                }
+            }
+        }.execute(postId);
+    }
+
     public static void getUserNameById(String userId, final Model.GetUserNameByIdListener listener)
     {
         new AsyncTask<String, Void, String>(){
@@ -78,7 +96,25 @@ public class PostAsyncDao{
                 }
             }
         }.execute(postsList);
+    }
 
 
+    public static void addPostAndFetch(Post post, final Model.GetPostByIdListener listener) {
+        new AsyncTask<Post, Void, Post>(){
+
+            @Override
+            protected Post doInBackground(Post... posts) {
+                ModelSql.getInstance().postDao().insertPost(posts[0]);
+                return ModelSql.getInstance().postDao().getPostById(post.getPostId());
+            }
+
+            @Override
+            protected void onPostExecute(Post post) {
+                super.onPostExecute(post);
+                if (listener != null) {
+                    listener.onComplete(post);
+                }
+            }
+        }.execute(post);
     }
 }
