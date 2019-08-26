@@ -5,11 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.MainActivity;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Utils.DateTimeUtils;
@@ -49,6 +51,10 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
         if (CommentsViewModel.checkDelete(comment)) {
             this.commentsList.remove(position);
             CommentsViewModel.deleteItem(comment);
+        }
+        else{
+            CharSequence text = "Cannot delete post";
+            Toast.makeText(MainActivity.context, text, Toast.LENGTH_SHORT).show();
         }
         notifyDataSetChanged();
 
