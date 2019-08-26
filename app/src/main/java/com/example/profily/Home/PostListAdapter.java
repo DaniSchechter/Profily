@@ -81,6 +81,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             PostAsyncDao.getUserNameById(post.getUserCreatorId(), name -> {
                 username.setText(name);
             });
+
             numOfLikes.setText(post.getLikedUsersList().size() + " likes");
             caption.setText(post.getCaption());
             comments.setText("View all " + post.getCommentsList().size() + " comments");

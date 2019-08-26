@@ -44,6 +44,16 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
         notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
 
+    public void deleteItem(int position) {
+        Comment comment = this.commentsList.get(position);
+        if (CommentsViewModel.checkDelete(comment)) {
+            this.commentsList.remove(position);
+            CommentsViewModel.deleteItem(comment);
+        }
+        notifyDataSetChanged();
+
+    }
+
 
     static class CommentRowViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,7 +75,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
         public void bind(Comment comment) {
 
-            commentatorUsername.setText("username " + comment.getUserId()); // TODO change
+            commentatorUsername.setText(comment.getUserCreatorId()); // TODO change
             commentDescription.setText(comment.getContent());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getCreatedDate()));
 

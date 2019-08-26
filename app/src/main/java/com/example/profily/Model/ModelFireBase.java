@@ -30,7 +30,7 @@ public class ModelFireBase {
     // =========== POSTS ===========
 
     public void getAllPosts(final int numOfPosts, final Model.GetAllPostsListener listener) {
-        db.collection("posts").orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
+        db.collection("posts").whereEqualTo("wasDeleted", false).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Post> data = new LinkedList<>();
                     if (fireBaseException != null) {
@@ -76,7 +76,7 @@ public class ModelFireBase {
     // =========== COMMENTS ===========
 
     public void getAllComments(final String postId, final int numOfComments, final Model.GetAllCommentsListener listener) {
-        db.collection("comments").whereEqualTo("postId", postId).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfComments).addSnapshotListener(
+        db.collection("comments").whereEqualTo("postId", postId).whereEqualTo("wasDeleted", false).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfComments).addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Comment> data = new LinkedList<>();
                     if (fireBaseException != null) {
@@ -96,12 +96,21 @@ public class ModelFireBase {
 
 
     public void addComment(Comment comment, final Model.AddCommentListener listener) {
+        String commentId = db.collection("comments").document().getId();
+        comment.setCommentId(commentId);
         db.collection("comments")
                 .document(comment.getCommentId())
                 .set(comment)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
 
     }
+
+    public void updateComment(Comment comment){
+        db.collection("comments")
+                .document(comment.getCommentId())
+                .set(comment);
+    }
+
 
     // =========== USERS ===========
 

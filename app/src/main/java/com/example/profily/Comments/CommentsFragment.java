@@ -6,14 +6,18 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.example.profily.Model.Model;
 import com.example.profily.R;
 
 
@@ -27,6 +31,8 @@ public class CommentsFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private CommentsListAdapter adapter;
     private ImageView loadMoreCommentsBtn;
+    private Button addNewCommentBtn;
+    private EditText commentBox;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -52,6 +58,9 @@ public class CommentsFragment extends Fragment {
         adapter = new CommentsListAdapter();
         recyclerView.setAdapter(adapter);
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteComment(adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         if (getArguments()!= null && getArguments().size()!=0)
         {
             String postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
@@ -63,9 +72,19 @@ public class CommentsFragment extends Fragment {
             commentsViewModel.getCommentsList().observe(this, list -> adapter.setComments(list) );
 
             loadMoreCommentsBtn = view.findViewById(R.id.add_more_comments_btn);
+            addNewCommentBtn = view.findViewById(R.id.save_comment_btn);
+            commentBox = view.findViewById(R.id.comment_text);
+
 
             String finalPostId = postId;
             loadMoreCommentsBtn.setOnClickListener(viewOnClick -> commentsViewModel.loadMoreComments(finalPostId));
+
+            addNewCommentBtn.setOnClickListener(viewOnClick -> {
+                if (!commentBox.getText().toString().equals("")){
+                    commentsViewModel.addNewComment(finalPostId, commentBox.getText().toString());
+                    commentBox.getText().clear();
+                }
+            });
         }
 
         return view;

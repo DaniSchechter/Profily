@@ -144,14 +144,20 @@ public class Model {
         });
     }
 
-    public void addAllComments(List<Comment> commentsList) {
-        CommentAsyncDao.addComments(commentsList);
-//        modelFirebase.addComment(commentsList, new AddCommentListener() {
-//            @Override
-//            public void onComplete(boolean success) {
-//
-//            }
-//        });
+    public void addComment(Comment comment) {
+//        CommentAsyncDao.addComment(comment);
+        modelFirebase.addComment(comment, new AddCommentListener() {
+            @Override
+            public void onComplete(boolean success) {
+
+            }
+        });
+    }
+
+    public void updateComment(Comment comment)
+    {
+        modelFirebase.updateComment(comment);
+        CommentAsyncDao.updateComment(comment);
     }
 
     /*
