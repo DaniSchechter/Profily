@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 
 import com.example.profily.Model.Converters;
 import com.example.profily.Model.Schema.User.User;
-import com.example.profily.Post.Post;
+import com.example.profily.Model.Schema.Post.Post;
 
 import java.util.Date;
 

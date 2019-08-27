@@ -28,7 +28,8 @@ public class Like {
     public Like(){}
 
     @Ignore
-    public Like(String postId, String likingUserId) {
+    public Like(String likeId, String postId, String likingUserId) {
+        this.likeId = likeId;
         this.postId = postId;
         this.likingUserId = likingUserId;
     }

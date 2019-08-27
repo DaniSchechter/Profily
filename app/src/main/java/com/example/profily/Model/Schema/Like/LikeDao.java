@@ -1,6 +1,8 @@
 package com.example.profily.Model.Schema.Like;
 
 import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 @Dao
@@ -11,8 +13,8 @@ public interface LikeDao {
     String likeByUser(String postId, String likingUserId);
 
     // Insert
-    @Query("INSERT INTO likes (likeId, postId, likingUserId) VALUES (:likeId, :postId, :likingUserId)")
-    void like(String likeId, String postId, String likingUserId);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void like(Like like);
 
     @Query("DELETE FROM likes WHERE likeId = :likeId ")
     void unlike(String likeId);

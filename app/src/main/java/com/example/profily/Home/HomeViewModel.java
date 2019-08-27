@@ -25,6 +25,7 @@ public class HomeViewModel extends ViewModel {
 
         // Get all posts async
         Model.instance.getAllPosts( numOfPosts, postsList -> {
+            Log.d("TAG", "------- Got posts, CLEARING POSTS LIST");
             postLikeWrappersList.clear();
 
             for(Post post: postsList) {
@@ -34,19 +35,18 @@ public class HomeViewModel extends ViewModel {
                 postLikeWrappersList.add(postLikeWrapper);
 
                 // Check in the DB if this post is liked
-                Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId -> {
-                    postLikeWrapper.setLikeIdForCurrentUser(likeId);
-                    // ---------------- DEBUGGING
-                    Log.d("TAG", "Applying To VM's list: postID: " + post.getPostId() +" likeID: "+ likeId);
-                    Log.d("TAG","******** Current VM's list *****");
-                    for (PostLikeWrapper p : postLikeWrappersList) {
-                        Log.d("TAG", p.post.getPostId() + " , " + p.likeIdForCurrentUser());
-                    }
+                Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId ->  {
+                        postLikeWrapper.setLikeIdForCurrentUser(likeId);
+                        this.postsListLiveData.setValue(postLikeWrappersList);
+
+                        // ---------------- DEBUGGING
+                        Log.d("TAG", "Applying To VM's list: postID: " + post.getPostId() +" likeID: "+ likeId);
+                        Log.d("TAG","******** Current VM's list ********");
+                        for (PostLikeWrapper p : postLikeWrappersList) {
+                            Log.d("TAG", p.post.getPostId() + " , " + p.likeIdForCurrentUser());
+                        }
                 });
-
             }
-
-            this.postsListLiveData.setValue(postLikeWrappersList);
         });
     }
 
@@ -80,7 +80,7 @@ public class HomeViewModel extends ViewModel {
         return postLikeWrappersList;
     }
 
-    public void likeToggle(PostLikeWrapper postLikeWrapper) {
+    public static void likeToggle(PostLikeWrapper postLikeWrapper) {
         if(postLikeWrapper.likeIdForCurrentUser() == null ) {
             Model.instance.like(postLikeWrapper.post.getPostId(), Model.instance.getConnectedUserId(), likeId -> {
                 postLikeWrapper.setLikeIdForCurrentUser(likeId);

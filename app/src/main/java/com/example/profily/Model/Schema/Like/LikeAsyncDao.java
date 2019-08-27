@@ -30,14 +30,14 @@ public class LikeAsyncDao {
         new AsyncTask<Void, Void, Void>(){
             @Override
             protected Void doInBackground(Void... voids) {
-                ModelSql.getInstance().likeDao().like(likeId, postId, likingUserId);
+                ModelSql.getInstance().likeDao().like(new Like(likeId, postId, likingUserId));
                 return null;
             }
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
-                listener.onComplete("");
+                listener.onComplete(" ");
             }
         }.execute();
     }

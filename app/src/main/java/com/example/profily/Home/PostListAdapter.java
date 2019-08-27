@@ -1,6 +1,5 @@
 package com.example.profily.Home;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,14 +7,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Post.Post;
 
 import java.util.List;
 
@@ -50,8 +47,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
     }
 
     void setPosts(List<PostLikeWrapper> postsList){
-        this.postsList = postsList;
-        notifyDataSetChanged(); //TODO need to check exactly what this function does
+        if(postsList != null && postsList.size() >0 ) {
+            this.postsList = postsList;
+            notifyDataSetChanged(); //TODO need to check exactly what this function does
+        }
     }
 
     static class PostRowViewHolder extends RecyclerView.ViewHolder {
@@ -64,6 +63,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         TextView numOfLikes;
         TextView caption;
         TextView comments;
+        final String cRedImageTag = "red_image_tag";
+        final String cWhiteImageTag = "white_image_tag";
 
         public PostRowViewHolder(@NonNull View itemView) {
 
@@ -91,8 +92,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             if(post.likeIdForCurrentUser() == null)
             {
                 likedImage.setImageResource(R.drawable.ic_heart_white);
-            } else {
+                likedImage.setTag(cWhiteImageTag);
+            } else if( ! String.valueOf(likedImage.getTag()).equals(cRedImageTag)){
                 likedImage.setImageResource(R.drawable.ic_heart_red);
+                likedImage.setTag(cRedImageTag);
             }
 
             profileImage.setOnClickListener(
@@ -119,10 +122,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
                 )
             );
 
-            likedImage.setOnClickListener(view -> {
-                Log.d("TAG", "liked");
-            });
-
+            likedImage.setOnClickListener(likedImage -> HomeViewModel.likeToggle(post));
 
         }
     }

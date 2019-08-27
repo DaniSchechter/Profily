@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this.getApplicationContext();
-
+        
         if (Model.instance.getConnectedUserId() == null)
         {
             displayAuthenticationActivity(false);

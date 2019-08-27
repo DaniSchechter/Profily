@@ -53,19 +53,33 @@ public class Model {
         // Get already cached data
         PostAsyncDao.getAllPosts(numOfPosts, cachedPosts -> {
             // Present it to the user
+            Log.d("TAG", "------- STARTING DISPLAYING LOCAL POSTS ------");
             listener.onComplete(cachedPosts);
             // Get the newest data from the cloud
             modelFirebase.getAllPosts(numOfPosts, cloudPosts -> {
                 // Update local DB
+                Log.d("TAG", "------- STARTING DISPLAYING REMOTE POSTS ------");
                 PostAsyncDao.addPostsAndFetch(numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
             });
         });
         //PostAsyncDao.getAllPosts(listener);
     }
 
-    public void getPostById(String postId) {
-//        PostAsyncDao.addPosts(postsList);
-        //modelFirebase.addPost(post, listener);
+    public interface  GetPostByIdListener{
+        void onComplete(Post post);
+    }
+
+    public void getPostById(String postId, final GetPostByIdListener listener) {
+        // Get already cached data
+        PostAsyncDao.getPostById(postId, cachedPost -> {
+            // Present it to the user
+            listener.onComplete(cachedPost);
+            // Get the newest data from the cloud
+            modelFirebase.getPostById(postId, cloudPost -> {
+                // Update local DB
+                PostAsyncDao.addPostAndFetch(cloudPost, post -> listener.onComplete(post));
+            });
+        });
     }
 
     public void addAllPosts(List<Post> postsList) {
@@ -108,14 +122,14 @@ public class Model {
     public void findLike(String postId, String userId, FindLikeListener listener) {
         // Get already cached data
         LikeAsyncDao.likeByUser(postId, userId, localLikeId -> {
-            Log.d("TAG", "============== NEW ==============");
+            Log.d("TAG", "============== FINISHED SEARCHING NEW LIKE ==============");
             Log.d("TAG", "post: " + postId + ", user: " + userId);
             Log.d("TAG", "LIKE local : " + localLikeId );
             // Present it to the user
             listener.onComplete(localLikeId);
             // Get the newest data from the cloud
             modelFirebase.likeByUser(postId, userId, cloudLikeId -> {
-                Log.d("TAG", "LIKE remote: " +postId + ": "+ cloudLikeId );
+                Log.d("TAG", "LIKE remote of user: "+ userId + ", postID: " +postId + ": "+ cloudLikeId );
                 // Update local DB
                 if (
                         (localLikeId == null && cloudLikeId != null) ||
@@ -166,7 +180,7 @@ public class Model {
      */
 
     public String getConnectedUserId() {
-        return modelFirebase.getConnectedUserId();
+        return modelFirebase.getUserById();
     }
 
     public void logOut() {
@@ -292,13 +306,38 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void addUser(List<User> users){
-        UserAsyncDao.addUsers(users);
-//        modelFirebase.addUser(user, new AddUserListener() {
-//            @Override
-//            public void onComplete(boolean success) {
-//
-//            }
-//        });
+    public void addUser(User user){
+        modelFirebase.addUser(user, new AddUserListener() {
+            @Override
+            public void onComplete(boolean success) {
+
+            }
+        });
+        UserAsyncDao.addUser(user);
+    }
+
+    public interface GetConnectedUserListener{
+        void onComplete(User user);
+    }
+
+    public void getUserById(String userId, final GetConnectedUserListener listener) {
+
+        // Get already cached data
+        UserAsyncDao.getUserById(userId, cachedUser -> {
+            // Present it to the user
+            if (cachedUser != null){
+                listener.onComplete(cachedUser);
+            }
+            // Get the newest data from the cloud
+            modelFirebase.getUserById(userId, cloudUser -> {
+                // Update local DB
+                UserAsyncDao.addUserDetailsAndFetch(userId, cloudUser, posts -> listener.onComplete(posts));
+            });
+        });
+        //PostAsyncDao.getAllPosts(listener);
+    }
+
+    public interface GetPostCountListener{
+        void onComplete(Integer numOfPosts);
     }
 }

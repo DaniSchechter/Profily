@@ -1,8 +1,6 @@
 package com.example.profily.Model;
 
-
   import android.util.Log;
-
   import com.example.profily.Model.Schema.Comment.Comment;
   import com.example.profily.Model.Schema.Like.Like;
   import com.example.profily.Model.Schema.Notification.Notification;
@@ -53,6 +51,23 @@ public class ModelFireBase {
         );
     }
 
+    public void getPostById(final String postId, final Model.GetPostByIdListener listener) {
+        db.collection("posts")
+                .whereEqualTo("postId", postId).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    Post post = new Post();
+                    if (fireBaseException != null) {
+                        listener.onComplete(post);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        post = queryDocumentSnapshots.getDocuments().get(0).toObject(Post.class);
+                        listener.onComplete(post);
+                    }
+                }
+        );
+    }
+
 
     public void addPost(Post post, final Model.AddPostListener listener) {
         db.collection("posts")
@@ -70,25 +85,29 @@ public class ModelFireBase {
                 .addSnapshotListener(
                         (queryDocumentSnapshots, fireBaseException) -> {
                                 if (fireBaseException != null) {
+                                    Log.d("TAG", "ERROR: " + fireBaseException.toString());
                                     listener.onComplete(null);
-                                    Log.d("TAG", "exception");
                                     return;
                                 }
                                 if (queryDocumentSnapshots != null) {
                                     if (queryDocumentSnapshots.size() == 0) {
+                                        Log.d("TAG", "Didn't find any like matching the params");
                                         listener.onComplete(null);
+                                        return;
                                     }
                                     if (queryDocumentSnapshots.size() > 1) {
                                         Log.w("TAG",
                                                 "found more than one like record for userId " + userId
                                                         + ", postId " + postId);
                                         listener.onComplete(null);
+                                        return;
                                     }
 
                                     // Will run only once
                                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                         Like like = doc.toObject(Like.class);
                                         listener.onComplete(like.getLikeId());
+                                        return;
                                     }
                                 }
                         }
@@ -96,19 +115,20 @@ public class ModelFireBase {
     }
 
     public void like(String postId, String userId, Model.LikeOperationListener listener) {
+        String likeId = db.collection("likes").document().getId();
         db.collection("likes")
-                .add(new Like(postId, userId))
+                .document(likeId)
+                .set(new Like(likeId, postId, userId))
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         listener.onComplete(null);
                         return;
                     }
-                    DocumentReference result = task.getResult();
-                    if (result == null) {
+                    if (!task.isSuccessful()) {
                         listener.onComplete(null);
                         return;
                     }
-                    listener.onComplete(result.getId());
+                    listener.onComplete(likeId);
                 });
     }
 
@@ -116,7 +136,9 @@ public class ModelFireBase {
         db.collection("likes")
                 .document(likeId)
                 .delete()
-                .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
+                .addOnCompleteListener(task -> {
+                    listener.onComplete(task.isSuccessful());
+                });
     }
 
     // =========== COMMENTS ===========
@@ -151,7 +173,25 @@ public class ModelFireBase {
 
     // =========== USERS ===========
 
-    public String getConnectedUserId ()
+    public void getUserById(String userId, final Model.GetConnectedUserListener listener)
+    {
+        db.collection("users")
+                .whereEqualTo("userId", userId).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    User user = new User();
+                    if (fireBaseException != null) {
+                        listener.onComplete(user);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        user = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class);
+                        listener.onComplete(user);
+                    }
+                }
+        );
+    }
+
+    public String getUserById ()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -220,7 +260,7 @@ public class ModelFireBase {
     }
 
     public void addUser(User user, final Model.AddUserListener listener) {
-        db.collection("posts")
+        db.collection("users")
                 .document(user.getUserId())
                 .set(user)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
