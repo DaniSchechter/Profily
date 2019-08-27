@@ -5,11 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.MainActivity;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Utils.DateTimeUtils;
@@ -44,6 +46,20 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
         notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
 
+    public void deleteItem(int position) {
+        Comment comment = this.commentsList.get(position);
+        if (CommentsViewModel.checkDelete(comment)) {
+            this.commentsList.remove(position);
+            CommentsViewModel.deleteItem(comment);
+        }
+        else{
+            CharSequence text = "Cannot delete post";
+            Toast.makeText(MainActivity.context, text, Toast.LENGTH_SHORT).show();
+        }
+        notifyDataSetChanged();
+
+    }
+
 
     static class CommentRowViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,7 +81,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
         public void bind(Comment comment) {
 
-            commentatorUsername.setText("username " + comment.getUserId()); // TODO change
+            commentatorUsername.setText(comment.getUserCreatorId()); // TODO change
             commentDescription.setText(comment.getContent());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getCreatedDate()));
 

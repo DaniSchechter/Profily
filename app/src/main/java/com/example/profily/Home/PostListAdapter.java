@@ -98,6 +98,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
                 likedImage.setTag(cRedImageTag);
             }
 
+
             profileImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     HomeFragmentDirections.actionHomeFragmentToProfileFragment(

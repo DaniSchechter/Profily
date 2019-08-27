@@ -27,15 +27,15 @@ public class CommentAsyncDao {
 
     }
 
-    public static void addComments(List<Comment> commentsList) {
-        new AsyncTask<List<Comment>, Void, Void>(){
+    public static void addComment(Comment comment) {
+        new AsyncTask<Comment, Void, Void>(){
 
             @Override
-            protected Void doInBackground(List<Comment>... comments) {
-                ModelSql.getInstance().commentDao().insertComments(comments[0]);
+            protected Void doInBackground(Comment... comment) {
+                ModelSql.getInstance().commentDao().insertComment(comment[0]);
                 return null;
             }
-        }.execute(commentsList);
+        }.execute(comment);
 
     }
 
@@ -56,7 +56,16 @@ public class CommentAsyncDao {
                 }
             }
         }.execute(commentsList);
+    }
 
+    public static void updateComment(Comment comment){
+        new AsyncTask<Comment, Void, Void>(){
 
+            @Override
+            protected Void doInBackground(Comment... comments) {
+                ModelSql.getInstance().commentDao().insertComment(comments[0]);
+                return null;
+            }
+        }.execute(comment);
     }
 }

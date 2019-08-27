@@ -91,4 +91,5 @@ public class Post {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
+
 }
