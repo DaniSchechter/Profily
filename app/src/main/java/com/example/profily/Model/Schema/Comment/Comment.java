@@ -35,15 +35,12 @@ public class Comment {
 
     private Date createdDate;
 
-
-
     public Comment() {
     }
 
     @Ignore
-    public Comment(@NonNull String commentId, String content,
+    public Comment(String content,
                    String userCreatorId, String postId, Boolean wasDeleted, Date createdDate) {
-        this.commentId = commentId;
         this.content = content;
         this.userCreatorId = userCreatorId;
         this.postId = postId;
