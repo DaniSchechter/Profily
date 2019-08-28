@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import com.example.profily.R;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.User.UserListAdapter;
 
-import java.util.Locale;
 import java.util.Vector;
 
 
@@ -96,7 +94,6 @@ public class SearchFragment extends Fragment {
     private void searchForMatch(String keyword){
         //update the users list view
         if(keyword.length() != 0){
-            Log.d("SEARCH====", keyword);
             searchViewModel.getUsersByName(keyword);
             searchViewModel.getUsersList().observe(this, list -> adapter.setUsers(list) );
         }
