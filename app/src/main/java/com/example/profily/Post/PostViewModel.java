@@ -23,11 +23,17 @@ public class PostViewModel extends ViewModel {
         // Get all posts async
         Model.instance.getPostById( postId, post -> {
 
-            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null);
+            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null, null);
 
             // Check in the DB if this post is liked
             Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId ->  {
                 postLikeWrapper.setLikeIdForCurrentUser(likeId);
+                this.postLiveData.setValue(postLikeWrapper);
+            });
+
+            // Check in the DB if this post is liked
+            Model.instance.getUserNameById(post.getUserCreatorId(), userName ->  {
+                postLikeWrapper.setUsernameForCurrentUser(userName);
                 this.postLiveData.setValue(postLikeWrapper);
             });
         });

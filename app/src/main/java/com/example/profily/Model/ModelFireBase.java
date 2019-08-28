@@ -235,6 +235,24 @@ public class ModelFireBase {
         return user.getUid();
     }
 
+    public void getUserNameById(String userId, final Model.GetUserNameByIdListener listener)
+    {
+        db.collection("users")
+                .whereEqualTo("userId", userId).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    String username = null;
+                    if (fireBaseException != null) {
+                        listener.onComplete(username);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        username = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class).getUsername();
+                        listener.onComplete(username);
+                    }
+                }
+        );
+    }
+
     public void logOut () {
         mAuth.signOut();
     }
