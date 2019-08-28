@@ -108,7 +108,7 @@ public class UserAsyncDao {
                     listener.onComplete(user);
                 }
             }
-        }.execute();
+        }.execute(userId);
     }
 
     public static void getPostCount(String userId, final Model.GetPostCountListener listener)

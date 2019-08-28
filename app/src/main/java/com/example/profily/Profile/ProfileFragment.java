@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,8 +49,6 @@ public class ProfileFragment extends Fragment {
     private ImageView loadMorePostsBtn;
 
     //counting vars
-    private TextView profileNumOfFollowers;
-    private TextView profileNumOfFollowing;
     private TextView profileNumOfPosts;
     private GridLayoutManager layoutManager;
 
@@ -71,18 +70,10 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         profileUsername = view.findViewById(R.id.profile_username);
         profileDescription = view.findViewById(R.id.profile_description);
-        profileNumOfFollowers = view.findViewById(R.id.profile_followers_count);
-        profileNumOfFollowing = view.findViewById(R.id.profile_following_count);
         profileNumOfPosts = view.findViewById(R.id.profile_posts_count);
         profileImage = view.findViewById(R.id.profile_image);
         editProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
         logoutButton = view.findViewById(R.id.profile_logout);
-
-
-
-        profileNumOfFollowers.setText("" + followersList.size());
-        profileNumOfFollowing.setText("" + followingList.size());
-
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -106,6 +97,14 @@ public class ProfileFragment extends Fragment {
             userId = Model.instance.getConnectedUserId();
         }
 
+        if (userId.equals(Model.instance.getConnectedUserId())){
+            editProfileBtn.setVisibility(View.VISIBLE);
+        }
+        else{
+            editProfileBtn.setVisibility(View.INVISIBLE);
+        }
+
+
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         profileViewModel.getPosts(userId);
         profileViewModel.populateUserDetails(userId);
@@ -114,6 +113,12 @@ public class ProfileFragment extends Fragment {
             Model.instance.logOut();
             ((MainActivity)getActivity()).displayAuthenticationActivity(false);
         });
+
+        editProfileBtn.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                        ProfileFragmentDirections.actionProfileFragmentToEditProfileFragment(userId)
+                )
+        );
 
         profileViewModel.getUser().observe(this, userData->{
             profileUsername.setText(userData.getUsername());
