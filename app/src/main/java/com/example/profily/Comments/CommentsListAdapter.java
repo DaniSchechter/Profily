@@ -12,8 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.MainActivity;
+import com.example.profily.Model.Schema.Comment.CommentWrapper;
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Utils.DateTimeUtils;
 
 import java.util.LinkedList;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapter.CommentRowViewHolder> {
 
-    private List<Comment> commentsList = new LinkedList<>();
+    private List<CommentWrapper> commentsList = new LinkedList<>();
 
     @NonNull
     @Override
@@ -32,7 +32,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull CommentRowViewHolder holder, int position) {
-        Comment comment = commentsList.get(position);
+        CommentWrapper comment = commentsList.get(position);
         holder.bind(comment);
     }
 
@@ -41,13 +41,13 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
         return commentsList.size();
     }
 
-    void setComments(List<Comment> commentsList){
+    void setComments(List<CommentWrapper> commentsList){
         this.commentsList = commentsList;
         notifyDataSetChanged(); //TODO need to check exactly what this function does
     }
 
     public void deleteItem(int position) {
-        Comment comment = this.commentsList.get(position);
+        CommentWrapper comment = this.commentsList.get(position);
         if (CommentsViewModel.checkDelete(comment)) {
             this.commentsList.remove(position);
             CommentsViewModel.deleteItem(comment);
@@ -79,16 +79,16 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
 
         }
 
-        public void bind(Comment comment) {
+        public void bind(CommentWrapper comment) {
 
-            commentatorUsername.setText(comment.getUserCreatorId()); // TODO change
-            commentDescription.setText(comment.getContent());
-            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.getCreatedDate()));
+            commentatorUsername.setText(comment.usernameForCurrentcomment()); // TODO change
+            commentDescription.setText(comment.comment.getContent());
+            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.comment.getCreatedDate()));
 
             commentatorUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     CommentsFragmentDirections.actionCommentsFragmentToProfileFragment(
-                        comment.getUserId()
+                        comment.comment.getUserId()
                     )
                 )
             );
@@ -96,7 +96,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
             commentatorImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     CommentsFragmentDirections.actionCommentsFragmentToProfileFragment(
-                            comment.getUserId()
+                            comment.comment.getUserId()
                     )
                 )
             );
