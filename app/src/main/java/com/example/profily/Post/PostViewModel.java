@@ -8,10 +8,11 @@ import com.example.profily.Model.Schema.Post.Post;
 
 
 import com.example.profily.Model.Model;
+import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 
 public class PostViewModel extends ViewModel {
 
-    private MutableLiveData<Post> postLiveData;
+    private MutableLiveData<PostLikeWrapper> postLiveData;
 
     public PostViewModel() {
 
@@ -20,10 +21,19 @@ public class PostViewModel extends ViewModel {
 
     public void getPost(String postId){
         // Get all posts async
-        Model.instance.getPostById( postId, postData -> this.postLiveData.setValue(postData));
+        Model.instance.getPostById( postId, post -> {
+
+            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null);
+
+            // Check in the DB if this post is liked
+            Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId ->  {
+                postLikeWrapper.setLikeIdForCurrentUser(likeId);
+                this.postLiveData.setValue(postLikeWrapper);
+            });
+        });
     }
 
-    public LiveData<Post> getPost() {
+    public LiveData<PostLikeWrapper> getPost() {
         return this.postLiveData;
     }
 }

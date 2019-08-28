@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.profily.Home.HomeFragmentDirections;
+import com.example.profily.Home.HomeViewModel;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Profile.ProfileViewModel;
 import com.example.profily.R;
@@ -35,9 +36,10 @@ public class Post extends Fragment {
 
     private ProfileViewModel profileViewModel;
 
-
     private PostViewModel postViewModel;
 
+    private final String cRedImageTag = "red_image_tag";
+    private final String cWhiteImageTag = "white_image_tag";
 
     public Post() {
         // Required empty public constructor
@@ -60,33 +62,45 @@ public class Post extends Fragment {
         caption = view.findViewById(R.id.post_caption);
         comments = view.findViewById(R.id.post_comments_link);
 
-
-        String postId = null;
-        if (getArguments() != null && getArguments().size()!=0)
+        // Make sure that a parameter PostId was passed
+        if (getArguments() == null || getArguments().size()==0)
         {
-            postId = PostArgs.fromBundle(getArguments()).getPostId();
+            return view;
         }
-        if (postId != null)
-        {
-            postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
-            postViewModel.getPost(postId);
 
-            postViewModel.getPost().observe(this, post->{
-                caption.setText(post.getCaption());
-                numOfLikes.setText("" + 0);
-                PostAsyncDao.getUserNameById(post.getUserCreatorId(), name -> {
-                    username.setText(name);
-                });
-                comments.setText("View all " + post.getCommentsList().size() + " comments");
-                comments.setOnClickListener(
-                        Navigation.createNavigateOnClickListener(
-                                PostDirections.actionPostToCommentsFragment(
-                                        post.getPostId()
-                                )
-                        )
-                );
+        String postId = PostArgs.fromBundle(getArguments()).getPostId();
+
+        postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+        postViewModel.getPost(postId);
+
+        postViewModel.getPost().observe(this, post->{
+
+            caption.setText(post.post.getCaption());
+            numOfLikes.setText("" + 0);
+            PostAsyncDao.getUserNameById(post.post.getUserCreatorId(), name -> {
+                username.setText(name);
             });
-        }
+            comments.setText("View all 4 comments");
+            comments.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                            PostDirections.actionPostToCommentsFragment(
+                                    post.post.getPostId()
+                            )
+                    )
+            );
+
+            if(post.likeIdForCurrentUser() == null)
+            {
+                likedImage.setImageResource(R.drawable.ic_heart_white);
+                likedImage.setTag(cWhiteImageTag);
+            } else if( ! String.valueOf(likedImage.getTag()).equals(cRedImageTag)){
+                likedImage.setImageResource(R.drawable.ic_heart_red);
+                likedImage.setTag(cRedImageTag);
+            }
+
+            likedImage.setOnClickListener(likedImage -> HomeViewModel.likeToggle(post));
+
+        });
 
         return view;
     }

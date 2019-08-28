@@ -11,15 +11,15 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
+import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Post.Post;
 
 import java.util.List;
 
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRowViewHolder> {
 
-    private List<Post> postsList; // Cached copy of posts
+    private List<PostLikeWrapper> postsList; // Cached copy of posts
 
     @NonNull
     @Override
@@ -46,9 +46,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         return 0;
     }
 
-    void setPosts(List<Post> postsList){
-        this.postsList = postsList;
-        notifyDataSetChanged(); //TODO need to check exactly what this function does
+    void setPosts(List<PostLikeWrapper> postsList){
+        if(postsList != null && postsList.size() >0 ) {
+            this.postsList = postsList;
+            notifyDataSetChanged(); //TODO need to check exactly what this function does
+        }
     }
 
     static class PostRowViewHolder extends RecyclerView.ViewHolder {
@@ -61,6 +63,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         TextView numOfLikes;
         TextView caption;
         TextView comments;
+        final String cRedImageTag = "red_image_tag";
+        final String cWhiteImageTag = "white_image_tag";
 
         public PostRowViewHolder(@NonNull View itemView) {
 
@@ -77,19 +81,28 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
         }
 
-        public void bind(Post post){
-            PostAsyncDao.getUserNameById(post.getUserCreatorId(), name -> {
+        public void bind(PostLikeWrapper post){
+            PostAsyncDao.getUserNameById(post.post.getUserCreatorId(), name -> {
                 username.setText(name);
             });
+            numOfLikes.setText("3"); // TODO CHANGE TO A REAL NUMBER
+            caption.setText(post.post.getCaption());
+            comments.setText("View all 9999 comments");// TODO CHANGE TO A REAL NUMBER
 
-            numOfLikes.setText(post.getLikedUsersList().size() + " likes");
-            caption.setText(post.getCaption());
-            comments.setText("View all " + post.getCommentsList().size() + " comments");
+            if(post.likeIdForCurrentUser() == null)
+            {
+                likedImage.setImageResource(R.drawable.ic_heart_white);
+                likedImage.setTag(cWhiteImageTag);
+            } else if( ! String.valueOf(likedImage.getTag()).equals(cRedImageTag)){
+                likedImage.setImageResource(R.drawable.ic_heart_red);
+                likedImage.setTag(cRedImageTag);
+            }
+
 
             profileImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     HomeFragmentDirections.actionHomeFragmentToProfileFragment(
-                            post.getUserCreatorId()
+                            post.post.getUserCreatorId()
                     )
                 )
             );
@@ -97,18 +110,21 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             username.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     HomeFragmentDirections.actionHomeFragmentToProfileFragment(
-                            post.getUserCreatorId()
+                            post.post.getUserCreatorId()
                     )
                 )
             );
 
             comments.setOnClickListener(
-                    Navigation.createNavigateOnClickListener(
-                            HomeFragmentDirections.actionHomeFragmentToCommentsFragment(
-                                    post.getPostId()
-                            )
-                    )
+                Navigation.createNavigateOnClickListener(
+                        HomeFragmentDirections.actionHomeFragmentToCommentsFragment(
+                                post.post.getPostId()
+                        )
+                )
             );
+
+            likedImage.setOnClickListener(likedImage -> HomeViewModel.likeToggle(post));
+
         }
     }
 

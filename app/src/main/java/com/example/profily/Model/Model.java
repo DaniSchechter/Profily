@@ -8,6 +8,7 @@ import com.example.profily.Model.Schema.Action.LikeAction;
 import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
+import com.example.profily.Model.Schema.Like.LikeAsyncDao;
 import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Model.Schema.Notification.NotificationAsyncDao;
 import com.example.profily.Model.Schema.Post.Post;
@@ -30,9 +31,9 @@ public class Model {
     }
 
     /*
-    -----------------------
+    =======================
     POSTS
-    -----------------------
+    =======================
      */
 
     public interface GetAllPostsListener {
@@ -52,10 +53,12 @@ public class Model {
         // Get already cached data
         PostAsyncDao.getAllPosts(numOfPosts, cachedPosts -> {
             // Present it to the user
+            Log.d("TAG", "------- STARTING DISPLAYING LOCAL POSTS ------");
             listener.onComplete(cachedPosts);
             // Get the newest data from the cloud
             modelFirebase.getAllPosts(numOfPosts, cloudPosts -> {
                 // Update local DB
+                Log.d("TAG", "------- STARTING DISPLAYING REMOTE POSTS ------");
                 PostAsyncDao.addPostsAndFetch(numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
             });
         });
@@ -93,12 +96,87 @@ public class Model {
 //        PostAsyncDao.addPosts(postsList);
         //modelFirebase.addPost(post, listener);
     }
+    
+    /*
+    =======================
+    LIKES
+    =======================
+     */
 
+
+    public interface FindLikeListener {
+        /**
+         * @return String - likeId if exists, null if does not exist yet
+         * */
+        void onComplete(String likeId);
+    }
+
+    public interface LikeOperationListener {
+        void onComplete(String likeId);
+    }
+
+    public interface UnlikeOperationListener {
+        void onComplete(boolean success);
+    }
+
+    public void findLike(String postId, String userId, FindLikeListener listener) {
+        // Get already cached data
+        LikeAsyncDao.likeByUser(postId, userId, localLikeId -> {
+            Log.d("TAG", "============== FINISHED SEARCHING NEW LIKE ==============");
+            Log.d("TAG", "post: " + postId + ", user: " + userId);
+            Log.d("TAG", "LIKE local : " + localLikeId );
+            // Present it to the user
+            listener.onComplete(localLikeId);
+            // Get the newest data from the cloud
+            modelFirebase.likeByUser(postId, userId, cloudLikeId -> {
+                Log.d("TAG", "LIKE remote of user: "+ userId + ", postID: " +postId + ": "+ cloudLikeId );
+                // Update local DB
+                if (
+                        (localLikeId == null && cloudLikeId != null) ||
+                        (localLikeId != null && cloudLikeId == null) ||
+                        (localLikeId != null && ! localLikeId.equals(cloudLikeId))
+                ) {
+                    Log.w("TAG", "Like state is different in FB and SQLite");
+                    if (localLikeId == null) {               // In local DB it is not liked, but should be
+                        Log.d("TAG", "Adding like to local DB");
+                        LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {});
+                    } else {
+                        Log.d("TAG", "Removing like from local DB");
+                        LikeAsyncDao.unlike(cloudLikeId, i-> {});
+                    }
+                }
+                listener.onComplete(cloudLikeId);
+                Log.d("TAG", "---------------------------------\n\n");
+
+            });
+        });
+    }
+
+    public void like(String postId, String userId, LikeOperationListener listener) {
+        modelFirebase.like(postId, userId, likeId -> {
+            if (likeId == null) {
+                Log.e("TAG" ,"Could not preform remote like operation, postId " + postId
+                        + ", userId " + userId);
+                return;
+            }
+            LikeAsyncDao.like(likeId, postId, userId,  i -> listener.onComplete(likeId));
+        });
+    }
+
+    public void unlike(String likeId, UnlikeOperationListener listener) {
+        modelFirebase.unlike(likeId, success -> {
+            if (!success) {
+                Log.e("TAG" ,"Could not preform remote unlike operation, likeId " + likeId);
+                return;
+            }
+            LikeAsyncDao.unlike(likeId, i -> listener.onComplete(true));
+        });
+    }
 
     /*
-    -----------------------
+    =======================
     USERS
-    -----------------------
+    =======================
      */
 
     public String getConnectedUserId() {
@@ -117,9 +195,9 @@ public class Model {
 //    }
 
     /*
-    -----------------------
+    =======================
     COMMENTS
-    -----------------------
+    =======================
      */
 
     public interface GetAllCommentsListener {
@@ -161,9 +239,9 @@ public class Model {
     }
 
     /*
-    -----------------------
+    =======================
     NOTIFICATIONS
-    -----------------------
+    =======================
      */
 
     public interface GetAllNotificationsListener {
@@ -206,9 +284,9 @@ public class Model {
 
 
     /*
-    -----------------------
+    =======================
     PROFILE
-    -----------------------
+    =======================
      */
 
     public interface GetAllUserPostsListener {
