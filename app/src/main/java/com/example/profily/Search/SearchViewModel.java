@@ -11,12 +11,10 @@ import java.util.List;
 
 public class SearchViewModel extends ViewModel {
     private MutableLiveData<List<User>> usersListLiveData;
-//    private MutableLiveData<User> userData;
 
     public SearchViewModel() {
 
         usersListLiveData = new MutableLiveData<>();
-//        userData = new MutableLiveData<>();
     }
 
     public void getUsersByName(String name){
@@ -28,12 +26,4 @@ public class SearchViewModel extends ViewModel {
     public LiveData<List<User>> getUsersList() {
         return this.usersListLiveData;
     }
-
-//    public LiveData<User> getUser() {
-//        return this.userData;
-//    }
-
-//    public void populateUserDetails(String userId){
-//        Model.instance.getUserById(userId, user -> this.userData.setValue(user));
-//    }
 }
