@@ -179,6 +179,10 @@ public class Model {
     =======================
      */
 
+    public interface GetAllUsersByNameListener{
+        void onComplete(List<User> users);
+    }
+
     public String getConnectedUserId() {
         return modelFirebase.getUserById();
     }
@@ -187,6 +191,9 @@ public class Model {
         modelFirebase.logOut();
     }
 
+    public void getAllUserByName(String username, final GetAllUsersByNameListener listener) {
+        modelFirebase.getAllUserByName(username, cloudUsers -> listener.onComplete(cloudUsers));
+    }
 //    public interface SaveImageListener{
 //        void onComplete(String url);
 //    }

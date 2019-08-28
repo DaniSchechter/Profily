@@ -14,11 +14,12 @@ import com.example.profily.R;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Search.SearchFragmentDirections;
 
+import java.util.List;
 import java.util.Vector;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRowViewHolder>  {
 
-    private Vector<User> searchList; //TODO maybe to delete
+    private List<User> searchList; //TODO maybe to delete
 
     public UserListAdapter(Vector<User> usersList) {
         this.searchList = usersList;
@@ -33,13 +34,20 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
 
     @Override
     public void onBindViewHolder(@NonNull UserRowViewHolder holder, int position) {
-        User user = searchList.elementAt(position);
+        User user = searchList.get(position);
         holder.bind(user);
     }
 
     @Override
     public int getItemCount() {
         return searchList.size();
+    }
+
+    public void setUsers(List<User> usersList){
+        if(usersList != null && usersList.size() >0 ) {
+            this.searchList = usersList;
+            notifyDataSetChanged(); //TODO need to check exactly what this function does
+        }
     }
 
 

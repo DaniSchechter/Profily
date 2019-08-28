@@ -144,7 +144,10 @@ public class ModelFireBase {
     // =========== COMMENTS ===========
 
     public void getAllComments(final String postId, final int numOfComments, final Model.GetAllCommentsListener listener) {
-        db.collection("comments").whereEqualTo("postId", postId).whereEqualTo("wasDeleted", false).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfComments).addSnapshotListener(
+        db.collection("comments").whereEqualTo("postId", postId)
+                .whereEqualTo("wasDeleted", false)
+                .orderBy("createdDate", Query.Direction.DESCENDING)
+                .limit(numOfComments).addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Comment> data = new LinkedList<>();
                     if (fireBaseException != null) {
@@ -182,6 +185,28 @@ public class ModelFireBase {
 
     // =========== USERS ===========
 
+    public void getAllUserByName(String username, final Model.GetAllUsersByNameListener listener){
+        db.collection("users")
+                .whereGreaterThanOrEqualTo("username", username)
+                .whereLessThanOrEqualTo("username", username+'\uf8ff')
+                .addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    LinkedList<User> data = new LinkedList<>();
+                    if (fireBaseException != null) {
+                        listener.onComplete(data);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            User user = doc.toObject(User.class);
+                            data.add(user);
+                        }
+                        listener.onComplete(data);
+                    }
+                }
+        );
+    }
+
     public void getUserById(String userId, final Model.GetConnectedUserListener listener)
     {
         db.collection("users")
@@ -199,6 +224,7 @@ public class ModelFireBase {
                 }
         );
     }
+
 
     public String getUserById ()
     {
