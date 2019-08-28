@@ -1,5 +1,6 @@
 package com.example.profily.Model;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.profily.Model.Schema.Action.Action;
@@ -47,6 +48,11 @@ public class Model {
         void onComplete(String username);
     }
 
+    public interface SaveImageListener{
+        void onFail();
+        void onComplete(String uri);
+    }
+
     public void getAllPosts(final int numOfPosts, final GetAllPostsListener listener) {
 
         // Get already cached data
@@ -79,14 +85,19 @@ public class Model {
         });
     }
 
-    public void addAllPosts(List<Post> postsList) {
-        PostAsyncDao.addPosts(postsList);
-//        modelFirebase.addPost(postsList, new AddPostListener() {
-//            @Override
-//            public void onComplete(boolean success) {
-//
-//            }
-//        });
+    public void addPost(Post post, Bitmap imageBitmap, AddPostListener listener)
+    {
+        modelFirebase.uploadImage(imageBitmap, new SaveImageListener() {
+            @Override
+            public void onFail() {
+
+            }
+
+            @Override
+            public void onComplete(String uri) {
+
+            }
+        });
     }
 
     public void addPostById(Post post) {

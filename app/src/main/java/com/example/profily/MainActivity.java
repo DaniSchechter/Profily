@@ -2,6 +2,7 @@ package com.example.profily;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,6 +11,8 @@ import com.example.profily.Model.Model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -40,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(menuItem.getItemId());
                 return true;
         });
+
+        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
     }
 
     public void displayAuthenticationActivity(Boolean clearBackStack) {

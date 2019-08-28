@@ -12,7 +12,7 @@
         android:title="@android:string/search_go" />
 
     <item
-        android:id="@id/uploadImageFragment"
+        android:id="@+id/uploadImageFragment"
         android:icon="@android:drawable/ic_menu_add"
         android:title="upload" />
 

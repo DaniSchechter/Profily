@@ -1,17 +1,27 @@
 package com.example.profily.Model;
 
-  import com.example.profily.Model.Schema.Comment.Comment;
-  import com.example.profily.Model.Schema.Notification.Notification;
-  import com.example.profily.Model.Schema.Post.Post;
-  import com.example.profily.Model.Schema.User.User;
-  import com.google.firebase.auth.FirebaseAuth;
-  import com.google.firebase.auth.FirebaseUser;
-  import com.google.firebase.firestore.FirebaseFirestore;
-  import com.google.firebase.firestore.FirebaseFirestoreSettings;
-  import com.google.firebase.firestore.Query;
-  import com.google.firebase.firestore.QueryDocumentSnapshot;
+import android.graphics.Bitmap;
+import android.net.Uri;
 
-  import java.util.LinkedList;
+import com.example.profily.Model.Schema.Comment.Comment;
+import com.example.profily.Model.Schema.Notification.Notification;
+import com.example.profily.Model.Schema.Post.Post;
+import com.example.profily.Model.Schema.User.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Date;
+import java.util.LinkedList;
 
 public class ModelFireBase {
 
@@ -71,6 +81,35 @@ public class ModelFireBase {
                 .document(post.getPostId())
                 .set(post)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
+    }
+
+    public void uploadImage(Bitmap imageBmp , final Model.SaveImageListener listener)
+    {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        Date d = new Date();
+        StorageReference imagesRef = storage.getReference().child("images").child("image_" + d.getTime() + "jpg");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = imagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception exception) {
+                listener.onFail();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        listener.onComplete(uri.toString());
+
+                    }
+                });
+
+            }
+        });
     }
 
     // =========== COMMENTS ===========

@@ -27,11 +27,6 @@
             app:destination="@id/profileFragment" />
     </fragment>
     <fragment
-        android:id="@+id/uploadImageFragment"
-        android:name="com.example.profily.UploadImageFragment"
-        android:label="fragment_upload_image"
-        tools:layout="@layout/fragment_upload_image" />
-    <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.profily.Notifications.NotificationsFragment"
         android:label="fragment_notifications"
@@ -80,4 +75,9 @@
             android:name="postId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/uploadImageFragment"
+        android:name="com.example.profily.UploadImage.UploadImageFragment"
+        android:label="fragment_upload_image"
+        tools:layout="@layout/fragment_upload_image" />
 </navigation>
