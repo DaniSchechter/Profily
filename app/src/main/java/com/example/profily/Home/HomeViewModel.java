@@ -95,7 +95,7 @@ public class HomeViewModel extends ViewModel {
 
     public static void likeToggle(PostLikeWrapper postLikeWrapper) {
         if(postLikeWrapper.likeIdForCurrentUser() == null ) {
-            Model.instance.like(postLikeWrapper.post.getPostId(), Model.instance.getConnectedUserId(), likeId -> {
+            Model.instance.like(postLikeWrapper.post, Model.instance.getConnectedUserId(), likeId -> {
                 postLikeWrapper.setLikeIdForCurrentUser(likeId);
             });
         } else {
