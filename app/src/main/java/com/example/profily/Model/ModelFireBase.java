@@ -295,6 +295,8 @@ public class ModelFireBase {
 
 
     public void addNotification(Notification notification, final Model.AddNotificationListener listener) {
+        String notificationId = db.collection("notifications").document().getId();
+        notification.setNotificationId(notificationId);
         db.collection("notifications")
                 .document(notification.getNotificationId())
                 .set(notification)

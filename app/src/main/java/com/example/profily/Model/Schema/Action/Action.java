@@ -1,5 +1,6 @@
 package com.example.profily.Model.Schema.Action;
 
+import androidx.room.Ignore;
 import androidx.room.TypeConverters;
 
 import com.example.profily.Model.Converters;
@@ -12,7 +13,15 @@ public class Action {
     private String description;
 
     public enum ActionType {
-        Like, Comment, Subscription
+        Like, Comment
+    }
+
+    public Action(){}
+
+    @Ignore
+    public Action(ActionType type, String description){
+        this.type = type;
+        this.description = description;
     }
 
     public ActionType getType() { return type; }

@@ -28,15 +28,15 @@ public class NotificationAsyncDao {
 
     }
 
-    public static void addNotifications(List<Notification> notificationsList) {
-        new AsyncTask<List<Notification>, Void, Void>(){
+    public static void addNotification(Notification notification) {
+        new AsyncTask<Notification, Void, Void>(){
 
             @Override
-            protected Void doInBackground(List<Notification>... notifications) {
+            protected Void doInBackground(Notification... notifications) {
                 ModelSql.getInstance().notificationDao().insertNotifications(notifications[0]);
                 return null;
             }
-        }.execute(notificationsList);
+        }.execute(notification);
 
     }
 
@@ -57,8 +57,6 @@ public class NotificationAsyncDao {
                 }
             }
         }.execute(notificationsList);
-
-
     }
 
 }

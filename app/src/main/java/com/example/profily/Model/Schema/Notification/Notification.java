@@ -1,7 +1,5 @@
 package com.example.profily.Model.Schema.Notification;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -12,14 +10,10 @@ import androidx.room.TypeConverters;
 
 import com.example.profily.Model.Converters;
 import com.example.profily.Model.Schema.Action.Action;
-import com.example.profily.Model.Schema.Action.CommentAction;
-import com.example.profily.Model.Schema.Action.LikeAction;
-import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Post.Post;
 
 import java.util.Date;
-import java.util.HashMap;
 
 @Entity(tableName = "notifications")
 @TypeConverters(Converters.class)
@@ -46,8 +40,7 @@ public class Notification {
     private Boolean wasDeleted;
 
     @Ignore
-    public Notification(@NonNull String notificationId, Action action, String triggeringUserId, String effectedUserId, String effectedPostId, Date actionDateTime, Boolean wasDeleted) {
-        this.notificationId = notificationId;
+    public Notification(Action action, String triggeringUserId, String effectedUserId, String effectedPostId, Date actionDateTime, Boolean wasDeleted) {
         this.action = action;
         this.triggeringUserId = triggeringUserId;
         this.effectedUserId = effectedUserId;

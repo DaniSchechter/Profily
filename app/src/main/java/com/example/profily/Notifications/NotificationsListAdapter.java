@@ -69,19 +69,16 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             description.setText(notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
 
-            if(notification.getAction().getType() == Action.ActionType.Subscription) {
-                effectedUserImage.setVisibility(View.GONE);
-            } else {
-                effectedUserImage.setVisibility(View.VISIBLE); ;
-                // Navigate to the effected post, if it is not a subscription action
-                effectedUserImage.setOnClickListener(
-                    Navigation.createNavigateOnClickListener(
-                        NotificationsFragmentDirections.actionNotificationsFragmentToPost(
-                                notification.getEffectedPostId()
-                        )
+
+            effectedUserImage.setVisibility(View.VISIBLE);
+            // Navigate to the effected post, if it is not a subscription action
+            effectedUserImage.setOnClickListener(
+                Navigation.createNavigateOnClickListener(
+                    NotificationsFragmentDirections.actionNotificationsFragmentToPost(
+                            notification.getEffectedPostId()
                     )
-                );
-            }
+                )
+            );
 
             // Navigate to Triggering user's profile
             triggeringUserImage.setOnClickListener(

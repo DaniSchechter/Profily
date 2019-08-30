@@ -37,10 +37,8 @@ public class Converters {
         }
         if (actionType == Action.ActionType.Comment) {
             return Action.ActionType.Comment.toString();
-        } else if (actionType == Action.ActionType.Like) {
-            return Action.ActionType.Like.toString();
         } else {
-            return Action.ActionType.Subscription.toString();
+            return Action.ActionType.Like.toString();
         }
     }
 
@@ -51,10 +49,8 @@ public class Converters {
         }
         if (actionType.equals(Action.ActionType.Comment.toString())) {
             return Action.ActionType.Comment;
-        } else if (actionType.equals(Action.ActionType.Like.toString())) {
-            return Action.ActionType.Like;
         } else {
-            return Action.ActionType.Subscription;
+            return Action.ActionType.Like;
         }
     }
 }

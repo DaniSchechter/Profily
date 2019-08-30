@@ -3,9 +3,6 @@ package com.example.profily.Model;
 import android.util.Log;
 
 import com.example.profily.Model.Schema.Action.Action;
-import com.example.profily.Model.Schema.Action.CommentAction;
-import com.example.profily.Model.Schema.Action.LikeAction;
-import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
 import com.example.profily.Model.Schema.Like.LikeAsyncDao;
@@ -17,7 +14,6 @@ import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Model.Schema.User.UserAsyncDao;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Model {
@@ -63,6 +59,10 @@ public class Model {
 
     public interface  GetPostByIdListener{
         void onComplete(Post post);
+    }
+
+    public interface GetUserIdByPostListener{
+        void onComplete(String userId);
     }
 
     public void getPostById(String postId, final GetPostByIdListener listener) {
@@ -170,6 +170,18 @@ public class Model {
                 return;
             }
             LikeAsyncDao.like(likeId, postId, userId,  i -> listener.onComplete(likeId));
+            PostAsyncDao.getUserIdByPost(postId, userCreatorIdOfLikedPost-> {
+                if (!userId.equals(userCreatorIdOfLikedPost)){
+                    addNotification(new Notification(
+                            new Action(Action.ActionType.Like, "Liked your photo"),
+                            userId,
+                            userCreatorIdOfLikedPost,
+                            postId,
+                            new Date(),
+                            false
+                    ));
+                }
+            });
         });
     }
 
@@ -256,11 +268,22 @@ public class Model {
     }
 
     public void addComment(Comment comment) {
-//        CommentAsyncDao.addComment(comment);
+        CommentAsyncDao.addComment(comment);
         modelFirebase.addComment(comment, new AddCommentListener() {
             @Override
             public void onComplete(boolean success) {
-
+                PostAsyncDao.getUserIdByPost(comment.getPostId(), userId-> {
+                    if (!userId.equals(comment.getUserCreatorId())){
+                        addNotification(new Notification(
+                                new Action(Action.ActionType.Comment, "Commented on your photo"),
+                                comment.getUserCreatorId(),
+                                userId,
+                                comment.getPostId(),
+                                new Date(),
+                                false
+                        ));
+                    }
+                });
             }
         });
     }
@@ -300,12 +323,9 @@ public class Model {
         });
     }
 
-    public void addAllNotifications(List<Notification> notificationsList) {
-//        NotificationAsyncDao.addNotifications(notificationsList);
-        for(Notification n: notificationsList){
-            modelFirebase.addNotification(n, result -> Log.d("TAG", String.valueOf(result)));
-        }
-
+    public void addNotification(Notification notification) {
+//        NotificationAsyncDao.addNotification(notification);
+        modelFirebase.addNotification(notification, result -> {});
     }
 
 //    public interface SaveImageListener{

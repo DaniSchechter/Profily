@@ -12,18 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Action.CommentAction;
-import com.example.profily.Model.Schema.Action.LikeAction;
-import com.example.profily.Model.Schema.Action.SubscriptionAction;
-import com.example.profily.Model.Schema.Notification.Notification;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Vector;
 
 
 /**
