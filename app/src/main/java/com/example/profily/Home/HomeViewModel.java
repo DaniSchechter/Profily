@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.Action.Action;
+import com.example.profily.Model.Schema.Action.LikeAction;
 import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostLikeWrapper;
@@ -104,7 +105,7 @@ public class HomeViewModel extends ViewModel {
             });
             if (!userId.equals(postLikeWrapper.post.getUserCreatorId())){
                 Model.instance.addNotification(new Notification(
-                        new Action(Action.ActionType.Like, "Liked your photo"),
+                        new LikeAction(),
                         userId,
                         postLikeWrapper.post.getUserCreatorId(),
                         postLikeWrapper.post.getPostId(),

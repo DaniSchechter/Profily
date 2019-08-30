@@ -3,6 +3,7 @@ package com.example.profily.Model;
 import android.util.Log;
 
 import com.example.profily.Model.Schema.Action.Action;
+import com.example.profily.Model.Schema.Action.CommentAction;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
 import com.example.profily.Model.Schema.Like.LikeAsyncDao;
@@ -263,7 +264,7 @@ public class Model {
                 PostAsyncDao.getUserIdByPost(comment.getPostId(), userId-> {
                     if (!userId.equals(comment.getUserCreatorId())){
                         addNotification(new Notification(
-                                new Action(Action.ActionType.Comment, "Commented on your photo"),
+                                new CommentAction(),
                                 comment.getUserCreatorId(),
                                 userId,
                                 comment.getPostId(),
