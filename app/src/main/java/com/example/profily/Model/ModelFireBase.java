@@ -114,16 +114,27 @@ public class ModelFireBase {
                 );
     }
 
+    public void getNumOfLikes(String postId, Model.GetNumberOfLikesListener listener){
+        db.collection("likes")
+                .whereEqualTo("postId", postId)
+                .addSnapshotListener((queryDocumentSnapshots, fireBaseException) -> {
+                    if (fireBaseException != null) {
+                        listener.onComplete(0);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        listener.onComplete(queryDocumentSnapshots.getDocuments().size());
+                    }
+                });
+
+    }
+
     public void like(String postId, String userId, Model.LikeOperationListener listener) {
         String likeId = db.collection("likes").document().getId();
         db.collection("likes")
                 .document(likeId)
                 .set(new Like(likeId, postId, userId))
                 .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        listener.onComplete(null);
-                        return;
-                    }
                     if (!task.isSuccessful()) {
                         listener.onComplete(null);
                         return;

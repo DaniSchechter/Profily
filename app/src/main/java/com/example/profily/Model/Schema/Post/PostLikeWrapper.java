@@ -1,11 +1,10 @@
 package com.example.profily.Model.Schema.Post;
 
-import com.example.profily.Model.Schema.Post.Post;
-
 public class PostLikeWrapper {
     public Post post;
     private String likeIdForCurrentUser;
     private String usernameForCurrentUser;
+    private int numOfLikes = 0;
 
     public PostLikeWrapper(Post post, String likeIdForCurrentUser, String usernameForCurrentUser) {
         this.post = post;
@@ -23,4 +22,10 @@ public class PostLikeWrapper {
     }
 
     public String usernameForCurrentUser(){ return usernameForCurrentUser; }
+
+    public void setNumOfLikes(int numOfLikes){
+        this.numOfLikes = numOfLikes;
+    }
+
+    public int getNumOfLikes(){ return this.numOfLikes; }
 }

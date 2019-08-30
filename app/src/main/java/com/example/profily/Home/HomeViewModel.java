@@ -52,6 +52,13 @@ public class HomeViewModel extends ViewModel {
                     postLikeWrapper.setUsernameForCurrentUser(username);
                     this.postsListLiveData.setValue(postLikeWrappersList);
                 });
+
+
+                // Get the number of likes of the post
+                Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {
+                    postLikeWrapper.setNumOfLikes(numOfLikes);
+                    this.postsListLiveData.setValue(postLikeWrappersList);
+                });
             }
         });
     }
