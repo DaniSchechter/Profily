@@ -130,20 +130,18 @@ public class Model {
             // Get the newest data from the cloud
             modelFirebase.likeByUser(postId, userId, cloudLikeId -> {
                 Log.d("TAG", "LIKE remote of user: "+ userId + ", postID: " +postId + ": "+ cloudLikeId );
-                // Update local DB
-                if (
-                        (localLikeId == null && cloudLikeId != null) ||
-                        (localLikeId != null && cloudLikeId == null) ||
-                        (localLikeId != null && ! localLikeId.equals(cloudLikeId))
-                ) {
-                    Log.w("TAG", "Like state is different in FB and SQLite");
-                    if (localLikeId == null) {               // In local DB it is not liked, but should be
-                        Log.d("TAG", "Adding like to local DB");
-                        LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {});
-                    } else {
-                        Log.d("TAG", "Removing like from local DB");
-                        LikeAsyncDao.unlike(cloudLikeId, i-> {});
-                    }
+                // Update local DB if needed
+
+                if (localLikeId == null && cloudLikeId != null) {
+                    Log.d("TAG", "Adding like to local DB");
+                    LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {});
+                } else if (localLikeId != null && cloudLikeId == null) {
+                    Log.d("TAG", "Removing like from local DB");
+                    LikeAsyncDao.unlike(localLikeId, i-> {});
+                } else if (localLikeId != null && ! localLikeId.equals(cloudLikeId)) {
+                    Log.d("TAG", "Updating like id in local DB");
+                    LikeAsyncDao.unlike(localLikeId, i-> {});
+                    LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {});
                 }
                 listener.onComplete(cloudLikeId);
                 Log.d("TAG", "---------------------------------\n\n");

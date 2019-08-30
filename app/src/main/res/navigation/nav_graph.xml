@@ -28,9 +28,13 @@
     </fragment>
     <fragment
         android:id="@+id/uploadImageFragment"
-        android:name="com.example.profily.UploadImageFragment"
+        android:name="com.example.profily.Camera.UploadImageFragment"
         android:label="fragment_upload_image"
-        tools:layout="@layout/fragment_upload_image" />
+        tools:layout="@layout/fragment_upload_image" >
+        <argument
+            android:name="Image"
+            app:argType="android.graphics.Bitmap" />
+    </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.example.profily.Notifications.NotificationsFragment"

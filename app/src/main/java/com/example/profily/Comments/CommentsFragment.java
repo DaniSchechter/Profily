@@ -41,7 +41,7 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        commentsViewModel = ViewModelProviders.of(this).get(CommentsViewModel.class);
     }
 
     @Override
@@ -65,7 +65,6 @@ public class CommentsFragment extends Fragment {
         {
             String postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-            commentsViewModel = ViewModelProviders.of(this).get(CommentsViewModel.class);
             commentsViewModel.getComments(postId);
 
             //TODO add logic for something like pagination

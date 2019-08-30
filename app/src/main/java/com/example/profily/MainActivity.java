@@ -59,15 +59,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d("TAG", "finishing");
 
             finish();
-        } else {
-            Log.d("TAG", "start destination id:  " + navController.getGraph().getStartDestination());
-            navController.navigate(navController.getGraph().getStartDestination());
         }
     }
 
     private void clearBackStack() {
         Log.d("TAG", "Clearing back stack");
-        Boolean stackNotEmpty;
+        boolean stackNotEmpty;
         do {
             stackNotEmpty = navController.popBackStack();
         } while(stackNotEmpty);
