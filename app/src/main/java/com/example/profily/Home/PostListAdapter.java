@@ -83,9 +83,9 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
         public void bind(PostLikeWrapper post){
             username.setText(post.usernameForCurrentUser());
-            numOfLikes.setText("3"); // TODO CHANGE TO A REAL NUMBER
+            numOfLikes.setText("" + post.getNumOfLikes()); // TODO CHANGE TO A REAL NUMBER
             caption.setText(post.post.getCaption());
-            comments.setText("View all 9999 comments");// TODO CHANGE TO A REAL NUMBER
+            comments.setText("View comments");
 
             if(post.likeIdForCurrentUser() == null)
             {

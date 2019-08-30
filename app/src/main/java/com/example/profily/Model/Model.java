@@ -107,6 +107,10 @@ public class Model {
         void onComplete(String likeId);
     }
 
+    public interface GetNumberOfLikesListener{
+        void onComplete(int numOfLikes);
+    }
+
     public interface LikeOperationListener {
         void onComplete(String likeId);
     }
@@ -145,6 +149,16 @@ public class Model {
                 Log.d("TAG", "---------------------------------\n\n");
 
             });
+        });
+    }
+
+    public void getNumberOfLikes(String postId, GetNumberOfLikesListener listener){
+        LikeAsyncDao.getNumOfLikes(postId, localNumOfLikes-> {
+           listener.onComplete(localNumOfLikes);
+
+           modelFirebase.getNumOfLikes(postId, cloudNumOfLikes->{
+              listener.onComplete(cloudNumOfLikes);
+           });
         });
     }
 

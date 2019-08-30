@@ -76,11 +76,11 @@ public class Post extends Fragment {
         postViewModel.getPost().observe(this, post->{
 
             caption.setText(post.post.getCaption());
-            numOfLikes.setText("" + 0);
+            numOfLikes.setText("" + post.getNumOfLikes());
             PostAsyncDao.getUserNameById(post.post.getUserCreatorId(), name -> {
                 username.setText(name);
             });
-            comments.setText("View all 4 comments");
+            comments.setText("View comments");
             comments.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
                             PostDirections.actionPostToCommentsFragment(
