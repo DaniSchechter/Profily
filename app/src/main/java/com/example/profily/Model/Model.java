@@ -170,16 +170,6 @@ public class Model {
                 return;
             }
             LikeAsyncDao.like(likeId, post.getPostId(), userId,  i -> listener.onComplete(likeId));
-            if (!userId.equals(post.getUserCreatorId())){
-                addNotification(new Notification(
-                        new Action(Action.ActionType.Like, "Liked your photo"),
-                        userId,
-                        post.getUserCreatorId(),
-                        post.getPostId(),
-                        new Date(),
-                        false
-                ));
-            }
         });
     }
 

@@ -7,9 +7,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.profily.Model.Model;
+import com.example.profily.Model.Schema.Action.Action;
+import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -95,9 +98,20 @@ public class HomeViewModel extends ViewModel {
 
     public static void likeToggle(PostLikeWrapper postLikeWrapper) {
         if(postLikeWrapper.likeIdForCurrentUser() == null ) {
-            Model.instance.like(postLikeWrapper.post, Model.instance.getConnectedUserId(), likeId -> {
+            String userId = Model.instance.getConnectedUserId();
+            Model.instance.like(postLikeWrapper.post, userId, likeId -> {
                 postLikeWrapper.setLikeIdForCurrentUser(likeId);
             });
+            if (!userId.equals(postLikeWrapper.post.getUserCreatorId())){
+                Model.instance.addNotification(new Notification(
+                        new Action(Action.ActionType.Like, "Liked your photo"),
+                        userId,
+                        postLikeWrapper.post.getUserCreatorId(),
+                        postLikeWrapper.post.getPostId(),
+                        new Date(),
+                        false
+                ));
+            }
         } else {
             Model.instance.unlike(postLikeWrapper.likeIdForCurrentUser(), success ->{
                 if(success) {
