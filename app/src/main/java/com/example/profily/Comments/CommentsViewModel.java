@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentWrapper;
-import com.google.rpc.Help;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -92,21 +91,5 @@ public class CommentsViewModel extends ViewModel {
     public static boolean checkDelete(CommentWrapper comment)
     {
         return comment.comment.getUserCreatorId().equals(Model.instance.getConnectedUserId());
-    }
-
-    private List<CommentWrapper> populatePostWrapperWithUsername(List<Comment> commentsList) {
-        commentsWrappersList.clear();
-
-        for(Comment comment: commentsList) {
-            // Initialize the Post Wrapper with the post itself
-            CommentWrapper commentWrapper = new CommentWrapper(comment, null);
-            commentsWrappersList.add(commentWrapper);
-
-            // Check in the DB if this post is liked
-            Model.instance.getUserNameById(comment.getUserCreatorId(), username -> {
-                commentWrapper.setUsernameForCurrentcomment(username);
-            });
-        }
-        return commentsWrappersList;
     }
 }
