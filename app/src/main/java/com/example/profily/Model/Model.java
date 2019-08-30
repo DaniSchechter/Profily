@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.example.profily.Model.Schema.Action.Action;
 import com.example.profily.Model.Schema.Action.CommentAction;
-import com.example.profily.Model.Schema.Action.LikeAction;
-import com.example.profily.Model.Schema.Action.SubscriptionAction;
 import com.example.profily.Model.Schema.Comment.Comment;
 import com.example.profily.Model.Schema.Comment.CommentAsyncDao;
 import com.example.profily.Model.Schema.Like.LikeAsyncDao;
@@ -17,7 +15,6 @@ import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Model.Schema.User.UserAsyncDao;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Model {
@@ -63,6 +60,10 @@ public class Model {
 
     public interface  GetPostByIdListener{
         void onComplete(Post post);
+    }
+
+    public interface GetUserIdByPostListener{
+        void onComplete(String userId);
     }
 
     public void getPostById(String postId, final GetPostByIdListener listener) {
@@ -256,11 +257,22 @@ public class Model {
     }
 
     public void addComment(Comment comment) {
-//        CommentAsyncDao.addComment(comment);
+        CommentAsyncDao.addComment(comment);
         modelFirebase.addComment(comment, new AddCommentListener() {
             @Override
             public void onComplete(boolean success) {
-
+                PostAsyncDao.getUserIdByPost(comment.getPostId(), userId-> {
+                    if (!userId.equals(comment.getUserCreatorId())){
+                        addNotification(new Notification(
+                                new CommentAction(),
+                                comment.getUserCreatorId(),
+                                userId,
+                                comment.getPostId(),
+                                new Date(),
+                                false
+                        ));
+                    }
+                });
             }
         });
     }
@@ -285,27 +297,24 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void getAllNotifications(final String userId, final int numOfNotifications, final GetAllNotificationsListener listener) {
+    public void getAllNotifications(final String userId, final GetAllNotificationsListener listener) {
 
         // Get already cached data
-        NotificationAsyncDao.getAllNotifications(userId, numOfNotifications, cachedNotifications -> {
+        NotificationAsyncDao.getAllNotifications(userId, cachedNotifications -> {
             // Present it to the user
             listener.onComplete(cachedNotifications);
             // Get the newest data from the cloud
-            modelFirebase.getAllNotifications(userId, numOfNotifications, cloudNotifications -> {
+            modelFirebase.getAllNotifications(userId, cloudNotifications -> {
                 // Update local DB
-                NotificationAsyncDao.addNotificationsAndFetch(userId, numOfNotifications, cloudNotifications, notifications ->
+                NotificationAsyncDao.addNotificationsAndFetch(userId, cloudNotifications, notifications ->
                         listener.onComplete(notifications));
             });
         });
     }
 
-    public void addAllNotifications(List<Notification> notificationsList) {
-//        NotificationAsyncDao.addNotifications(notificationsList);
-        for(Notification n: notificationsList){
-            modelFirebase.addNotification(n, result -> Log.d("TAG", String.valueOf(result)));
-        }
-
+    public void addNotification(Notification notification) {
+//        NotificationAsyncDao.addNotification(notification);
+        modelFirebase.addNotification(notification, result -> {});
     }
 
 //    public interface SaveImageListener{

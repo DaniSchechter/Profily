@@ -12,18 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Action.CommentAction;
-import com.example.profily.Model.Schema.Action.LikeAction;
-import com.example.profily.Model.Schema.Action.SubscriptionAction;
-import com.example.profily.Model.Schema.Notification.Notification;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Vector;
 
 
 /**
@@ -53,7 +44,6 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         recyclerView = view.findViewById(R.id.notifications_recycler_view);
-        loadMoreNotificationBtn = view.findViewById(R.id.notification_load_more_button);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -65,8 +55,6 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel = ViewModelProviders.of(this).get(NotificationsViewModel.class);
         notificationsViewModel.getNotificationsList().observe(this, list -> adapter.setNotifications(list));
         notificationsViewModel.getNotifications();
-
-        loadMoreNotificationBtn.setOnClickListener(viewOnClick -> notificationsViewModel.loadMoreNotifications());
 
         return view;
     }

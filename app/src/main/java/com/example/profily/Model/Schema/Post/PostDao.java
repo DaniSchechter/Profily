@@ -18,8 +18,11 @@ public interface PostDao {
     @Query("SELECT * FROM posts WHERE postId = :postId AND wasDeleted = 0")
     Post getPostById(String postId);
 
-    @Query("SELECT username from users WHERE userId = :userId")
+    @Query("SELECT username FROM users WHERE userId = :userId")
     String getUserNameById(String userId);
+
+    @Query("SELECT userCreatorId FROM posts WHERE postId = :postId")
+    String getUserIdByPost(String postId);
 
     @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
     List<Post> getAllPostsByUserId(String userId, int limit);
