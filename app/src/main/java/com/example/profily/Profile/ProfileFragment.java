@@ -111,7 +111,7 @@ public class ProfileFragment extends Fragment {
 
         logoutButton.setOnClickListener(view1 -> {
             Model.instance.logOut();
-            ((MainActivity)getActivity()).displayAuthenticationActivity(false);
+            ((MainActivity)getActivity()).displayAuthenticationActivity(true);
         });
 
         editProfileBtn.setOnClickListener(
