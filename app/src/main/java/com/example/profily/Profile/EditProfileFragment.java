@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.profily.MainActivity;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.R;
 
@@ -72,15 +74,20 @@ public class EditProfileFragment extends Fragment {
             profileDescription.setText(userData.getDescription());
 
             saveProfileBtn.setOnClickListener(view1 -> {
-                profileViewModel.updateUser(
-                        new User(userData.getUserId(),
-                                userData.getProfileImageURL(),
-                                profileUsername.getText().toString(),
-                                profileDescription.getText().toString(),
-                                profileFirstName.getText().toString(),
-                                profileLastName.getText().toString()
-                        ));
-                getFragmentManager().popBackStack();
+                if (profileUsername.getText().toString().equals("")){
+                    Toast.makeText(MainActivity.context, "Username cannot be empty", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    profileViewModel.updateUser(
+                            new User(userData.getUserId(),
+                                    userData.getProfileImageURL(),
+                                    profileUsername.getText().toString(),
+                                    profileDescription.getText().toString(),
+                                    profileFirstName.getText().toString(),
+                                    profileLastName.getText().toString()
+                            ));
+                    getFragmentManager().popBackStack();
+                }
             });
         });
 
