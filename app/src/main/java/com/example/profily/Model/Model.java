@@ -162,14 +162,14 @@ public class Model {
         });
     }
 
-    public void like(Post post, String userId, LikeOperationListener listener) {
-        modelFirebase.like(post.getPostId(), userId, likeId -> {
+    public void like(String postId, String userId, LikeOperationListener listener) {
+        modelFirebase.like(postId, userId, likeId -> {
             if (likeId == null) {
-                Log.e("TAG" ,"Could not preform remote like operation, postId " + post.getPostId()
+                Log.e("TAG" ,"Could not preform remote like operation, postId " + postId
                         + ", userId " + userId);
                 return;
             }
-            LikeAsyncDao.like(likeId, post.getPostId(), userId,  i -> listener.onComplete(likeId));
+            LikeAsyncDao.like(likeId, postId, userId,  i -> listener.onComplete(likeId));
         });
     }
 
