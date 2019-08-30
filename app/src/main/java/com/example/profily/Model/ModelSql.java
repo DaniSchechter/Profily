@@ -27,7 +27,6 @@ public abstract class ModelSql extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract PostDao postDao();
     public abstract CommentDao commentDao();
-    public abstract FollowDao followDao();
     public abstract LikeDao likeDao();
     public abstract NotificationDao notificationDao();
 

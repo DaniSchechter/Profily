@@ -1,40 +1,73 @@
 package com.example.profily.Comments;
 
-import android.content.Context;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.Comment.Comment;
+import com.example.profily.Model.Schema.Comment.CommentWrapper;
 
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class CommentsViewModel extends ViewModel {
-    private MutableLiveData<List<Comment>> commentsListLiveData; //todo yblalal
+    private MutableLiveData<List<CommentWrapper>> commentsListLiveData;
+    private List<CommentWrapper> commentsWrappersList;
+
     private static final int delta = 10;
     private int numOfComments = 10;
 
     public CommentsViewModel() {
         commentsListLiveData = new MutableLiveData<>();
+        commentsWrappersList = new LinkedList<>();
     }
 
     public void getComments(String postId){
         // Get all comments async
-        Model.instance.getAllComments( postId, numOfComments, commentsList -> this.commentsListLiveData.setValue(commentsList));
+        Model.instance.getAllComments( postId, numOfComments, commentsList -> {
+            commentsWrappersList.clear();
+
+            for(Comment comment: commentsList) {
+
+                // Initialize the Comment Wrapper with the comment itself
+                CommentWrapper commentWrapper = new CommentWrapper(comment, null);
+                commentsWrappersList.add(commentWrapper);
+
+                // Get the username of the comment
+                Model.instance.getUserNameById(comment.getUserCreatorId(), username ->  {
+                    commentWrapper.setUsernameForCurrentcomment(username);
+                    this.commentsListLiveData.setValue(commentsWrappersList);
+                });
+            }
+        });
     }
 
-    public LiveData<List<Comment>> getCommentsList() {
+    public LiveData<List<CommentWrapper>> getCommentsList() {
         return this.commentsListLiveData;
     }
 
     public void loadMoreComments(String postId) {
 
         this.numOfComments += delta;
-        Model.instance.getAllComments( postId, numOfComments, commentsList -> this.commentsListLiveData.setValue(commentsList));
+        // Get all comments async
+        Model.instance.getAllComments( postId, numOfComments, commentsList -> {
+            commentsWrappersList.clear();
+
+            for(Comment comment: commentsList) {
+
+                // Initialize the Comment Wrapper with the comment itself
+                CommentWrapper commentWrapper = new CommentWrapper(comment, null);
+                commentsWrappersList.add(commentWrapper);
+
+                // Get the username of the comment
+                Model.instance.getUserNameById(comment.getUserCreatorId(), username ->  {
+                    commentWrapper.setUsernameForCurrentcomment(username);
+                    this.commentsListLiveData.setValue(commentsWrappersList);
+                });
+            }
+        });
     }
 
     public void addNewComment(String postId, String comment)
@@ -49,14 +82,14 @@ public class CommentsViewModel extends ViewModel {
                 date));
     }
 
-    public static void deleteItem(Comment comment)
+    public static void deleteItem(CommentWrapper comment)
     {
-            comment.setWasDeleted(true);
-            Model.instance.updateComment(comment);
+            comment.comment.setWasDeleted(true);
+            Model.instance.updateComment(comment.comment);
     }
 
-    public static boolean checkDelete(Comment comment)
+    public static boolean checkDelete(CommentWrapper comment)
     {
-        return comment.getUserCreatorId().equals(Model.instance.getConnectedUserId());
+        return comment.comment.getUserCreatorId().equals(Model.instance.getConnectedUserId());
     }
 }

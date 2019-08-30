@@ -67,6 +67,25 @@ public class PostAsyncDao{
         }.execute();
     }
 
+    public static void getUserIdByPost(String postId, final Model.GetUserIdByPostListener listener)
+    {
+        new AsyncTask<String, Void, String>(){
+
+            @Override
+            protected String doInBackground(String... strings) {
+                return ModelSql.getInstance().postDao().getUserIdByPost(postId);
+            }
+
+            @Override
+            protected void onPostExecute(String userId) {
+                super.onPostExecute(userId);
+                if (listener != null) {
+                    listener.onComplete(userId);
+                }
+            }
+        }.execute();
+    }
+
     public static void addPosts(List<Post> postsList) {
         new AsyncTask<List<Post>, Void, Void>(){
 

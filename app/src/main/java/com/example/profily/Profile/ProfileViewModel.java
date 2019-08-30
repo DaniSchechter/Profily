@@ -45,4 +45,8 @@ public class ProfileViewModel extends ViewModel {
     public void populateUserDetails(String userId){
         Model.instance.getUserById(userId, user -> this.userData.setValue(user));
     }
+
+    public void updateUser(User user){
+        Model.instance.addUser(user);
+    }
 }

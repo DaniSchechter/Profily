@@ -13,8 +13,8 @@ public interface NotificationDao {
 
     // Get
     @Query("SELECT * FROM notifications WHERE effectedUserId = :userId " +
-            "AND wasDeleted = 0 ORDER BY actionDateTime desc LIMIT :limit")
-    List<Notification> getAllNotifications(String userId, int limit);
+            "AND wasDeleted = 0 ORDER BY actionDateTime desc")
+    List<Notification> getAllNotifications(String userId);
 
     // Insert
     @Insert(onConflict = OnConflictStrategy.REPLACE)

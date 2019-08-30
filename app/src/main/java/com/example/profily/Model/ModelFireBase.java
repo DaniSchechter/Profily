@@ -114,16 +114,27 @@ public class ModelFireBase {
                 );
     }
 
+    public void getNumOfLikes(String postId, Model.GetNumberOfLikesListener listener){
+        db.collection("likes")
+                .whereEqualTo("postId", postId)
+                .addSnapshotListener((queryDocumentSnapshots, fireBaseException) -> {
+                    if (fireBaseException != null) {
+                        listener.onComplete(0);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        listener.onComplete(queryDocumentSnapshots.getDocuments().size());
+                    }
+                });
+
+    }
+
     public void like(String postId, String userId, Model.LikeOperationListener listener) {
         String likeId = db.collection("likes").document().getId();
         db.collection("likes")
                 .document(likeId)
                 .set(new Like(likeId, postId, userId))
                 .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        listener.onComplete(null);
-                        return;
-                    }
                     if (!task.isSuccessful()) {
                         listener.onComplete(null);
                         return;
@@ -144,7 +155,10 @@ public class ModelFireBase {
     // =========== COMMENTS ===========
 
     public void getAllComments(final String postId, final int numOfComments, final Model.GetAllCommentsListener listener) {
-        db.collection("comments").whereEqualTo("postId", postId).whereEqualTo("wasDeleted", false).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfComments).addSnapshotListener(
+        db.collection("comments").whereEqualTo("postId", postId)
+                .whereEqualTo("wasDeleted", false)
+                .orderBy("createdDate", Query.Direction.DESCENDING)
+                .limit(numOfComments).addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Comment> data = new LinkedList<>();
                     if (fireBaseException != null) {
@@ -182,6 +196,28 @@ public class ModelFireBase {
 
     // =========== USERS ===========
 
+    public void getAllUserByName(String username, final Model.GetAllUsersByNameListener listener){
+        db.collection("users")
+                .whereGreaterThanOrEqualTo("username", username)
+                .whereLessThanOrEqualTo("username", username+'\uf8ff')
+                .addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    LinkedList<User> data = new LinkedList<>();
+                    if (fireBaseException != null) {
+                        listener.onComplete(data);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            User user = doc.toObject(User.class);
+                            data.add(user);
+                        }
+                        listener.onComplete(data);
+                    }
+                }
+        );
+    }
+
     public void getUserById(String userId, final Model.GetConnectedUserListener listener)
     {
         db.collection("users")
@@ -200,6 +236,7 @@ public class ModelFireBase {
         );
     }
 
+
     public String getUserById ()
     {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -209,17 +246,34 @@ public class ModelFireBase {
         return user.getUid();
     }
 
+    public void getUserNameById(String userId, final Model.GetUserNameByIdListener listener)
+    {
+        db.collection("users")
+                .whereEqualTo("userId", userId).addSnapshotListener(
+                (queryDocumentSnapshots, fireBaseException) -> {
+                    String username = null;
+                    if (fireBaseException != null) {
+                        listener.onComplete(username);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null) {
+                        username = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class).getUsername();
+                        listener.onComplete(username);
+                    }
+                }
+        );
+    }
+
     public void logOut () {
         mAuth.signOut();
     }
 
     // =========== NOTIFICATIONS ===========
 
-    public void getAllNotifications(final String userId, final int numOfNotifications, final Model.GetAllNotificationsListener listener) {
+    public void getAllNotifications(final String userId, final Model.GetAllNotificationsListener listener) {
         db.collection("notifications")
                 .whereEqualTo("effectedUserId", userId)
                 .orderBy("actionDateTime", Query.Direction.DESCENDING)
-                .limit(numOfNotifications)
                 .addSnapshotListener(
                         (queryDocumentSnapshots, fireBaseException) -> {
                                 LinkedList<Notification> data = new LinkedList<>();
@@ -240,6 +294,8 @@ public class ModelFireBase {
 
 
     public void addNotification(Notification notification, final Model.AddNotificationListener listener) {
+        String notificationId = db.collection("notifications").document().getId();
+        notification.setNotificationId(notificationId);
         db.collection("notifications")
                 .document(notification.getNotificationId())
                 .set(notification)

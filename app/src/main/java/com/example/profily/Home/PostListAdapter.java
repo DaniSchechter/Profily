@@ -73,7 +73,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             mainImage = itemView.findViewById(R.id.post_main_image);
             username = itemView.findViewById(R.id.post_username);
             likedImage = itemView.findViewById(R.id.post_like_image);
-            commentImage = itemView.findViewById(R.id.post_comment_image);
             numOfLikes = itemView.findViewById(R.id.post_num_of_likes);
             caption = itemView.findViewById(R.id.post_caption);
             comments = itemView.findViewById(R.id.post_comments_link);
@@ -82,12 +81,10 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         }
 
         public void bind(PostLikeWrapper post){
-            PostAsyncDao.getUserNameById(post.post.getUserCreatorId(), name -> {
-                username.setText(name);
-            });
-            numOfLikes.setText("3"); // TODO CHANGE TO A REAL NUMBER
+            username.setText(post.usernameForCurrentUser());
+            numOfLikes.setText("" + post.getNumOfLikes() + " likes");
             caption.setText(post.post.getCaption());
-            comments.setText("View all 9999 comments");// TODO CHANGE TO A REAL NUMBER
+            comments.setText("View comments");
 
             if(post.likeIdForCurrentUser() == null)
             {

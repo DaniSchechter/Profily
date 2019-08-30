@@ -58,4 +58,21 @@ public class LikeAsyncDao {
             }
         }.execute();
     }
+
+    public static void getNumOfLikes(String postId, Model.GetNumberOfLikesListener listener){
+        new AsyncTask<String, Void, Integer>(){
+
+            @Override
+            protected Integer doInBackground(String... strings) {
+                int numOfLikes = ModelSql.getInstance().likeDao().getNumOfLikes(postId);
+                return numOfLikes;
+            }
+
+            @Override
+            protected void onPostExecute(Integer numOfLikes) {
+                super.onPostExecute(numOfLikes);
+                listener.onComplete(numOfLikes);
+            }
+        }.execute();
+    }
 }

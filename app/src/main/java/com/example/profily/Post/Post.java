@@ -57,7 +57,6 @@ public class Post extends Fragment {
         mainImage = view.findViewById(R.id.post_main_image);
         username = view.findViewById(R.id.post_username);
         likedImage = view.findViewById(R.id.post_like_image);
-        commentImage = view.findViewById(R.id.post_comment_image);
         numOfLikes = view.findViewById(R.id.post_num_of_likes);
         caption = view.findViewById(R.id.post_caption);
         comments = view.findViewById(R.id.post_comments_link);
@@ -76,11 +75,11 @@ public class Post extends Fragment {
         postViewModel.getPost().observe(this, post->{
 
             caption.setText(post.post.getCaption());
-            numOfLikes.setText("" + 0);
+            numOfLikes.setText("" + post.getNumOfLikes() + " likes");
             PostAsyncDao.getUserNameById(post.post.getUserCreatorId(), name -> {
                 username.setText(name);
             });
-            comments.setText("View all 4 comments");
+            comments.setText("View comments");
             comments.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
                             PostDirections.actionPostToCommentsFragment(

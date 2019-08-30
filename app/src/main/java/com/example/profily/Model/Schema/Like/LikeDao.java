@@ -12,6 +12,9 @@ public interface LikeDao {
     @Query("SELECT likeId FROM likes WHERE postId = :postId AND likingUserId = :likingUserId")
     String likeByUser(String postId, String likingUserId);
 
+    @Query("SELECT COUNT(*) FROM likes WHERE postId = :postId")
+    int getNumOfLikes(String postId);
+
     // Insert
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void like(Like like);
