@@ -70,7 +70,6 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
 
 
-            effectedUserImage.setVisibility(View.VISIBLE);
             // Navigate to the effected post, if it is not a subscription action
             effectedUserImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
