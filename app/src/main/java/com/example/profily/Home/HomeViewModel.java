@@ -31,7 +31,7 @@ public class HomeViewModel extends ViewModel {
             for(Post post: postsList) {
 
                 // Initialize the Post Wrapper with the post itself
-                PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null);
+                PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null, null);
                 postLikeWrappersList.add(postLikeWrapper);
 
                 // Check in the DB if this post is liked
@@ -45,6 +45,12 @@ public class HomeViewModel extends ViewModel {
                         for (PostLikeWrapper p : postLikeWrappersList) {
                             Log.d("TAG", p.post.getPostId() + " , " + p.likeIdForCurrentUser());
                         }
+                });
+
+                // Get the username of the post
+                Model.instance.getUserNameById(post.getUserCreatorId(), username ->  {
+                    postLikeWrapper.setUsernameForCurrentUser(username);
+                    this.postsListLiveData.setValue(postLikeWrappersList);
                 });
             }
         });
@@ -68,7 +74,7 @@ public class HomeViewModel extends ViewModel {
 
         for(Post post: postsList) {
             // Initialize the Post Wrapper with the post itself
-            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null);
+            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null, null);
             postLikeWrappersList.add(postLikeWrapper);
 
             // Check in the DB if this post is liked

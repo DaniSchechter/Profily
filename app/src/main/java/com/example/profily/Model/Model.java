@@ -44,10 +44,6 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public interface GetUserNameByIdListener{
-        void onComplete(String username);
-    }
-
     public void getAllPosts(final int numOfPosts, final GetAllPostsListener listener) {
 
         // Get already cached data
@@ -183,6 +179,10 @@ public class Model {
         void onComplete(List<User> users);
     }
 
+    public interface GetUserNameByIdListener{
+        void onComplete(String username);
+    }
+
     public String getConnectedUserId() {
         return modelFirebase.getUserById();
     }
@@ -200,6 +200,18 @@ public class Model {
 //    public void saveImage(Bitmap imageBitmap, SaveImageListener listener) {
 //        modelFirebase.saveImage(imageBitmap, listener);
 //    }
+
+    public void getUserNameById(String userId, final GetUserNameByIdListener listener){
+        // Get already cached data
+        PostAsyncDao.getUserNameById(userId, localUsername -> {
+            // Present it to the user
+            listener.onComplete(localUsername);
+            // Get the newest data from the cloud
+            modelFirebase.getUserNameById(userId, cloudUsername -> {
+                listener.onComplete(cloudUsername);
+            });
+        });
+    }
 
     /*
     =======================
