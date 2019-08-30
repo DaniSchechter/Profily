@@ -308,16 +308,16 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void getAllNotifications(final String userId, final int numOfNotifications, final GetAllNotificationsListener listener) {
+    public void getAllNotifications(final String userId, final GetAllNotificationsListener listener) {
 
         // Get already cached data
-        NotificationAsyncDao.getAllNotifications(userId, numOfNotifications, cachedNotifications -> {
+        NotificationAsyncDao.getAllNotifications(userId, cachedNotifications -> {
             // Present it to the user
             listener.onComplete(cachedNotifications);
             // Get the newest data from the cloud
-            modelFirebase.getAllNotifications(userId, numOfNotifications, cloudNotifications -> {
+            modelFirebase.getAllNotifications(userId, cloudNotifications -> {
                 // Update local DB
-                NotificationAsyncDao.addNotificationsAndFetch(userId, numOfNotifications, cloudNotifications, notifications ->
+                NotificationAsyncDao.addNotificationsAndFetch(userId, cloudNotifications, notifications ->
                         listener.onComplete(notifications));
             });
         });

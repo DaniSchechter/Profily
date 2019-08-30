@@ -44,7 +44,6 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         recyclerView = view.findViewById(R.id.notifications_recycler_view);
-        loadMoreNotificationBtn = view.findViewById(R.id.notification_load_more_button);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -56,8 +55,6 @@ public class NotificationsFragment extends Fragment {
         notificationsViewModel = ViewModelProviders.of(this).get(NotificationsViewModel.class);
         notificationsViewModel.getNotificationsList().observe(this, list -> adapter.setNotifications(list));
         notificationsViewModel.getNotifications();
-
-        loadMoreNotificationBtn.setOnClickListener(viewOnClick -> notificationsViewModel.loadMoreNotifications());
 
         return view;
     }

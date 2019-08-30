@@ -270,11 +270,10 @@ public class ModelFireBase {
 
     // =========== NOTIFICATIONS ===========
 
-    public void getAllNotifications(final String userId, final int numOfNotifications, final Model.GetAllNotificationsListener listener) {
+    public void getAllNotifications(final String userId, final Model.GetAllNotificationsListener listener) {
         db.collection("notifications")
                 .whereEqualTo("effectedUserId", userId)
                 .orderBy("actionDateTime", Query.Direction.DESCENDING)
-                .limit(numOfNotifications)
                 .addSnapshotListener(
                         (queryDocumentSnapshots, fireBaseException) -> {
                                 LinkedList<Notification> data = new LinkedList<>();
