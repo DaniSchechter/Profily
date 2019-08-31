@@ -136,4 +136,15 @@ public class PostAsyncDao{
             }
         }.execute(post);
     }
+
+    public static void updatePost(Post post){
+        new AsyncTask<Post, Void, Void>(){
+
+            @Override
+            protected Void doInBackground(Post... posts) {
+                ModelSql.getInstance().postDao().insertPost(posts[0]);
+                return null;
+            }
+        }.execute(post);
+    }
 }

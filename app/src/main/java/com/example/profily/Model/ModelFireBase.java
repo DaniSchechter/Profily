@@ -33,7 +33,7 @@ public class ModelFireBase {
     // =========== POSTS ===========
 
     public void getAllPosts(final Model.GetAllPostsListener listener) {
-        db.collection("posts").whereEqualTo("wasDeleted", false)
+        db.collection("posts")
                 .orderBy("createdDate", Query.Direction.DESCENDING)
                 .addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
@@ -76,6 +76,12 @@ public class ModelFireBase {
                 .document(post.getPostId())
                 .set(post)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
+    }
+
+    public void updatePost(Post post){
+        db.collection("posts")
+                .document(post.getPostId())
+                .set(post);
     }
 
     // =========== LIKES ===========
