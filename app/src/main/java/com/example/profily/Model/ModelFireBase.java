@@ -32,8 +32,10 @@ public class ModelFireBase {
 
     // =========== POSTS ===========
 
-    public void getAllPosts(final int numOfPosts, final Model.GetAllPostsListener listener) {
-        db.collection("posts").whereEqualTo("wasDeleted", false).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
+    public void getAllPosts(final Model.GetAllPostsListener listener) {
+        db.collection("posts").whereEqualTo("wasDeleted", false)
+                .orderBy("createdDate", Query.Direction.DESCENDING)
+                .addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Post> data = new LinkedList<>();
                     if (fireBaseException != null) {
@@ -154,11 +156,10 @@ public class ModelFireBase {
 
     // =========== COMMENTS ===========
 
-    public void getAllComments(final String postId, final int numOfComments, final Model.GetAllCommentsListener listener) {
+    public void getAllComments(final String postId, final Model.GetAllCommentsListener listener) {
         db.collection("comments").whereEqualTo("postId", postId)
-                .whereEqualTo("wasDeleted", false)
                 .orderBy("createdDate", Query.Direction.DESCENDING)
-                .limit(numOfComments).addSnapshotListener(
+                .addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Comment> data = new LinkedList<>();
                     if (fireBaseException != null) {
@@ -305,8 +306,10 @@ public class ModelFireBase {
 
     // =========== PROFILE ===========
 
-    public void getAllUserPosts(String userId, final int numOfPosts, final Model.GetAllUserPostsListener listener) {
-        db.collection("posts").whereEqualTo("userCreatorId", userId).orderBy("createdDate", Query.Direction.DESCENDING).limit(numOfPosts).addSnapshotListener(
+    public void getAllUserPosts(String userId, final Model.GetAllUserPostsListener listener) {
+        db.collection("posts").whereEqualTo("userCreatorId", userId)
+                .orderBy("createdDate", Query.Direction.DESCENDING)
+                .addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
                     LinkedList<Post> data = new LinkedList<>();
                     if (fireBaseException != null) {

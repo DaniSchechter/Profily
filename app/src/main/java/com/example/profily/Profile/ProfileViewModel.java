@@ -14,8 +14,6 @@ public class ProfileViewModel extends ViewModel {
 
     private MutableLiveData<List<Post>> postsListLiveData;
     private MutableLiveData<User> userData;
-    private static final int delta = 9;
-    private int numOfPosts = 9;
 
     public ProfileViewModel() {
 
@@ -25,17 +23,11 @@ public class ProfileViewModel extends ViewModel {
 
     public void getPosts(String userId){
         // Get all posts async
-        Model.instance.getAllUserPosts( userId, numOfPosts, postsList -> this.postsListLiveData.setValue(postsList));
+        Model.instance.getAllUserPosts( userId, postsList -> this.postsListLiveData.setValue(postsList));
     }
 
     public LiveData<List<Post>> getPostsList() {
         return this.postsListLiveData;
-    }
-
-    public void loadMorePosts(String postId) {
-
-        this.numOfPosts += delta;
-        Model.instance.getAllUserPosts( postId, numOfPosts, postsList -> this.postsListLiveData.setValue(postsList));
     }
 
     public LiveData<User> getUser() {

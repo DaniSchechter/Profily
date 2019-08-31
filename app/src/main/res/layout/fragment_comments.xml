@@ -64,18 +64,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/add_more_comments_btn"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="75dp"
-        android:src="@drawable/plus"
-        app:civ_border_color="#000"
-        app:civ_border_width="1dp"
-        app:layout_constraintBottom_toBottomOf="@+id/comments_recycler_view"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

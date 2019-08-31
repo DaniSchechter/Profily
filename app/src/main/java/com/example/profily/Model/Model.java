@@ -41,18 +41,18 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void getAllPosts(final int numOfPosts, final GetAllPostsListener listener) {
+    public void getAllPosts(final GetAllPostsListener listener) {
 
         // Get already cached data
-        PostAsyncDao.getAllPosts(numOfPosts, cachedPosts -> {
+        PostAsyncDao.getAllPosts(cachedPosts -> {
             // Present it to the user
             Log.d("TAG", "------- STARTING DISPLAYING LOCAL POSTS ------");
             listener.onComplete(cachedPosts);
             // Get the newest data from the cloud
-            modelFirebase.getAllPosts(numOfPosts, cloudPosts -> {
+            modelFirebase.getAllPosts(cloudPosts -> {
                 // Update local DB
                 Log.d("TAG", "------- STARTING DISPLAYING REMOTE POSTS ------");
-                PostAsyncDao.addPostsAndFetch(numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
+                PostAsyncDao.addPostsAndFetch(cloudPosts, posts -> listener.onComplete(posts));
             });
         });
         //PostAsyncDao.getAllPosts(listener);
@@ -242,16 +242,16 @@ public class Model {
         void onComplete(boolean success);
     }
 
-    public void getAllComments(final String postId, final int numOfComments, final GetAllCommentsListener listener) {
+    public void getAllComments(final String postId, final GetAllCommentsListener listener) {
 
         // Get already cached data
-        CommentAsyncDao.getAllComments(postId, numOfComments, cachedComments -> {
+        CommentAsyncDao.getAllComments(postId, cachedComments -> {
             // Present it to the user
             listener.onComplete(cachedComments);
             // Get the newest data from the cloud
-            modelFirebase.getAllComments(postId, numOfComments, cloudComments -> {
+            modelFirebase.getAllComments(postId, cloudComments -> {
                 // Update local DB
-                CommentAsyncDao.addCommentsAndFetch(postId, numOfComments, cloudComments, comments -> listener.onComplete(comments));
+                CommentAsyncDao.addCommentsAndFetch(postId, cloudComments, comments -> listener.onComplete(comments));
             });
         });
     }
@@ -335,16 +335,16 @@ public class Model {
         void onComplete(List<Post> posts);
     }
 
-    public void getAllUserPosts(String userId, final int numOfPosts, final GetAllUserPostsListener listener) {
+    public void getAllUserPosts(String userId, final GetAllUserPostsListener listener) {
 
         // Get already cached data
-        UserAsyncDao.getAllUserPosts(userId, numOfPosts, cachedPosts -> {
+        UserAsyncDao.getAllUserPosts(userId, cachedPosts -> {
             // Present it to the user
             listener.onComplete(cachedPosts);
             // Get the newest data from the cloud
-            modelFirebase.getAllUserPosts(userId, numOfPosts, cloudPosts -> {
+            modelFirebase.getAllUserPosts(userId, cloudPosts -> {
                 // Update local DB
-                UserAsyncDao.addUserPostsAndFetch(userId, numOfPosts, cloudPosts, posts -> listener.onComplete(posts));
+                UserAsyncDao.addUserPostsAndFetch(userId, cloudPosts, posts -> listener.onComplete(posts));
             });
         });
         //PostAsyncDao.getAllPosts(listener);
