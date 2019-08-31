@@ -121,6 +121,7 @@ public class Post extends Fragment {
             deletePostBtn.setOnClickListener(viewOnClick -> {
                 post.post.setWasDeleted(true);
                 PostViewModel.updatePost(post.post);
+                getFragmentManager().popBackStack();
             });
         });
 
