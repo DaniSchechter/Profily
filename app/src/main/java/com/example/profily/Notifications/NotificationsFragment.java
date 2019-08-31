@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.example.profily.R;
 
@@ -26,7 +27,7 @@ public class NotificationsFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private NotificationsListAdapter adapter;
-    private ImageView loadMoreNotificationBtn;
+    private ProgressBar progressBar;
 
     public NotificationsFragment() {
         // Required empty public constructor
@@ -44,6 +45,7 @@ public class NotificationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
         recyclerView = view.findViewById(R.id.notifications_recycler_view);
+        progressBar = view.findViewById(R.id.notification_progress_bar);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -53,7 +55,11 @@ public class NotificationsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         notificationsViewModel = ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        notificationsViewModel.getNotificationsList().observe(this, list -> adapter.setNotifications(list));
+        progressBar.setVisibility(View.VISIBLE);
+        notificationsViewModel.getNotificationsList().observe(this, list -> {
+            adapter.setNotifications(list);
+            progressBar.setVisibility(View.GONE);
+        });
         notificationsViewModel.getNotifications();
 
         return view;
