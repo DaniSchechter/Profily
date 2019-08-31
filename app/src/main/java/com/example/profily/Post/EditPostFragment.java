@@ -39,7 +39,7 @@ public class EditPostFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
     }
 
     @Override
@@ -58,9 +58,6 @@ public class EditPostFragment extends Fragment {
         {
             postId = EditPostFragmentArgs.fromBundle(getArguments()).getPostId();
         }
-
-
-        postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
         postViewModel.populatePostDetails(postId);
         postViewModel.getPost().observe(this, postData->{
