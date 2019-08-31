@@ -8,12 +8,12 @@ import java.util.List;
 
 public class CommentAsyncDao {
 
-    public static void getAllComments(final String postId, final int numOfComments, final Model.GetAllCommentsListener listener) {
+    public static void getAllComments(final String postId, final Model.GetAllCommentsListener listener) {
         new AsyncTask<String,Void, List<Comment>>(){
 
             @Override
             protected List<Comment> doInBackground(String... strings) {
-                return ModelSql.getInstance().commentDao().getAllComments(postId, numOfComments);
+                return ModelSql.getInstance().commentDao().getAllComments(postId);
             }
 
             @Override
@@ -39,13 +39,13 @@ public class CommentAsyncDao {
 
     }
 
-    public static void addCommentsAndFetch(final String postId, final int numOfComments, List<Comment> commentsList, final Model.GetAllCommentsListener listener) {
+    public static void addCommentsAndFetch(final String postId, List<Comment> commentsList, final Model.GetAllCommentsListener listener) {
         new AsyncTask<List<Comment>, Void, List<Comment>>(){
 
             @Override
             protected List<Comment> doInBackground(List<Comment>... comments) {
                 ModelSql.getInstance().commentDao().insertComments(comments[0]);
-                return ModelSql.getInstance().commentDao().getAllComments(postId, numOfComments);
+                return ModelSql.getInstance().commentDao().getAllComments(postId);
             }
 
             @Override

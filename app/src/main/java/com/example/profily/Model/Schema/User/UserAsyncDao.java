@@ -11,12 +11,12 @@ import java.util.List;
 
 public class UserAsyncDao {
 
-    public static void getAllUserPosts(String userId, final int numOfPosts, final Model.GetAllUserPostsListener listener) {
+    public static void getAllUserPosts(String userId, final Model.GetAllUserPostsListener listener) {
         new AsyncTask<String,Void, List<Post>>(){
 
             @Override
             protected List<Post> doInBackground(String... strings) {
-                return ModelSql.getInstance().userDao().getAllUserPosts(userId, numOfPosts);
+                return ModelSql.getInstance().userDao().getAllUserPosts(userId);
             }
 
             @Override
@@ -49,13 +49,13 @@ public class UserAsyncDao {
         }.execute(user);
     }
 
-    public static void addUserPostsAndFetch(final String postId, final int numOfPosts, List<Post> postsList, final Model.GetAllUserPostsListener listener) {
+    public static void addUserPostsAndFetch(final String postId, List<Post> postsList, final Model.GetAllUserPostsListener listener) {
         new AsyncTask<List<Post>, Void, List<Post>>() {
 
             @Override
             protected List<Post> doInBackground(List<Post>... posts) {
                 ModelSql.getInstance().postDao().insertPosts(posts[0]);
-                return ModelSql.getInstance().userDao().getAllUserPosts(postId, numOfPosts);
+                return ModelSql.getInstance().userDao().getAllUserPosts(postId);
             }
 
             @Override

@@ -11,12 +11,12 @@ import java.util.List;
 
 public class PostAsyncDao{
 
-    public static void getAllPosts(final int numOfPosts, final Model.GetAllPostsListener listener) {
+    public static void getAllPosts(final Model.GetAllPostsListener listener) {
         new AsyncTask<String,Void,List<Post>>(){
 
             @Override
             protected List<Post> doInBackground(String... strings) {
-                return ModelSql.getInstance().postDao().getAllPosts(numOfPosts);
+                return ModelSql.getInstance().postDao().getAllPosts();
             }
 
             @Override
@@ -86,25 +86,25 @@ public class PostAsyncDao{
         }.execute();
     }
 
-    public static void addPosts(List<Post> postsList) {
-        new AsyncTask<List<Post>, Void, Void>(){
+    public static void addPost(Post post) {
+        new AsyncTask<Post, Void, Void>(){
 
             @Override
-            protected Void doInBackground(List<Post>... posts) {
-                ModelSql.getInstance().postDao().insertPosts(posts[0]);
+            protected Void doInBackground(Post... posts) {
+                ModelSql.getInstance().postDao().insertPost(posts[0]);
                 return null;
             }
-        }.execute(postsList);
+        }.execute(post);
 
     }
 
-    public static void addPostsAndFetch(final int numOfPosts, List<Post> postsList, final Model.GetAllPostsListener listener) {
+    public static void addPostsAndFetch(List<Post> postsList, final Model.GetAllPostsListener listener) {
         new AsyncTask<List<Post>, Void, List<Post>>(){
 
             @Override
             protected List<Post> doInBackground(List<Post>... posts) {
                 ModelSql.getInstance().postDao().insertPosts(posts[0]);
-                return ModelSql.getInstance().postDao().getAllPosts(numOfPosts);
+                return ModelSql.getInstance().postDao().getAllPosts();
             }
 
             @Override

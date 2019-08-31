@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.Model.Schema.Notification.NotificationWrapper;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Action.Action;
 import com.example.profily.Model.Schema.Notification.Notification;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class NotificationsListAdapter extends RecyclerView.Adapter<NotificationsListAdapter.NotificationRowViewHolder>  {
 
-    private List<Notification> notificationsList = new LinkedList<>();
+    private List<NotificationWrapper> notificationsList = new LinkedList<>();
 
     @NonNull
     @Override
@@ -31,11 +32,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
 
     @Override
     public void onBindViewHolder(@NonNull NotificationRowViewHolder holder, int position) {
-        Notification notification = notificationsList.get(position);
+        NotificationWrapper notification = notificationsList.get(position);
         holder.bind(notification);
     }
 
-    void setNotifications(List<Notification> notificationsList){
+    void setNotifications(List<NotificationWrapper> notificationsList){
         this.notificationsList = notificationsList;
         notifyDataSetChanged();
     }
@@ -64,17 +65,17 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             actionElapsedTime = itemView.findViewById(R.id.notifications_elapsed_time);
         }
 
-        public void bind(Notification notification){
-            triggeringUserUsername.setText(notification.getTriggeringUserId()); // TODO change
-            description.setText(notification.getAction().getDescription());
-            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.getActionDateTime()));
+        public void bind(NotificationWrapper notification){
+            triggeringUserUsername.setText(notification.usernameForCurrentnotification()); // TODO change
+            description.setText(notification.notification.getAction().getDescription());
+            actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.notification.getActionDateTime()));
 
 
             // Navigate to the effected post, if it is not a subscription action
             effectedUserImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToPost(
-                            notification.getEffectedPostId()
+                            notification.notification.getEffectedPostId()
                     )
                 )
             );
@@ -83,7 +84,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             triggeringUserImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToProfileFragment(
-                        notification.getTriggeringUserId()
+                        notification.notification.getTriggeringUserId()
                     )
                 )
             );
@@ -91,7 +92,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             triggeringUserUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToProfileFragment(
-                            notification.getTriggeringUserId()
+                            notification.notification.getTriggeringUserId()
                     )
                 )
             );

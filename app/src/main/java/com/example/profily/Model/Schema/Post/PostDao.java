@@ -12,8 +12,8 @@ import java.util.List;
 public interface PostDao {
 
     // Get
-    @Query("SELECT * FROM posts WHERE wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
-    List<Post> getAllPosts(int limit);
+    @Query("SELECT * FROM posts WHERE wasDeleted = 0 ORDER BY createdDate Desc")
+    List<Post> getAllPosts();
 
     @Query("SELECT * FROM posts WHERE postId = :postId AND wasDeleted = 0")
     Post getPostById(String postId);

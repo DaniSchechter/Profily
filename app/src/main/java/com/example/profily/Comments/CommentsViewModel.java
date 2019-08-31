@@ -16,9 +16,6 @@ public class CommentsViewModel extends ViewModel {
     private MutableLiveData<List<CommentWrapper>> commentsListLiveData;
     private List<CommentWrapper> commentsWrappersList;
 
-    private static final int delta = 10;
-    private int numOfComments = 10;
-
     public CommentsViewModel() {
         commentsListLiveData = new MutableLiveData<>();
         commentsWrappersList = new LinkedList<>();
@@ -26,7 +23,7 @@ public class CommentsViewModel extends ViewModel {
 
     public void getComments(String postId){
         // Get all comments async
-        Model.instance.getAllComments( postId, numOfComments, commentsList -> {
+        Model.instance.getAllComments( postId, commentsList -> {
             commentsWrappersList.clear();
 
             for(Comment comment: commentsList) {
@@ -46,28 +43,6 @@ public class CommentsViewModel extends ViewModel {
 
     public LiveData<List<CommentWrapper>> getCommentsList() {
         return this.commentsListLiveData;
-    }
-
-    public void loadMoreComments(String postId) {
-
-        this.numOfComments += delta;
-        // Get all comments async
-        Model.instance.getAllComments( postId, numOfComments, commentsList -> {
-            commentsWrappersList.clear();
-
-            for(Comment comment: commentsList) {
-
-                // Initialize the Comment Wrapper with the comment itself
-                CommentWrapper commentWrapper = new CommentWrapper(comment, null);
-                commentsWrappersList.add(commentWrapper);
-
-                // Get the username of the comment
-                Model.instance.getUserNameById(comment.getUserCreatorId(), username ->  {
-                    commentWrapper.setUsernameForCurrentcomment(username);
-                    this.commentsListLiveData.setValue(commentsWrappersList);
-                });
-            }
-        });
     }
 
     public void addNewComment(String postId, String comment)

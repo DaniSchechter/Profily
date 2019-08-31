@@ -1,5 +1,6 @@
 package com.example.profily.Home;
 
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.profily.MainActivity;
+import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 import com.example.profily.R;
@@ -57,12 +60,14 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
         ImageView profileImage;
         ImageView mainImage;
-        TextView username;
+        ImageView editPostBtn;
         ImageView likedImage;
-        ImageView commentImage;
+        TextView username;
         TextView numOfLikes;
         TextView caption;
         TextView comments;
+
+
         final String cRedImageTag = "red_image_tag";
         final String cWhiteImageTag = "white_image_tag";
 
@@ -76,7 +81,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             numOfLikes = itemView.findViewById(R.id.post_num_of_likes);
             caption = itemView.findViewById(R.id.post_caption);
             comments = itemView.findViewById(R.id.post_comments_link);
-
+            editPostBtn = itemView.findViewById(R.id.post_edit_post_btn);
 
         }
 
@@ -85,6 +90,12 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             numOfLikes.setText("" + post.getNumOfLikes() + " likes");
             caption.setText(post.post.getCaption());
             comments.setText("View comments");
+            if (HomeViewModel.checkEdit(post.post.getUserCreatorId())){
+                editPostBtn.setVisibility(View.VISIBLE);
+            }
+            else{
+                editPostBtn.setVisibility(View.INVISIBLE);
+            }
 
             if(post.likeIdForCurrentUser() == null)
             {
@@ -122,6 +133,13 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
             likedImage.setOnClickListener(likedImage -> HomeViewModel.likeToggle(post));
 
+            editPostBtn.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                            HomeFragmentDirections.actionHomeFragmentToEditPostFragment(
+                                    post.post.getPostId()
+                            )
+                    )
+            );
         }
     }
 

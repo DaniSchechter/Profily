@@ -34,8 +34,6 @@ public class ProfileFragment extends Fragment {
 
     private Vector<Post> postsList = new Vector<>();
     private ProfileViewModel profileViewModel;
-    private Vector<String> followingList = new Vector<>();
-    private Vector<String> followersList = new Vector<>();
 
     private ImageGridAdapter adapter;
     private RecyclerView recyclerView;
@@ -46,7 +44,6 @@ public class ProfileFragment extends Fragment {
     private ImageView profileImage;
     private Button editProfileBtn;
     private ImageButton logoutButton;
-    private ImageView loadMorePostsBtn;
 
     //counting vars
     private TextView profileNumOfPosts;
@@ -111,7 +108,7 @@ public class ProfileFragment extends Fragment {
 
         logoutButton.setOnClickListener(view1 -> {
             Model.instance.logOut();
-            ((MainActivity)getActivity()).displayAuthenticationActivity(false);
+            ((MainActivity)getActivity()).displayAuthenticationActivity(true);
         });
 
         editProfileBtn.setOnClickListener(
@@ -130,12 +127,6 @@ public class ProfileFragment extends Fragment {
             adapter.setPosts(list);
             profileNumOfPosts.setText("" + list.size());
         } );
-
-        loadMorePostsBtn = view.findViewById(R.id.add_more_posts_to_profile_btn);
-
-        String finaluserId = userId;
-        loadMorePostsBtn.setOnClickListener(viewOnClick -> profileViewModel.loadMorePosts(finaluserId));
-
 
 
         return view;

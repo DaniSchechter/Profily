@@ -20,15 +20,13 @@ import java.util.List;
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<PostLikeWrapper>> postsListLiveData;
     private List<PostLikeWrapper> postLikeWrappersList;
-    private static final int delta = 10;
-    private int numOfPosts = 10;
 
     public HomeViewModel() {
         postsListLiveData = new MutableLiveData<>();
         postLikeWrappersList = new LinkedList<>();
 
         // Get all posts async
-        Model.instance.getAllPosts( numOfPosts, postsList -> {
+        Model.instance.getAllPosts(postsList -> {
             Log.d("TAG", "------- Got posts, CLEARING POSTS LIST");
             postLikeWrappersList.clear();
 
@@ -71,15 +69,6 @@ public class HomeViewModel extends ViewModel {
         return this.postsListLiveData;
     }
 
-    public void loadMorePosts() {
-
-        this.numOfPosts += delta;
-
-        Model.instance.getAllPosts( numOfPosts, postsList -> {
-            this.postsListLiveData.setValue(populatePostWrapperWithLike(postsList));
-        });
-    }
-
     private List<PostLikeWrapper> populatePostWrapperWithLike(List<Post> postsList) {
         postLikeWrappersList.clear();
 
@@ -120,6 +109,10 @@ public class HomeViewModel extends ViewModel {
                 }
             });
         }
+    }
+
+    public static boolean checkEdit(String userId){
+        return userId.equals(Model.instance.getConnectedUserId());
     }
 
 }
