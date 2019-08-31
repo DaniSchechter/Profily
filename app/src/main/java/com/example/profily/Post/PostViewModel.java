@@ -23,25 +23,28 @@ public class PostViewModel extends ViewModel {
         // Get all posts async
         Model.instance.getPostById( postId, post -> {
 
-            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null, null);
+            if (post!=null){
+                PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null, null);
 
-            // Check in the DB if this post is liked
-            Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId ->  {
-                postLikeWrapper.setLikeIdForCurrentUser(likeId);
-                this.postLiveData.setValue(postLikeWrapper);
-            });
+                // Check in the DB if this post is liked
+                Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId ->  {
+                    postLikeWrapper.setLikeIdForCurrentUser(likeId);
+                    this.postLiveData.setValue(postLikeWrapper);
+                });
 
-            // Check in the DB if this post is liked
-            Model.instance.getUserNameById(post.getUserCreatorId(), userName ->  {
-                postLikeWrapper.setUsernameForCurrentUser(userName);
-                this.postLiveData.setValue(postLikeWrapper);
-            });
+                // Check in the DB if this post is liked
+                Model.instance.getUserNameById(post.getUserCreatorId(), userName ->  {
+                    postLikeWrapper.setUsernameForCurrentUser(userName);
+                    this.postLiveData.setValue(postLikeWrapper);
+                });
 
-            // Get the number of likes of the post
-            Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {
-                postLikeWrapper.setNumOfLikes(numOfLikes);
-                this.postLiveData.setValue(postLikeWrapper);
-            });
+                // Get the number of likes of the post
+                Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {
+                    postLikeWrapper.setNumOfLikes(numOfLikes);
+                    this.postLiveData.setValue(postLikeWrapper);
+                });
+            }
+
         });
     }
 
@@ -56,8 +59,8 @@ public class PostViewModel extends ViewModel {
         return this.postLiveData;
     }
 
-    public void updatePost(Post post){
-        Model.instance.addPost(post);
+    public static void updatePost(Post post){
+        Model.instance.updatePost(post);
     }
 
 }

@@ -79,7 +79,7 @@ public class Model {
         });
     }
 
-    public void addPost(Post post) {
+    public void addPost(Post post){
         PostAsyncDao.addPost(post);
         modelFirebase.addPost(post, new AddPostListener() {
             @Override
@@ -87,6 +87,11 @@ public class Model {
 
             }
         });
+    }
+
+    public void updatePost(Post post) {
+        PostAsyncDao.updatePost(post);
+        modelFirebase.updatePost(post);
     }
 
     public void addPostById(Post post) {
