@@ -27,7 +27,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private PostListAdapter adapter;
-    private ImageView loadMorePostsBtn;
 
 
     public HomeFragment() {
@@ -53,10 +52,6 @@ public class HomeFragment extends Fragment {
 
         //TODO add logic for something like pagination
         homeViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
-
-        loadMorePostsBtn = view.findViewById(R.id.add_more_posts_btn);
-
-        loadMorePostsBtn.setOnClickListener(viewOnClick -> homeViewModel.loadMorePosts());
 
         return view;
     }

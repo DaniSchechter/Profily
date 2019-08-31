@@ -12,8 +12,8 @@ import java.util.List;
 public interface UserDao {
 
     // Get
-    @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
-    List<Post> getAllUserPosts(String userId, int limit);
+    @Query("SELECT * FROM posts WHERE userCreatorId = :userId AND wasDeleted = 0 ORDER BY createdDate Desc")
+    List<Post> getAllUserPosts(String userId);
 
     @Query("SELECT * FROM users WHERE userId = :userId")
     User getUserById(String userId);

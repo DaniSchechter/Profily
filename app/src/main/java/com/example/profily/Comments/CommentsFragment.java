@@ -30,7 +30,6 @@ public class CommentsFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private CommentsListAdapter adapter;
-    private ImageView loadMoreCommentsBtn;
     private Button addNewCommentBtn;
     private EditText commentBox;
 
@@ -71,17 +70,12 @@ public class CommentsFragment extends Fragment {
             //TODO add logic for something like pagination
             commentsViewModel.getCommentsList().observe(this, list -> adapter.setComments(list) );
 
-            loadMoreCommentsBtn = view.findViewById(R.id.add_more_comments_btn);
             addNewCommentBtn = view.findViewById(R.id.save_comment_btn);
             commentBox = view.findViewById(R.id.comment_text);
 
-
-            String finalPostId = postId;
-            loadMoreCommentsBtn.setOnClickListener(viewOnClick -> commentsViewModel.loadMoreComments(finalPostId));
-
             addNewCommentBtn.setOnClickListener(viewOnClick -> {
                 if (!commentBox.getText().toString().equals("")){
-                    commentsViewModel.addNewComment(finalPostId, commentBox.getText().toString());
+                    commentsViewModel.addNewComment(postId, commentBox.getText().toString());
                     commentBox.getText().clear();
                 }
             });

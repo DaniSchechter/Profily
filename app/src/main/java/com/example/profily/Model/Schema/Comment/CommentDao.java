@@ -12,8 +12,8 @@ import java.util.List;
 public interface CommentDao {
     
     // Get
-    @Query("SELECT * FROM comments WHERE postId = :postId AND wasDeleted = 0 ORDER BY createdDate Desc LIMIT :limit")
-    List<Comment> getAllComments(String postId, int limit);
+    @Query("SELECT * FROM comments WHERE postId = :postId AND wasDeleted = 0 ORDER BY createdDate Desc")
+    List<Comment> getAllComments(String postId);
 
     // Insert
     @Insert(onConflict = OnConflictStrategy.REPLACE)
