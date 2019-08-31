@@ -95,11 +95,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             comments.setText("View comments");
             if (HomeViewModel.checkEdit(post.post.getUserCreatorId())){
                 editPostBtn.setVisibility(View.VISIBLE);
-                deletePostBtn.setVisibility((View.VISIBLE));
+                deletePostBtn.setVisibility(View.VISIBLE);
             }
             else{
                 editPostBtn.setVisibility(View.INVISIBLE);
-                deletePostBtn.setVisibility((View.INVISIBLE));
+                deletePostBtn.setVisibility(View.INVISIBLE);
             }
 
             if(post.likeIdForCurrentUser() == null)
