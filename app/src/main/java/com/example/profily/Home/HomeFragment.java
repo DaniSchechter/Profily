@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.example.profily.R;
 
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private PostListAdapter adapter;
+    private ProgressBar progressBar;
 
 
     public HomeFragment() {
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
+        progressBar = view.findViewById(R.id.home_progress_bar);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -51,7 +54,11 @@ public class HomeFragment extends Fragment {
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
 
         //TODO add logic for something like pagination
-        homeViewModel.getPostsList().observe(this, list -> adapter.setPosts(list) );
+        progressBar.setVisibility(View.VISIBLE);
+        homeViewModel.getPostsList().observe(this, list -> {
+            adapter.setPosts(list);
+            progressBar.setVisibility(View.GONE);
+        } );
 
         return view;
     }

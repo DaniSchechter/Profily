@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.profily.MainActivity;
@@ -44,6 +45,7 @@ public class ProfileFragment extends Fragment {
     private ImageView profileImage;
     private Button editProfileBtn;
     private ImageButton logoutButton;
+    private ProgressBar progressBar;
 
     //counting vars
     private TextView profileNumOfPosts;
@@ -71,6 +73,7 @@ public class ProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.profile_image);
         editProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
         logoutButton = view.findViewById(R.id.profile_logout);
+        progressBar = view.findViewById(R.id.profile_progress_bar);
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -103,6 +106,7 @@ public class ProfileFragment extends Fragment {
 
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        progressBar.setVisibility(View.VISIBLE);
         profileViewModel.getPosts(userId);
         profileViewModel.populateUserDetails(userId);
 
@@ -120,12 +124,14 @@ public class ProfileFragment extends Fragment {
         profileViewModel.getUser().observe(this, userData->{
             profileUsername.setText(userData.getUsername());
             profileDescription.setText(userData.getDescription());
+            progressBar.setVisibility(View.GONE);
         });
 
         //TODO add logic for something like pagination
         profileViewModel.getPostsList().observe(this, list -> {
             adapter.setPosts(list);
             profileNumOfPosts.setText("" + list.size());
+            progressBar.setVisibility(View.GONE);
         } );
 
 
