@@ -122,4 +122,8 @@ public class HomeViewModel extends ViewModel {
         }
     }
 
+    public static boolean checkEdit(String userId){
+        return userId.equals(Model.instance.getConnectedUserId());
+    }
+
 }

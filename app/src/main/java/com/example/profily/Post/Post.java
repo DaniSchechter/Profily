@@ -27,9 +27,10 @@ public class Post extends Fragment {
 
     private ImageView profileImage;
     private ImageView mainImage;
-    private TextView username;
     private ImageView likedImage;
     private ImageView commentImage;
+    private ImageView editPostBtn;
+    private TextView username;
     private TextView numOfLikes;
     private TextView caption;
     private TextView comments;
@@ -60,6 +61,7 @@ public class Post extends Fragment {
         numOfLikes = view.findViewById(R.id.post_num_of_likes);
         caption = view.findViewById(R.id.post_caption);
         comments = view.findViewById(R.id.post_comments_link);
+        editPostBtn = view.findViewById(R.id.post_edit_post_btn);
 
         // Make sure that a parameter PostId was passed
         if (getArguments() == null || getArguments().size()==0)
@@ -98,6 +100,21 @@ public class Post extends Fragment {
             }
 
             likedImage.setOnClickListener(likedImage -> HomeViewModel.likeToggle(post));
+
+            if (HomeViewModel.checkEdit(post.post.getUserCreatorId())){
+                editPostBtn.setVisibility(View.VISIBLE);
+            }
+            else{
+                editPostBtn.setVisibility(View.INVISIBLE);
+            }
+
+            editPostBtn.setOnClickListener(
+                    Navigation.createNavigateOnClickListener(
+                            PostDirections.actionPostToEditPostFragment(
+                                    post.post.getPostId()
+                            )
+                    )
+            );
 
         });
 

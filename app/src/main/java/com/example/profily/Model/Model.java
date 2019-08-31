@@ -79,14 +79,14 @@ public class Model {
         });
     }
 
-    public void addAllPosts(List<Post> postsList) {
-        PostAsyncDao.addPosts(postsList);
-//        modelFirebase.addPost(postsList, new AddPostListener() {
-//            @Override
-//            public void onComplete(boolean success) {
-//
-//            }
-//        });
+    public void addPost(Post post) {
+        PostAsyncDao.addPost(post);
+        modelFirebase.addPost(post, new AddPostListener() {
+            @Override
+            public void onComplete(boolean success) {
+
+            }
+        });
     }
 
     public void addPostById(Post post) {

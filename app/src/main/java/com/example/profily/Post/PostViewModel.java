@@ -45,7 +45,19 @@ public class PostViewModel extends ViewModel {
         });
     }
 
+    public void populatePostDetails(String postId){
+        Model.instance.getPostById(postId, post -> {
+            PostLikeWrapper postLikeWrapper = new PostLikeWrapper(post, null, null);
+            this.postLiveData.setValue(postLikeWrapper);
+        });
+    }
+
     public LiveData<PostLikeWrapper> getPost() {
         return this.postLiveData;
     }
+
+    public void updatePost(Post post){
+        Model.instance.addPost(post);
+    }
+
 }
