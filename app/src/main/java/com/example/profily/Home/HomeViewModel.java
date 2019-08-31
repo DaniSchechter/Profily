@@ -38,28 +38,26 @@ public class HomeViewModel extends ViewModel {
 
                 // Check in the DB if this post is liked
                 Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId ->  {
-                        postLikeWrapper.setLikeIdForCurrentUser(likeId);
-                        this.postsListLiveData.setValue(postLikeWrappersList);
+                    postLikeWrapper.setLikeIdForCurrentUser(likeId);
 
-                        // ---------------- DEBUGGING
-                        Log.d("TAG", "Applying To VM's list: postID: " + post.getPostId() +" likeID: "+ likeId);
-                        Log.d("TAG","******** Current VM's list ********");
-                        for (PostLikeWrapper p : postLikeWrappersList) {
-                            Log.d("TAG", p.post.getPostId() + " , " + p.likeIdForCurrentUser());
-                        }
-                });
+                    // ---------------- DEBUGGING
+                    Log.d("TAG", "Applying To VM's list: postID: " + post.getPostId() +" likeID: "+ likeId);
+                    Log.d("TAG","******** Current VM's list ********");
+                    for (PostLikeWrapper p : postLikeWrappersList) {
+                        Log.d("TAG", p.post.getPostId() + " , " + p.likeIdForCurrentUser());
+                    }
 
-                // Get the username of the post
-                Model.instance.getUserNameById(post.getUserCreatorId(), username ->  {
-                    postLikeWrapper.setUsernameForCurrentUser(username);
-                    this.postsListLiveData.setValue(postLikeWrappersList);
-                });
+                    // Get the username of the post
+                    Model.instance.getUserNameById(post.getUserCreatorId(), username ->  {
+                        postLikeWrapper.setUsernameForCurrentUser(username);
 
+                        // Get the number of likes of the post
+                        Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {
+                            postLikeWrapper.setNumOfLikes(numOfLikes);
+                            this.postsListLiveData.setValue(postLikeWrappersList);
+                        });
+                    });
 
-                // Get the number of likes of the post
-                Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {
-                    postLikeWrapper.setNumOfLikes(numOfLikes);
-                    this.postsListLiveData.setValue(postLikeWrappersList);
                 });
             }
         });
@@ -79,8 +77,8 @@ public class HomeViewModel extends ViewModel {
 
             // Check in the DB if this post is liked
             Model.instance.findLike(post.getPostId(), Model.instance.getConnectedUserId(), likeId -> {
-                    postLikeWrapper.setLikeIdForCurrentUser(likeId);
-                    Log.d("TAG", "Applying To VM's list: " + post.getPostId() +" "+ likeId);
+                postLikeWrapper.setLikeIdForCurrentUser(likeId);
+                Log.d("TAG", "Applying To VM's list: " + post.getPostId() +" "+ likeId);
             });
         }
         return postLikeWrappersList;
