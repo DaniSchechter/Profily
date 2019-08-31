@@ -15,6 +15,7 @@ import com.example.profily.MainActivity;
 import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Model.Schema.Post.PostLikeWrapper;
+import com.example.profily.Post.PostViewModel;
 import com.example.profily.R;
 
 import java.util.List;
@@ -61,6 +62,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         ImageView profileImage;
         ImageView mainImage;
         ImageView editPostBtn;
+        ImageView deletePostBtn;
         ImageView likedImage;
         TextView username;
         TextView numOfLikes;
@@ -82,6 +84,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             caption = itemView.findViewById(R.id.post_caption);
             comments = itemView.findViewById(R.id.post_comments_link);
             editPostBtn = itemView.findViewById(R.id.post_edit_post_btn);
+            deletePostBtn = itemView.findViewById(R.id.post_delete_post_btn);
 
         }
 
@@ -92,9 +95,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             comments.setText("View comments");
             if (HomeViewModel.checkEdit(post.post.getUserCreatorId())){
                 editPostBtn.setVisibility(View.VISIBLE);
+                deletePostBtn.setVisibility((View.VISIBLE));
             }
             else{
                 editPostBtn.setVisibility(View.INVISIBLE);
+                deletePostBtn.setVisibility((View.INVISIBLE));
             }
 
             if(post.likeIdForCurrentUser() == null)
@@ -140,6 +145,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
                             )
                     )
             );
+
+            deletePostBtn.setOnClickListener(viewOnClick -> {
+                post.post.setWasDeleted(true);
+                PostViewModel.updatePost(post.post);
+            });
         }
     }
 

@@ -56,8 +56,8 @@ public class PostViewModel extends ViewModel {
         return this.postLiveData;
     }
 
-    public void updatePost(Post post){
-        Model.instance.addPost(post);
+    public static void updatePost(Post post){
+        Model.instance.updatePost(post);
     }
 
 }
