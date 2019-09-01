@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.profily.Model.Model;
 import com.example.profily.Model.ModelSql;
+import com.example.profily.Model.Schema.User.User;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,25 +47,6 @@ public class PostAsyncDao{
                 }
             }
         }.execute(postId);
-    }
-
-    public static void getUserNameById(String userId, final Model.GetUserNameByIdListener listener)
-    {
-        new AsyncTask<String, Void, String>(){
-
-            @Override
-            protected String doInBackground(String... strings) {
-                return ModelSql.getInstance().postDao().getUserNameById(userId);
-            }
-
-            @Override
-            protected void onPostExecute(String username) {
-                super.onPostExecute(username);
-                if (listener != null) {
-                    listener.onComplete(username);
-                }
-            }
-        }.execute();
     }
 
     public static void getUserIdByPost(String postId, final Model.GetUserIdByPostListener listener)

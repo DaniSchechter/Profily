@@ -32,6 +32,16 @@ public class Post {
     private Date createdDate;
 
     @Ignore
+    public Post(String userCreatorId, String imageURL, String caption,
+                Boolean wasDeleted, Date createdDate) {
+        this.userCreatorId = userCreatorId;
+        this.imageURL = imageURL;
+        this.caption = caption;
+        this.wasDeleted = wasDeleted;
+        this.createdDate = createdDate;
+    }
+
+    @Ignore
     public Post(String postId, String userCreatorId, String imageURL, String caption,
                 Boolean wasDeleted, Date createdDate) {
         this.postId = postId;

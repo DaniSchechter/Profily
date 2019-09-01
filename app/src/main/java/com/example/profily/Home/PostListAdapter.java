@@ -11,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.profily.MainActivity;
-import com.example.profily.Model.Model;
-import com.example.profily.Model.Schema.Post.PostAsyncDao;
+import com.bumptech.glide.Glide;
 import com.example.profily.Model.Schema.Post.PostLikeWrapper;
 import com.example.profily.Post.PostViewModel;
 import com.example.profily.R;
@@ -36,8 +34,6 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
     public void onBindViewHolder(@NonNull PostRowViewHolder holder, int position) {
         if (postsList != null) {
             holder.bind(postsList.get(position));
-        } else {
-            // TODO show spinner
         }
 
     }
@@ -89,10 +85,20 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
         }
 
         public void bind(PostLikeWrapper post){
-            username.setText(post.usernameForCurrentUser());
+            if (post.getUser() == null){
+                return;
+            }
+            username.setText(post.getUser().getUsername());
             numOfLikes.setText("" + post.getNumOfLikes() + " likes");
             caption.setText(post.post.getCaption());
             comments.setText("View comments");
+            if(!post.getUser().getProfileImageURL().isEmpty()){
+                Glide.with(profileImage.getContext()).load(post.getUser().getProfileImageURL()).into(profileImage);
+            }
+
+            Glide.with(mainImage.getContext()).load(post.post.getImageURL()).into(mainImage);
+
+
             if (HomeViewModel.checkEdit(post.post.getUserCreatorId())){
                 editPostBtn.setVisibility(View.VISIBLE);
                 deletePostBtn.setVisibility(View.VISIBLE);
@@ -148,7 +154,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
 
             deletePostBtn.setOnClickListener(viewOnClick -> {
                 post.post.setWasDeleted(true);
-                PostViewModel.updatePost(post.post);
+                PostViewModel.updatePost(post.post, null);
             });
         }
     }

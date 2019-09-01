@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.MainActivity;
 import com.example.profily.Model.Model;
 import com.example.profily.R;
@@ -43,6 +44,7 @@ public class ProfileFragment extends Fragment {
     private Button editProfileBtn;
     private ImageButton logoutButton;
     private ProgressBar progressBar;
+    private ProgressBar profileImageProgressBar;
 
     //counting vars
     private TextView profileNumOfPosts;
@@ -71,6 +73,7 @@ public class ProfileFragment extends Fragment {
         editProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
         logoutButton = view.findViewById(R.id.profile_logout);
         progressBar = view.findViewById(R.id.profile_progress_bar);
+        profileImageProgressBar = view.findViewById(R.id.profile_image_progress_bar);
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -79,7 +82,7 @@ public class ProfileFragment extends Fragment {
         layoutManager.isAutoMeasureEnabled();
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new ImageGridAdapter(postsList);
+        adapter = new ImageGridAdapter();
         recyclerView.setAdapter(adapter);
 
         String userId = null;
@@ -105,7 +108,6 @@ public class ProfileFragment extends Fragment {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
 
-        profileViewModel.getPosts(userId);
         profileViewModel.populateUserDetails(userId);
 
         logoutButton.setOnClickListener(view1 -> {
@@ -119,10 +121,15 @@ public class ProfileFragment extends Fragment {
                 )
         );
 
-        profileViewModel.getUser().observe(this, userData->{
+        profileImageProgressBar.setVisibility(View.VISIBLE);
+        profileViewModel.getUser().observe(this, userData -> {
             profileUsername.setText(userData.getUsername());
             profileDescription.setText(userData.getDescription());
             progressBar.setVisibility(View.GONE);
+            if(!profileViewModel.isImageLoading()) {
+                Glide.with(this).load(userData.getProfileImageURL()).into(profileImage);
+                profileImageProgressBar.setVisibility(View.GONE);
+            }
         });
 
         profileViewModel.getPostsList().observe(this, list -> {
@@ -130,9 +137,9 @@ public class ProfileFragment extends Fragment {
             profileNumOfPosts.setText("" + list.size());
             progressBar.setVisibility(View.GONE);
         } );
+        profileViewModel.getPosts(userId);
 
 
         return view;
     }
-
 }

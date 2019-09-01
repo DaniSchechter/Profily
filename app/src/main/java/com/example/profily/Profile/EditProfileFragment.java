@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.Camera.UploadImageActivity;
 import com.example.profily.MainActivity;
 import com.example.profily.Model.Schema.User.User;
@@ -43,7 +44,7 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
     }
 
     @Override
@@ -67,14 +68,12 @@ public class EditProfileFragment extends Fragment {
             userId = EditProfileFragmentArgs.fromBundle(getArguments()).getUserId();
         }
 
-
-        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-
         progressBar.setVisibility(View.VISIBLE);
         profileViewModel.populateUserDetails(userId);
 
         profileImage.setOnClickListener(v -> dispatchTakePictureIntent());
 
+        profileViewModel.getImageBitmap().observe(this, bitmap -> profileImage.setImageBitmap(bitmap));
         profileViewModel.getUser().observe(this, userData->{
             if (userData.getUsername() != null){
                 profileUsername.setText(userData.getUsername());
@@ -86,6 +85,9 @@ public class EditProfileFragment extends Fragment {
             profileLastName.setText(userData.getLastName());
             profileDescription.setText(userData.getDescription());
             progressBar.setVisibility(View.GONE);
+            if (!userData.getProfileImageURL().isEmpty()){
+                Glide.with(this).load(userData.getProfileImageURL()).into(profileImage);
+            }
 
 
             saveProfileBtn.setOnClickListener(view1 -> {
@@ -127,7 +129,7 @@ public class EditProfileFragment extends Fragment {
                 return;
             }
             Bundle extras = data.getExtras();
-            profileImage.setImageBitmap((Bitmap) extras.get(UploadImageActivity.IMAGE_KEY)); // TODO CHANGE TO VIEW MODEL
+            profileViewModel.setImageBitmapLiveData((Bitmap) extras.get(UploadImageActivity.IMAGE_KEY));
         }
     }
 

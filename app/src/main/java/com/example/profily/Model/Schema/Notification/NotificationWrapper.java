@@ -1,17 +1,29 @@
 package com.example.profily.Model.Schema.Notification;
 
+import com.example.profily.Model.Schema.User.User;
+
 public class NotificationWrapper {
     public Notification notification;
-    private String usernameForCurrentnotification;
+    private User userForCurrentnotification;
 
-    public NotificationWrapper(Notification notification, String usernameForCurrentNotification) {
+    public String getUserImgURL() {
+        return userImgURL;
+    }
+
+    public void setUserImgURL(String userImgURL) {
+        this.userImgURL = userImgURL;
+    }
+
+    private String userImgURL;
+
+    public NotificationWrapper(Notification notification, User userForCurrentnotification) {
         this.notification = notification;
-        this.usernameForCurrentnotification = usernameForCurrentNotification;
+        this.userForCurrentnotification = userForCurrentnotification;
     }
 
-    public void setUsernameForCurrentnotification(String usernameForCurrentnotification){
-        this.usernameForCurrentnotification = usernameForCurrentnotification;
+    public void setUserForCurrentnotification(User userForCurrentnotification){
+        this.userForCurrentnotification = userForCurrentnotification;
     }
 
-    public String usernameForCurrentnotification(){ return usernameForCurrentnotification; }
+    public User getUserForCurrentnotification(){ return userForCurrentnotification; }
 }

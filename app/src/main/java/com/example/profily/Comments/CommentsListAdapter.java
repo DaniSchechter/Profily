@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.MainActivity;
 import com.example.profily.Model.Schema.Comment.CommentWrapper;
 import com.example.profily.R;
@@ -80,10 +81,14 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
         }
 
         public void bind(CommentWrapper comment) {
-
-            commentatorUsername.setText(comment.usernameForCurrentcomment()); // TODO change
+            if (comment.getUser() == null) {
+                return;
+            }
+            commentatorUsername.setText(comment.getUser().getUsername()); // TODO change
             commentDescription.setText(comment.comment.getContent());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.comment.getCreatedDate()));
+
+            Glide.with(commentatorImage.getContext()).load(comment.getUser().getProfileImageURL()).into(commentatorImage);
 
             commentatorUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(

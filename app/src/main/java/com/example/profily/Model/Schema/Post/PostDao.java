@@ -6,6 +6,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.profily.Model.Schema.User.User;
+
 import java.util.List;
 
 @Dao
@@ -17,9 +19,6 @@ public interface PostDao {
 
     @Query("SELECT * FROM posts WHERE postId = :postId AND wasDeleted = 0")
     Post getPostById(String postId);
-
-    @Query("SELECT username FROM users WHERE userId = :userId")
-    String getUserNameById(String userId);
 
     @Query("SELECT userCreatorId FROM posts WHERE postId = :postId")
     String getUserIdByPost(String postId);

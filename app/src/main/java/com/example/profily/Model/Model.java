@@ -1,5 +1,6 @@
 package com.example.profily.Model;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.profily.Model.Schema.Action.Action;
@@ -58,11 +59,11 @@ public class Model {
         //PostAsyncDao.getAllPosts(listener);
     }
 
-    public interface  GetPostByIdListener{
+    public interface GetPostByIdListener {
         void onComplete(Post post);
     }
 
-    public interface GetUserIdByPostListener{
+    public interface GetUserIdByPostListener {
         void onComplete(String userId);
     }
 
@@ -80,11 +81,10 @@ public class Model {
     }
 
     public void addPost(Post post){
-        PostAsyncDao.addPost(post);
         modelFirebase.addPost(post, new AddPostListener() {
             @Override
             public void onComplete(boolean success) {
-
+                PostAsyncDao.addPost(post);
             }
         });
     }
@@ -109,11 +109,11 @@ public class Model {
     public interface FindLikeListener {
         /**
          * @return String - likeId if exists, null if does not exist yet
-         * */
+         */
         void onComplete(String likeId);
     }
 
-    public interface GetNumberOfLikesListener{
+    public interface GetNumberOfLikesListener {
         void onComplete(int numOfLikes);
     }
 
@@ -130,24 +130,28 @@ public class Model {
         LikeAsyncDao.likeByUser(postId, userId, localLikeId -> {
             Log.d("TAG", "============== FINISHED SEARCHING NEW LIKE ==============");
             Log.d("TAG", "post: " + postId + ", user: " + userId);
-            Log.d("TAG", "LIKE local : " + localLikeId );
+            Log.d("TAG", "LIKE local : " + localLikeId);
             // Present it to the user
             listener.onComplete(localLikeId);
             // Get the newest data from the cloud
             modelFirebase.likeByUser(postId, userId, cloudLikeId -> {
-                Log.d("TAG", "LIKE remote of user: "+ userId + ", postID: " +postId + ": "+ cloudLikeId );
+                Log.d("TAG", "LIKE remote of user: " + userId + ", postID: " + postId + ": " + cloudLikeId);
                 // Update local DB if needed
 
                 if (localLikeId == null && cloudLikeId != null) {
                     Log.d("TAG", "Adding like to local DB");
-                    LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {});
+                    LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {
+                    });
                 } else if (localLikeId != null && cloudLikeId == null) {
                     Log.d("TAG", "Removing like from local DB");
-                    LikeAsyncDao.unlike(localLikeId, i-> {});
-                } else if (localLikeId != null && ! localLikeId.equals(cloudLikeId)) {
+                    LikeAsyncDao.unlike(localLikeId, i -> {
+                    });
+                } else if (localLikeId != null && !localLikeId.equals(cloudLikeId)) {
                     Log.d("TAG", "Updating like id in local DB");
-                    LikeAsyncDao.unlike(localLikeId, i-> {});
-                    LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {});
+                    LikeAsyncDao.unlike(localLikeId, i -> {
+                    });
+                    LikeAsyncDao.like(cloudLikeId, postId, userId, i -> {
+                    });
                 }
                 listener.onComplete(cloudLikeId);
                 Log.d("TAG", "---------------------------------\n\n");
@@ -156,31 +160,27 @@ public class Model {
         });
     }
 
-    public void getNumberOfLikes(String postId, GetNumberOfLikesListener listener){
-        LikeAsyncDao.getNumOfLikes(postId, localNumOfLikes-> {
-           listener.onComplete(localNumOfLikes);
-
-           modelFirebase.getNumOfLikes(postId, cloudNumOfLikes->{
-              listener.onComplete(cloudNumOfLikes);
-           });
+    public void getNumberOfLikes(String postId, GetNumberOfLikesListener listener) {
+        modelFirebase.getNumOfLikes(postId, cloudNumOfLikes -> {
+            listener.onComplete(cloudNumOfLikes);
         });
     }
 
     public void like(String postId, String userId, LikeOperationListener listener) {
         modelFirebase.like(postId, userId, likeId -> {
             if (likeId == null) {
-                Log.e("TAG" ,"Could not preform remote like operation, postId " + postId
+                Log.e("TAG", "Could not preform remote like operation, postId " + postId
                         + ", userId " + userId);
                 return;
             }
-            LikeAsyncDao.like(likeId, postId, userId,  i -> listener.onComplete(likeId));
+            LikeAsyncDao.like(likeId, postId, userId, i -> listener.onComplete(likeId));
         });
     }
 
     public void unlike(String likeId, UnlikeOperationListener listener) {
         modelFirebase.unlike(likeId, success -> {
             if (!success) {
-                Log.e("TAG" ,"Could not preform remote unlike operation, likeId " + likeId);
+                Log.e("TAG", "Could not preform remote unlike operation, likeId " + likeId);
                 return;
             }
             LikeAsyncDao.unlike(likeId, i -> listener.onComplete(true));
@@ -193,12 +193,12 @@ public class Model {
     =======================
      */
 
-    public interface GetAllUsersByNameListener{
+    public interface GetAllUsersByNameListener {
         void onComplete(List<User> users);
     }
 
-    public interface GetUserNameByIdListener{
-        void onComplete(String username);
+    public interface GetUserByIdListener {
+        void onComplete(User user);
     }
 
     public String getConnectedUserId() {
@@ -219,14 +219,16 @@ public class Model {
 //        modelFirebase.saveImage(imageBitmap, listener);
 //    }
 
-    public void getUserNameById(String userId, final GetUserNameByIdListener listener){
+    public void getUserById(String userId, final GetUserByIdListener listener) {
         // Get already cached data
-        PostAsyncDao.getUserNameById(userId, localUsername -> {
+        UserAsyncDao.getUserById(userId, localUser -> {
             // Present it to the user
-            listener.onComplete(localUsername);
+            if (localUser != null){
+                listener.onComplete(localUser);
+            }
             // Get the newest data from the cloud
-            modelFirebase.getUserNameById(userId, cloudUsername -> {
-                listener.onComplete(cloudUsername);
+            modelFirebase.getUserById(userId, cloudUser -> {
+                UserAsyncDao.addUserAndFetch(cloudUser, user -> listener.onComplete(user));
             });
         });
     }
@@ -264,8 +266,8 @@ public class Model {
         modelFirebase.addComment(comment, new AddCommentListener() {
             @Override
             public void onComplete(boolean success) {
-                PostAsyncDao.getUserIdByPost(comment.getPostId(), userId-> {
-                    if (!userId.equals(comment.getUserCreatorId())){
+                PostAsyncDao.getUserIdByPost(comment.getPostId(), userId -> {
+                    if (!userId.equals(comment.getUserCreatorId())) {
                         addNotification(new Notification(
                                 new CommentAction(),
                                 comment.getUserCreatorId(),
@@ -280,8 +282,7 @@ public class Model {
         });
     }
 
-    public void updateComment(Comment comment)
-    {
+    public void updateComment(Comment comment) {
         modelFirebase.updateComment(comment);
         CommentAsyncDao.updateComment(comment);
     }
@@ -317,7 +318,8 @@ public class Model {
 
     public void addNotification(Notification notification) {
 //        NotificationAsyncDao.addNotification(notification);
-        modelFirebase.addNotification(notification, result -> {});
+        modelFirebase.addNotification(notification, result -> {
+        });
     }
 
 //    public interface SaveImageListener{
@@ -353,42 +355,80 @@ public class Model {
         //PostAsyncDao.getAllPosts(listener);
     }
 
-    public interface AddUserListener{
+    public interface AddUserListener {
         void onComplete(boolean success);
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         modelFirebase.addUser(user, new AddUserListener() {
             @Override
             public void onComplete(boolean success) {
-
+                if (success) {
+                    UserAsyncDao.addUser(user);
+                }
             }
         });
-        UserAsyncDao.addUser(user);
     }
 
-    public interface GetConnectedUserListener{
+    public interface GetConnectedUserListener {
         void onComplete(User user);
     }
 
-    public void getUserById(String userId, final GetConnectedUserListener listener) {
-
-        // Get already cached data
-        UserAsyncDao.getUserById(userId, cachedUser -> {
-            // Present it to the user
-            if (cachedUser != null){
-                listener.onComplete(cachedUser);
-            }
-            // Get the newest data from the cloud
-            modelFirebase.getUserById(userId, cloudUser -> {
-                // Update local DB
-                UserAsyncDao.addUserDetailsAndFetch(userId, cloudUser, posts -> listener.onComplete(posts));
-            });
-        });
-        //PostAsyncDao.getAllPosts(listener);
-    }
-
-    public interface GetPostCountListener{
+    public interface GetPostCountListener {
         void onComplete(Integer numOfPosts);
     }
+
+    /*
+    =======================
+    FIREBASE STORAGE
+    =======================
+     */
+
+    public interface SaveImageListener {
+        void onFailure();
+
+        void onSuccess(String URI);
+    }
+
+    public interface GetImageListener {
+        void onFailure();
+
+        void onSuccess(Bitmap bitmap);
+    }
+
+
+    private void uploadImage(Bitmap imageBmp, String collection_name, Model.SaveImageListener listener) {
+        modelFirebase.uploadImage(imageBmp, collection_name, listener);
+    }
+
+    public void uploadPostImage(Post post, Bitmap imageBmp, Model.SaveImageListener listener) {
+        this.uploadImage(imageBmp, "post_image/"+post.getPostId(), new SaveImageListener() {
+            @Override
+            public void onFailure() {
+                Log.e("TAG", "Error uploading posts's image");
+                listener.onFailure();
+            }
+
+            @Override
+            public void onSuccess(String URI) {
+                listener.onSuccess(URI);
+            }
+        });
+    }
+
+    public void uploadUserImage(User user, Bitmap imageBmp, Model.SaveImageListener listener) {
+        this.uploadImage(imageBmp, "user_image/"+user.getUserId(), new SaveImageListener() {
+            @Override
+            public void onFailure() {
+                Log.e("TAG", "Error uploading user's image");
+                listener.onFailure();
+            }
+
+            @Override
+            public void onSuccess(String URI) {
+                listener.onSuccess(URI);
+            }
+        });
+    }
+
 }

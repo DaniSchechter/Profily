@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.Camera.UploadImageActivity;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.R;
@@ -36,7 +38,7 @@ public class EditPostFragment extends Fragment {
     private TextView postCaption;
     private ImageView postImage;
     private Button savePostBtn;
-
+    private ProgressBar progressBar;
 
     public EditPostFragment() {
         // Required empty public constructor
@@ -54,9 +56,10 @@ public class EditPostFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_post, container, false);
         postCaption = view.findViewById(R.id.edit_post_caption);
-
         postImage = view.findViewById(R.id.edit_post_post_image);
         savePostBtn = view.findViewById(R.id.edit_post_save_post_btn);
+        progressBar = view.findViewById(R.id.edit_post_progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
 
         String postId = null;
         if (getArguments() != null && getArguments().size()!=0)
@@ -64,6 +67,7 @@ public class EditPostFragment extends Fragment {
             postId = EditPostFragmentArgs.fromBundle(getArguments()).getPostId();
         }
 
+        postViewModel.getBitmap().observe(this, bitmap -> postImage.setImageBitmap(bitmap));
         postImage.setOnClickListener(v -> dispatchTakePictureIntent());
 
         postViewModel.populatePostDetails(postId);
@@ -75,6 +79,9 @@ public class EditPostFragment extends Fragment {
             else{
                 postCaption.setText("");
             }
+
+            Glide.with(postImage.getContext()).load(postData.post.getImageURL()).into(postImage);
+            progressBar.setVisibility(View.GONE);
 
             savePostBtn.setOnClickListener(view1 -> {
                 postViewModel.updatePost(
@@ -108,7 +115,7 @@ public class EditPostFragment extends Fragment {
                 return;
             }
             Bundle extras = data.getExtras();
-            postImage.setImageBitmap((Bitmap) extras.get(UploadImageActivity.IMAGE_KEY)); // TODO CHANGE TO VIEW MODEL
+            postViewModel.setBitmap((Bitmap) extras.get(UploadImageActivity.IMAGE_KEY));
         }
     }
 

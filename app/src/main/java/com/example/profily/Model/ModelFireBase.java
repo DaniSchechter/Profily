@@ -1,11 +1,16 @@
 package com.example.profily.Model;
 
+  import android.graphics.Bitmap;
+  import android.graphics.BitmapFactory;
+  import android.net.Uri;
   import android.util.Log;
   import com.example.profily.Model.Schema.Comment.Comment;
   import com.example.profily.Model.Schema.Like.Like;
   import com.example.profily.Model.Schema.Notification.Notification;
   import com.example.profily.Model.Schema.Post.Post;
   import com.example.profily.Model.Schema.User.User;
+  import com.google.android.gms.tasks.OnFailureListener;
+  import com.google.android.gms.tasks.OnSuccessListener;
   import com.google.firebase.auth.FirebaseAuth;
   import com.google.firebase.auth.FirebaseUser;
   import com.google.firebase.firestore.DocumentReference;
@@ -13,7 +18,11 @@ package com.example.profily.Model;
   import com.google.firebase.firestore.FirebaseFirestoreSettings;
   import com.google.firebase.firestore.Query;
   import com.google.firebase.firestore.QueryDocumentSnapshot;
+  import com.google.firebase.storage.FirebaseStorage;
+  import com.google.firebase.storage.StorageReference;
+  import com.google.firebase.storage.UploadTask;
 
+  import java.io.ByteArrayOutputStream;
   import java.util.LinkedList;
 
 public class ModelFireBase {
@@ -62,7 +71,7 @@ public class ModelFireBase {
                         listener.onComplete(post);
                         return;
                     }
-                    if (queryDocumentSnapshots != null) {
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
                         post = queryDocumentSnapshots.getDocuments().get(0).toObject(Post.class);
                         listener.onComplete(post);
                     }
@@ -72,6 +81,8 @@ public class ModelFireBase {
 
 
     public void addPost(Post post, final Model.AddPostListener listener) {
+        String postId = db.collection("posts").document().getId();
+        post.setPostId(postId);
         db.collection("posts")
                 .document(post.getPostId())
                 .set(post)
@@ -225,24 +236,6 @@ public class ModelFireBase {
         );
     }
 
-    public void getUserById(String userId, final Model.GetConnectedUserListener listener)
-    {
-        db.collection("users")
-                .whereEqualTo("userId", userId).addSnapshotListener(
-                (queryDocumentSnapshots, fireBaseException) -> {
-                    User user = new User();
-                    if (fireBaseException != null) {
-                        listener.onComplete(user);
-                        return;
-                    }
-                    if (queryDocumentSnapshots != null) {
-                        user = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class);
-                        listener.onComplete(user);
-                    }
-                }
-        );
-    }
-
 
     public String getUserById ()
     {
@@ -253,19 +246,18 @@ public class ModelFireBase {
         return user.getUid();
     }
 
-    public void getUserNameById(String userId, final Model.GetUserNameByIdListener listener)
+    public void getUserById(String userId, final Model.GetUserByIdListener listener)
     {
         db.collection("users")
                 .whereEqualTo("userId", userId).addSnapshotListener(
                 (queryDocumentSnapshots, fireBaseException) -> {
-                    String username = null;
                     if (fireBaseException != null) {
-                        listener.onComplete(username);
+                        listener.onComplete(null);
                         return;
                     }
-                    if (queryDocumentSnapshots != null) {
-                        username = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class).getUsername();
-                        listener.onComplete(username);
+                    if (queryDocumentSnapshots != null && queryDocumentSnapshots.getDocuments().size() > 0) {
+                        User user = queryDocumentSnapshots.getDocuments().get(0).toObject(User.class);
+                        listener.onComplete(user);
                     }
                 }
         );
@@ -313,24 +305,25 @@ public class ModelFireBase {
     // =========== PROFILE ===========
 
     public void getAllUserPosts(String userId, final Model.GetAllUserPostsListener listener) {
-        db.collection("posts").whereEqualTo("userCreatorId", userId)
+        db.collection("posts")
+                .whereEqualTo("userCreatorId", userId)
                 .orderBy("createdDate", Query.Direction.DESCENDING)
                 .addSnapshotListener(
-                (queryDocumentSnapshots, fireBaseException) -> {
-                    LinkedList<Post> data = new LinkedList<>();
-                    if (fireBaseException != null) {
-                        listener.onComplete(data);
-                        return;
-                    }
-                    if (queryDocumentSnapshots != null) {
-                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                            Post post = doc.toObject(Post.class);
-                            data.add(post);
+                    (queryDocumentSnapshots, fireBaseException) -> {
+                        LinkedList<Post> data = new LinkedList<>();
+                        if (fireBaseException != null) {
+                            listener.onComplete(data);
+                            return;
                         }
-                        listener.onComplete(data);
+                        if (queryDocumentSnapshots != null) {
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                Post post = doc.toObject(Post.class);
+                                data.add(post);
+                            }
+                            listener.onComplete(data);
+                        }
                     }
-                }
-        );
+                );
     }
 
     public void addUser(User user, final Model.AddUserListener listener) {
@@ -339,4 +332,31 @@ public class ModelFireBase {
                 .set(user)
                 .addOnCompleteListener(task -> listener.onComplete(task.isSuccessful()));
     }
+
+    // =========== FIREBASE STORAGE ===========
+
+    public void uploadImage(Bitmap imageBmp, String collection_name, final Model.SaveImageListener listener){
+        StorageReference imagesRef = FirebaseStorage.getInstance().getReference().child("images").child(collection_name);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        imageBmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = imagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception exception) {
+                listener.onFailure();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                if (taskSnapshot.getMetadata() == null || taskSnapshot.getMetadata().getReference() == null)
+                    return;
+
+                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(
+                        uri -> listener.onSuccess(uri.toString())
+                );
+            }
+        });
+    }
+
 }

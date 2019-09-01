@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.Model.Schema.Notification.NotificationWrapper;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Action.Action;
@@ -66,10 +67,15 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
         }
 
         public void bind(NotificationWrapper notification){
-            triggeringUserUsername.setText(notification.usernameForCurrentnotification()); // TODO change
+            if (notification.getUserForCurrentnotification() == null){
+                return;
+            }
+            triggeringUserUsername.setText(notification.getUserForCurrentnotification().getUsername()); // TODO change
             description.setText(notification.notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.notification.getActionDateTime()));
-
+            if(!notification.getUserForCurrentnotification().getProfileImageURL().isEmpty()) {
+                Glide.with(triggeringUserImage.getContext()).load(notification.getUserForCurrentnotification().getProfileImageURL()).into(triggeringUserImage);
+            }
 
             // Navigate to the effected post, if it is not a subscription action
             effectedUserImage.setOnClickListener(

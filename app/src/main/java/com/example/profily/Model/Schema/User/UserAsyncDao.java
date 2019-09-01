@@ -29,14 +29,14 @@ public class UserAsyncDao {
         }.execute();
     }
 
-    public static void addUserDetailsAndFetch(final String userId, final User user, final Model.GetConnectedUserListener listener)
+    public static void addUserAndFetch(final User user, final Model.GetUserByIdListener listener)
     {
         new AsyncTask<User, Void, User>(){
 
             @Override
             protected User doInBackground(User... users) {
                 ModelSql.getInstance().userDao().insertUser(users[0]);
-                return ModelSql.getInstance().userDao().getUserById(userId);
+                return ModelSql.getInstance().userDao().getUserById(user.getUserId());
             }
 
             @Override

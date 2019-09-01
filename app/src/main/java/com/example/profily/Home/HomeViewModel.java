@@ -48,8 +48,8 @@ public class HomeViewModel extends ViewModel {
                     }
 
                     // Get the username of the post
-                    Model.instance.getUserNameById(post.getUserCreatorId(), username ->  {
-                        postLikeWrapper.setUsernameForCurrentUser(username);
+                    Model.instance.getUserById(post.getUserCreatorId(), user ->  {
+                        postLikeWrapper.setUser(user);
 
                         // Get the number of likes of the post
                         Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {

@@ -60,6 +60,12 @@ public class NotificationsFragment extends Fragment {
             adapter.setNotifications(list);
             progressBar.setVisibility(View.GONE);
         });
+        notificationsViewModel.getNumberOfNotifications().observe(this, size -> {
+            if (size == 0){
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
         notificationsViewModel.getNotifications();
 
         return view;

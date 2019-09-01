@@ -33,8 +33,8 @@ public class CommentsViewModel extends ViewModel {
                 commentsWrappersList.add(commentWrapper);
 
                 // Get the username of the comment
-                Model.instance.getUserNameById(comment.getUserCreatorId(), username ->  {
-                    commentWrapper.setUsernameForCurrentcomment(username);
+                Model.instance.getUserById(comment.getUserCreatorId(), user ->  {
+                    commentWrapper.setUser(user);
                     this.commentsListLiveData.setValue(commentsWrappersList);
                 });
             }
