@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.example.profily.Model.Model;
 import com.example.profily.R;
@@ -32,6 +33,7 @@ public class CommentsFragment extends Fragment {
     private CommentsListAdapter adapter;
     private Button addNewCommentBtn;
     private EditText commentBox;
+    private ProgressBar progressBar;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -49,6 +51,7 @@ public class CommentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_comments, container, false);
 
         recyclerView = view.findViewById(R.id.comments_recycler_view);
+        progressBar = view.findViewById(R.id.comments_progress_bar);
         recyclerView.setHasFixedSize(true);
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -65,9 +68,14 @@ public class CommentsFragment extends Fragment {
             String postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
 
             commentsViewModel.getComments(postId);
+            progressBar.setVisibility(View.VISIBLE);
 
             //TODO add logic for something like pagination
-            commentsViewModel.getCommentsList().observe(this, list -> adapter.setComments(list) );
+            commentsViewModel.getCommentsList().observe(this, list -> {
+                adapter.setComments(list);
+                progressBar.setVisibility(View.GONE);
+
+            });
 
             addNewCommentBtn = view.findViewById(R.id.save_comment_btn);
             commentBox = view.findViewById(R.id.comment_text);

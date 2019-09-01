@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class EditProfileFragment extends Fragment {
     private TextView profileUsername,profileDescription,profileFirstName,profileLastName;
     private ImageView profileImage;
     private Button saveProfileBtn;
+    private ProgressBar progressBar;
 
 
     public EditProfileFragment() {
@@ -57,6 +59,8 @@ public class EditProfileFragment extends Fragment {
         profileImage = view.findViewById(R.id.edit_profile_profile_image);
         saveProfileBtn = view.findViewById(R.id.edit_profile_save_profile_btn);
 
+        progressBar = view.findViewById(R.id.edit_profile_progress_bar);
+
         String userId = null;
         if (getArguments() != null && getArguments().size()!=0)
         {
@@ -66,6 +70,7 @@ public class EditProfileFragment extends Fragment {
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 
+        progressBar.setVisibility(View.VISIBLE);
         profileViewModel.populateUserDetails(userId);
 
         profileImage.setOnClickListener(v -> dispatchTakePictureIntent());
@@ -80,8 +85,11 @@ public class EditProfileFragment extends Fragment {
             profileFirstName.setText(userData.getFirstName());
             profileLastName.setText(userData.getLastName());
             profileDescription.setText(userData.getDescription());
+            progressBar.setVisibility(View.GONE);
+
 
             saveProfileBtn.setOnClickListener(view1 -> {
+                progressBar.setVisibility(View.VISIBLE);
                 if (profileUsername.getText().toString().equals("")){
                     Toast.makeText(MainActivity.context, "Username cannot be empty", Toast.LENGTH_SHORT).show();
                 }
@@ -94,6 +102,7 @@ public class EditProfileFragment extends Fragment {
                                     profileFirstName.getText().toString(),
                                     profileLastName.getText().toString()
                             ));
+                    progressBar.setVisibility(View.GONE);
                     getFragmentManager().popBackStack();
                 }
             });
