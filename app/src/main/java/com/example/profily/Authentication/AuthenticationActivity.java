@@ -194,6 +194,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
+            setResult(RESULT_OK);
             this.finish();
         }
         else {

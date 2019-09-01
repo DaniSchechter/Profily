@@ -1,5 +1,7 @@
 package com.example.profily.Profile;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +15,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.profily.Camera.UploadImageActivity;
 import com.example.profily.MainActivity;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.R;
 
+import static android.app.Activity.RESULT_OK;
+
 public class EditProfileFragment extends Fragment {
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private ProfileViewModel profileViewModel;
 
     //Profile vars
     private TextView profileUsername,profileDescription,profileFirstName,profileLastName;
-    private TextView changeProfileImgBtn;
     private ImageView profileImage;
     private Button saveProfileBtn;
 
@@ -48,7 +54,6 @@ public class EditProfileFragment extends Fragment {
         profileFirstName = view.findViewById(R.id.edit_profile_first_name);
         profileLastName = view.findViewById(R.id.edit_profile_last_name);
 
-        changeProfileImgBtn = view.findViewById(R.id.edit_profile_change_profile_pic);
         profileImage = view.findViewById(R.id.edit_profile_profile_image);
         saveProfileBtn = view.findViewById(R.id.edit_profile_save_profile_btn);
 
@@ -62,6 +67,9 @@ public class EditProfileFragment extends Fragment {
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
 
         profileViewModel.populateUserDetails(userId);
+
+        profileImage.setOnClickListener(v -> dispatchTakePictureIntent());
+
         profileViewModel.getUser().observe(this, userData->{
             if (userData.getUsername() != null){
                 profileUsername.setText(userData.getUsername());
@@ -94,6 +102,24 @@ public class EditProfileFragment extends Fragment {
         return view;
     }
 
+    private void dispatchTakePictureIntent() {
+        Intent intent = new Intent(getActivity(), UploadImageActivity.class);
 
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            this.startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if(data == null) {
+                return;
+            }
+            Bundle extras = data.getExtras();
+            profileImage.setImageBitmap((Bitmap) extras.get(UploadImageActivity.IMAGE_KEY)); // TODO CHANGE TO VIEW MODEL
+        }
+    }
 
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Camera.UploadImageActivity">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:id="@+id/upload_image_operations_group"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        android:paddingBottom="?attr/actionBarSize"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/upload_image_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.48"
+            android:alpha="0.7"
+            android:background="@drawable/gallery"
+            android:gravity="center"
+            android:text="Choose from gallery"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@android:color/black"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/upload_image_camera"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.48"
+            android:alpha="0.7"
+            android:background="@drawable/camera"
+            android:gravity="center"
+            android:text="Take a picture"
+            android:textColor="#000000"
+            android:textColorHighlight="@android:color/black"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

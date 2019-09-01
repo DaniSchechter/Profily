@@ -1,6 +1,8 @@
 package com.example.profily.Profile;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,7 +12,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
 import java.util.Vector;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,7 +57,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
     }
 
     @Override
@@ -86,15 +86,15 @@ public class ProfileFragment extends Fragment {
         if (getArguments() != null && getArguments().size()!=0)
         {
             userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
-            Log.d("TAGUSER", userId);
         }
-
         if (userId == null)
         {
             userId = Model.instance.getConnectedUserId();
         }
 
+        // Restrict edit operations
         if (userId.equals(Model.instance.getConnectedUserId())){
+            // Display the edit button
             editProfileBtn.setVisibility(View.VISIBLE);
         }
         else{
@@ -102,7 +102,6 @@ public class ProfileFragment extends Fragment {
         }
 
 
-        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         profileViewModel.getPosts(userId);
         profileViewModel.populateUserDetails(userId);
 
@@ -122,7 +121,6 @@ public class ProfileFragment extends Fragment {
             profileDescription.setText(userData.getDescription());
         });
 
-        //TODO add logic for something like pagination
         profileViewModel.getPostsList().observe(this, list -> {
             adapter.setPosts(list);
             profileNumOfPosts.setText("" + list.size());
@@ -131,7 +129,5 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
-
-
 
 }
