@@ -57,7 +57,13 @@ public class HomeFragment extends Fragment {
         homeViewModel.getPostsList().observe(this, list -> {
             adapter.setPosts(list);
             progressBar.setVisibility(View.GONE);
-        } );
+        });
+        homeViewModel.getNumOfPostsLiveData().observe(this, size -> {
+            if (size == 0) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
 
         return view;
     }

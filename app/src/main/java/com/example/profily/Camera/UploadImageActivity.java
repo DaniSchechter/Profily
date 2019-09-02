@@ -25,7 +25,6 @@ public class UploadImageActivity extends AppCompatActivity {
     public static final String IMAGE_KEY = "upload image intent";
 
     private TextView cameraUploadImage;
-    private TextView galleryUploadImage;
 
 
     public UploadImageActivity() {
@@ -38,14 +37,12 @@ public class UploadImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload_image);
 
         cameraUploadImage = findViewById(R.id.upload_image_camera);
-        galleryUploadImage = findViewById(R.id.upload_image_gallery);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         cameraUploadImage.setOnClickListener(view1 -> dispatchTakePictureIntent());
-        //TODO use galleryUploadImage
     }
 
     private void dispatchTakePictureIntent() {

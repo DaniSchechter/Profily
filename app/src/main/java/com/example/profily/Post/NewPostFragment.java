@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.profily.Camera.UploadImageActivity;
-import com.example.profily.Profile.ImageGridAdapter;
 import com.example.profily.R;
 
 import static android.app.Activity.RESULT_OK;

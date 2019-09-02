@@ -14,9 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.profily.Home.HomeFragmentDirections;
 import com.example.profily.Home.HomeViewModel;
-import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Profile.ProfileViewModel;
 import com.example.profily.R;
 

@@ -54,8 +54,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/sunset" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/notifications_elapsed_time"

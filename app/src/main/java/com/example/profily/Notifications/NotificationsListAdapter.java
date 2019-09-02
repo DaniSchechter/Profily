@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.profily.Model.Schema.Notification.NotificationWrapper;
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Action.Action;
-import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Utils.DateTimeUtils;
 
 import java.util.LinkedList;
