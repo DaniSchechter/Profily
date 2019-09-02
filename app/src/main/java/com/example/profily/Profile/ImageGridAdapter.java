@@ -49,7 +49,7 @@ public class ImageGridAdapter extends RecyclerView.Adapter<ImageGridAdapter.Imag
     }
 
     void setPosts(List<Post> postsList){
-        if(postsList != null && postsList.size() >0 ) {
+        if(postsList != null) {
             this.postsList = postsList;
             notifyDataSetChanged();
         }

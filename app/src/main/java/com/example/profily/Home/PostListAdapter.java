@@ -46,7 +46,7 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
     }
 
     void setPosts(List<PostLikeWrapper> postsList){
-        if(postsList != null && postsList.size() >0 ) {
+        if(postsList != null) {
             this.postsList = postsList;
             notifyDataSetChanged(); //TODO need to check exactly what this function does
         }

@@ -45,7 +45,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
     }
 
     public void setUsers(List<User> usersList){
-        if(usersList != null && usersList.size() >0 ) {
+        if(usersList != null) {
             this.searchList = usersList;
             notifyDataSetChanged(); //TODO need to check exactly what this function does
         }
