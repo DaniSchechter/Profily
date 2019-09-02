@@ -29,6 +29,10 @@ public class CommentsViewModel extends ViewModel {
             commentsWrappersList.clear();
             numOfCommentsLiveData.setValue(commentsList.size());
 
+            if(commentsList != null && commentsList.size() == 0) {
+                this.commentsListLiveData.setValue(commentsWrappersList);
+            }
+
             for(Comment comment: commentsList) {
 
                 // Initialize the Comment Wrapper with the comment itself
