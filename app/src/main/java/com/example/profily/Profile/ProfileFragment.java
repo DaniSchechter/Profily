@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.profily.MainActivity;
-import com.example.profily.Model.Model;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
@@ -92,11 +91,11 @@ public class ProfileFragment extends Fragment {
         }
         if (userId == null)
         {
-            userId = Model.instance.getConnectedUserId();
+            userId = profileViewModel.getConnectedUserId();
         }
 
         // Restrict edit operations
-        if (userId.equals(Model.instance.getConnectedUserId())){
+        if (userId.equals(profileViewModel.getConnectedUserId())){
             // Display the edit button
             editProfileBtn.setVisibility(View.VISIBLE);
         }
@@ -111,7 +110,7 @@ public class ProfileFragment extends Fragment {
         profileViewModel.populateUserDetails(userId);
 
         logoutButton.setOnClickListener(view1 -> {
-            Model.instance.logOut();
+            profileViewModel.logOut();
             ((MainActivity)getActivity()).displayAuthenticationActivity(true);
         });
 

@@ -54,7 +54,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
             CommentsViewModel.deleteItem(comment);
         }
         else{
-            CharSequence text = "Cannot delete post";
+            CharSequence text = "Cannot delete comment";
             Toast.makeText(MainActivity.context, text, Toast.LENGTH_SHORT).show();
         }
         notifyDataSetChanged();

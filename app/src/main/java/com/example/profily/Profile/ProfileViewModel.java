@@ -77,4 +77,12 @@ public class ProfileViewModel extends ViewModel {
     public boolean isImageLoading() {
         return ProfileViewModel.imageLoading;
     }
+
+    public String getConnectedUserId() {
+        return Model.instance.getConnectedUserId();
+    }
+
+    public void logOut() {
+        Model.instance.logOut();
+    }
 }
