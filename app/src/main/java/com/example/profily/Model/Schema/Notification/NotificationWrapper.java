@@ -1,20 +1,12 @@
 package com.example.profily.Model.Schema.Notification;
 
+import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.Model.Schema.User.User;
 
 public class NotificationWrapper {
     public Notification notification;
     private User userForCurrentnotification;
-
-    public String getUserImgURL() {
-        return userImgURL;
-    }
-
-    public void setUserImgURL(String userImgURL) {
-        this.userImgURL = userImgURL;
-    }
-
-    private String userImgURL;
+    private Post effectedPost;
 
     public NotificationWrapper(Notification notification, User userForCurrentnotification) {
         this.notification = notification;
@@ -26,4 +18,12 @@ public class NotificationWrapper {
     }
 
     public User getUserForCurrentnotification(){ return userForCurrentnotification; }
+
+    public Post getEffectedPost() {
+        return effectedPost;
+    }
+
+    public void setEffectedPost(Post effectedPost) {
+        this.effectedPost = effectedPost;
+    }
 }

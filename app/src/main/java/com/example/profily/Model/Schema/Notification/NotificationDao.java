@@ -12,8 +12,10 @@ import java.util.List;
 public interface NotificationDao {
 
     // Get
-    @Query("SELECT * FROM notifications WHERE effectedUserId = :userId " +
-            "AND wasDeleted = 0 ORDER BY actionDateTime desc")
+    @Query("SELECT notifications.* " +
+            "FROM notifications JOIN posts ON notifications.effectedPostId = posts.postId " +
+            "WHERE effectedUserId = :userId AND posts.wasDeleted = 0 " +
+            "AND notifications.wasDeleted = 0 ORDER BY actionDateTime desc")
     List<Notification> getAllNotifications(String userId);
 
     // Insert

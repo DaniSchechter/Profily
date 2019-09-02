@@ -59,17 +59,22 @@ public class PostViewModel extends ViewModel {
                 false,
                 new Date()
         );
-        Model.instance.uploadPostImage(post, bitmap.getValue(), new Model.SaveImageListener() {
-            @Override
-            public void onFailure() {
-                Log.e("TAG", "Error uploading image");}
-
-            @Override
-            public void onSuccess(String URI) {
-                // Update URI reference
-                post.setImageURL(URI);
-                Model.instance.addPost(post);
+        Model.instance.addPost(post, success -> {
+            if (!success){
+                return;
             }
+            Model.instance.uploadPostImage(post, bitmap.getValue(), new Model.SaveImageListener() {
+                @Override
+                public void onFailure() {
+                    Log.e("TAG", "Error uploading image");}
+
+                @Override
+                public void onSuccess(String URI) {
+                    // Update URI reference
+                    post.setImageURL(URI);
+                    Model.instance.updatePost(post);
+                }
+            });
         });
     }
 

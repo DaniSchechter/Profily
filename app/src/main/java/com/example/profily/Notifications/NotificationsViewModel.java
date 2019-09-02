@@ -40,7 +40,11 @@ public class NotificationsViewModel extends ViewModel {
                 // Get the username of the comment
                 Model.instance.getUserById(notification.getTriggeringUserId(), user ->  {
                     notificationWrapper.setUserForCurrentnotification(user);
-                    this.notificationsListLiveData.setValue(notificationsWrappersList);
+
+                    Model.instance.getPostById(notification.getEffectedPostId(), post -> {
+                        notificationWrapper.setEffectedPost(post);
+                        this.notificationsListLiveData.setValue(notificationsWrappersList);
+                    });
                 });
             }
         });

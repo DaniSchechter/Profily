@@ -70,11 +70,14 @@ public class CommentsFragment extends Fragment {
             commentsViewModel.getComments(postId);
             progressBar.setVisibility(View.VISIBLE);
 
-            //TODO add logic for something like pagination
             commentsViewModel.getCommentsList().observe(this, list -> {
                 adapter.setComments(list);
                 progressBar.setVisibility(View.GONE);
-
+            });
+            commentsViewModel.getNumOfCommentsLiveData().observe(this, size -> {
+                if(size == 0) {
+                    progressBar.setVisibility(View.GONE);
+                }
             });
 
             addNewCommentBtn = view.findViewById(R.id.save_comment_btn);

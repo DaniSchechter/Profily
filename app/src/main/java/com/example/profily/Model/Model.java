@@ -80,11 +80,12 @@ public class Model {
         });
     }
 
-    public void addPost(Post post){
+    public void addPost(Post post, final AddPostListener listener){
         modelFirebase.addPost(post, new AddPostListener() {
             @Override
             public void onComplete(boolean success) {
                 PostAsyncDao.addPost(post);
+                listener.onComplete(success);
             }
         });
     }
@@ -92,11 +93,6 @@ public class Model {
     public void updatePost(Post post) {
         PostAsyncDao.updatePost(post);
         modelFirebase.updatePost(post);
-    }
-
-    public void addPostById(Post post) {
-//        PostAsyncDao.addPosts(postsList);
-        //modelFirebase.addPost(post, listener);
     }
     
     /*
@@ -212,12 +208,6 @@ public class Model {
     public void getAllUserByName(String username, final GetAllUsersByNameListener listener) {
         modelFirebase.getAllUserByName(username, cloudUsers -> listener.onComplete(cloudUsers));
     }
-//    public interface SaveImageListener{
-//        void onComplete(String url);
-//    }
-//    public void saveImage(Bitmap imageBitmap, SaveImageListener listener) {
-//        modelFirebase.saveImage(imageBitmap, listener);
-//    }
 
     public void getUserById(String userId, final GetUserByIdListener listener) {
         // Get already cached data
@@ -262,10 +252,10 @@ public class Model {
     }
 
     public void addComment(Comment comment) {
-        CommentAsyncDao.addComment(comment);
         modelFirebase.addComment(comment, new AddCommentListener() {
             @Override
             public void onComplete(boolean success) {
+                CommentAsyncDao.addComment(comment);
                 PostAsyncDao.getUserIdByPost(comment.getPostId(), userId -> {
                     if (!userId.equals(comment.getUserCreatorId())) {
                         addNotification(new Notification(
@@ -317,17 +307,10 @@ public class Model {
     }
 
     public void addNotification(Notification notification) {
-//        NotificationAsyncDao.addNotification(notification);
+        // No reason to add to local cache because the effected user is the one who gets the notification
         modelFirebase.addNotification(notification, result -> {
         });
     }
-
-//    public interface SaveImageListener{
-//        void onComplete(String url);
-//    }
-//    public void saveImage(Bitmap imageBitmap, SaveImageListener listener) {
-//        modelFirebase.saveImage(imageBitmap, listener);
-//    }
 
 
     /*
@@ -352,7 +335,6 @@ public class Model {
                 UserAsyncDao.addUserPostsAndFetch(userId, cloudPosts, posts -> listener.onComplete(posts));
             });
         });
-        //PostAsyncDao.getAllPosts(listener);
     }
 
     public interface AddUserListener {
@@ -389,13 +371,6 @@ public class Model {
 
         void onSuccess(String URI);
     }
-
-    public interface GetImageListener {
-        void onFailure();
-
-        void onSuccess(Bitmap bitmap);
-    }
-
 
     private void uploadImage(Bitmap imageBmp, String collection_name, Model.SaveImageListener listener) {
         modelFirebase.uploadImage(imageBmp, collection_name, listener);

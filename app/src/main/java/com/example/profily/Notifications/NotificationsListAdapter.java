@@ -50,7 +50,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     static class NotificationRowViewHolder extends RecyclerView.ViewHolder {
 
         ImageView triggeringUserImage;
-        ImageView effectedUserImage;
+        ImageView effectedImage;
         TextView  triggeringUserUsername;
         TextView  description;
         TextView  actionElapsedTime;
@@ -60,14 +60,14 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             super(itemView);
 
             triggeringUserImage = itemView.findViewById(R.id.notification_trigger_user_image);
-            effectedUserImage = itemView.findViewById(R.id.notifications_effected_user_image);
+            effectedImage = itemView.findViewById(R.id.notifications_effected_image);
             triggeringUserUsername = itemView.findViewById(R.id.notification_trigger_user_username);
             description = itemView.findViewById(R.id.notification_description);
             actionElapsedTime = itemView.findViewById(R.id.notifications_elapsed_time);
         }
 
         public void bind(NotificationWrapper notification){
-            if (notification.getUserForCurrentnotification() == null){
+            if (notification.getUserForCurrentnotification() == null || notification.getEffectedPost() == null){
                 return;
             }
             triggeringUserUsername.setText(notification.getUserForCurrentnotification().getUsername()); // TODO change
@@ -77,8 +77,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
                 Glide.with(triggeringUserImage.getContext()).load(notification.getUserForCurrentnotification().getProfileImageURL()).into(triggeringUserImage);
             }
 
+            Glide.with(effectedImage.getContext()).load(notification.getEffectedPost().getImageURL()).into(effectedImage);
+
+
             // Navigate to the effected post, if it is not a subscription action
-            effectedUserImage.setOnClickListener(
+            effectedImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToPost(
                             notification.notification.getEffectedPostId()
