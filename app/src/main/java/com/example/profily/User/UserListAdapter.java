@@ -67,10 +67,11 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
 
         public void bind(User user){
 
-            String str = user.getUsername();
-            userUsername.setText(str); // TODO change
+            userUsername.setText(user.getUsername());
             if(!user.getProfileImageURL().isEmpty()) {
                 Glide.with(userImage.getContext()).load(user.getProfileImageURL()).into(userImage);
+            } else {
+                userImage.setImageResource(R.drawable.profile);
             }
 
             userUsername.setOnClickListener(

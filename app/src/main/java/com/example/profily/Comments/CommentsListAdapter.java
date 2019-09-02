@@ -88,7 +88,11 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsListAdapte
             commentDescription.setText(comment.comment.getContent());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(comment.comment.getCreatedDate()));
 
-            Glide.with(commentatorImage.getContext()).load(comment.getUser().getProfileImageURL()).into(commentatorImage);
+            if(!comment.getUser().getProfileImageURL().isEmpty()){
+                Glide.with(commentatorImage.getContext()).load(comment.getUser().getProfileImageURL()).into(commentatorImage);
+            } else {
+                commentatorImage.setImageResource(R.drawable.profile);
+            }
 
             commentatorUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(

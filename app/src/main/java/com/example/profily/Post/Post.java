@@ -91,8 +91,11 @@ public class Post extends Fragment {
                     )
             );
             Glide.with(mainImage.getContext()).load(post.post.getImageURL()).into(mainImage);
+
             if(!post.getUser().getProfileImageURL().isEmpty()){
                 Glide.with(profileImage.getContext()).load(post.getUser().getProfileImageURL()).into(profileImage);
+            } else {
+                profileImage.setImageResource(R.drawable.profile);
             }
 
             if(post.likeIdForCurrentUser() == null)

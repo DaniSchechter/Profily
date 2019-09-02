@@ -127,7 +127,11 @@ public class ProfileFragment extends Fragment {
             profileDescription.setText(userData.getDescription());
             progressBar.setVisibility(View.GONE);
             if(!profileViewModel.isImageLoading()) {
-                Glide.with(this).load(userData.getProfileImageURL()).into(profileImage);
+                if (!userData.getProfileImageURL().isEmpty()) {
+                    Glide.with(this).load(userData.getProfileImageURL()).into(profileImage);
+                } else {
+                    profileImage.setImageResource(R.drawable.profile);
+                }
                 profileImageProgressBar.setVisibility(View.GONE);
             }
         });

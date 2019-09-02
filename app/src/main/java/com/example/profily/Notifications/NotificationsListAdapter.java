@@ -73,8 +73,11 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             triggeringUserUsername.setText(notification.getUserForCurrentnotification().getUsername()); // TODO change
             description.setText(notification.notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.notification.getActionDateTime()));
+
             if(!notification.getUserForCurrentnotification().getProfileImageURL().isEmpty()) {
                 Glide.with(triggeringUserImage.getContext()).load(notification.getUserForCurrentnotification().getProfileImageURL()).into(triggeringUserImage);
+            } else {
+                triggeringUserImage.setImageResource(R.drawable.profile);
             }
 
             Glide.with(effectedImage.getContext()).load(notification.getEffectedPost().getImageURL()).into(effectedImage);

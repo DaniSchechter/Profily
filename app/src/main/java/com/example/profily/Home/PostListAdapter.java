@@ -94,6 +94,8 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.PostRo
             comments.setText("View comments");
             if(!post.getUser().getProfileImageURL().isEmpty()){
                 Glide.with(profileImage.getContext()).load(post.getUser().getProfileImageURL()).into(profileImage);
+            } else {
+                profileImage.setImageResource(R.drawable.profile);
             }
 
             Glide.with(mainImage.getContext()).load(post.post.getImageURL()).into(mainImage);
