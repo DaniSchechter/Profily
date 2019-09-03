@@ -1,15 +1,17 @@
 package com.example.profily.Model.Schema.Post;
 
+import com.example.profily.Model.Schema.User.User;
+
 public class PostLikeWrapper {
     public Post post;
     private String likeIdForCurrentUser;
-    private String usernameForCurrentUser;
+    private User user;
     private int numOfLikes = 0;
 
-    public PostLikeWrapper(Post post, String likeIdForCurrentUser, String usernameForCurrentUser) {
+    public PostLikeWrapper(Post post, String likeIdForCurrentUser, User user) {
         this.post = post;
         this.likeIdForCurrentUser = likeIdForCurrentUser;
-        this.usernameForCurrentUser = usernameForCurrentUser;
+        this.user = user;
     }
 
     public void setLikeIdForCurrentUser(String likeIdForCurrentUser) {
@@ -17,11 +19,11 @@ public class PostLikeWrapper {
     }
     public String likeIdForCurrentUser(){ return likeIdForCurrentUser; }
 
-    public void setUsernameForCurrentUser(String usernameForCurrentUser){
-        this.usernameForCurrentUser = usernameForCurrentUser;
+    public void setUser(User user){
+        this.user = user;
     }
 
-    public String usernameForCurrentUser(){ return usernameForCurrentUser; }
+    public User getUser(){ return user; }
 
     public void setNumOfLikes(int numOfLikes){
         this.numOfLikes = numOfLikes;

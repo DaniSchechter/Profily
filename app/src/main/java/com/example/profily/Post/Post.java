@@ -13,9 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.profily.Home.HomeFragmentDirections;
+import com.bumptech.glide.Glide;
 import com.example.profily.Home.HomeViewModel;
-import com.example.profily.Model.Schema.Post.PostAsyncDao;
 import com.example.profily.Profile.ProfileViewModel;
 import com.example.profily.R;
 
@@ -80,7 +79,7 @@ public class Post extends Fragment {
 
             caption.setText(post.post.getCaption());
             numOfLikes.setText("" + post.getNumOfLikes() + " likes");
-            username.setText(post.usernameForCurrentUser());
+            username.setText(post.getUser().getUsername());
             comments.setText("View comments");
             comments.setOnClickListener(
                     Navigation.createNavigateOnClickListener(
@@ -89,6 +88,13 @@ public class Post extends Fragment {
                             )
                     )
             );
+            Glide.with(mainImage.getContext()).load(post.post.getImageURL()).into(mainImage);
+
+            if(!post.getUser().getProfileImageURL().isEmpty()){
+                Glide.with(profileImage.getContext()).load(post.getUser().getProfileImageURL()).into(profileImage);
+            } else {
+                profileImage.setImageResource(R.drawable.profile);
+            }
 
             if(post.likeIdForCurrentUser() == null)
             {
@@ -120,7 +126,7 @@ public class Post extends Fragment {
 
             deletePostBtn.setOnClickListener(viewOnClick -> {
                 post.post.setWasDeleted(true);
-                PostViewModel.updatePost(post.post);
+                PostViewModel.updatePost(post.post, null);
                 getFragmentManager().popBackStack();
             });
         });

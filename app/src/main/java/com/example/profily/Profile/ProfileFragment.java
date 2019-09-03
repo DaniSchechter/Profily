@@ -1,6 +1,5 @@
 package com.example.profily.Profile;
 
-
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,7 +9,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +18,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.MainActivity;
-import com.example.profily.Model.Model;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.Post.Post;
 
 import java.util.Vector;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,6 +43,7 @@ public class ProfileFragment extends Fragment {
     private Button editProfileBtn;
     private ImageButton logoutButton;
     private ProgressBar progressBar;
+    private ProgressBar profileImageProgressBar;
 
     //counting vars
     private TextView profileNumOfPosts;
@@ -59,7 +57,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
     }
 
     @Override
@@ -74,6 +72,7 @@ public class ProfileFragment extends Fragment {
         editProfileBtn = view.findViewById(R.id.profile_edit_profile_btn);
         logoutButton = view.findViewById(R.id.profile_logout);
         progressBar = view.findViewById(R.id.profile_progress_bar);
+        profileImageProgressBar = view.findViewById(R.id.profile_image_progress_bar);
 
         recyclerView = view.findViewById(R.id.home_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -82,22 +81,22 @@ public class ProfileFragment extends Fragment {
         layoutManager.isAutoMeasureEnabled();
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new ImageGridAdapter(postsList);
+        adapter = new ImageGridAdapter();
         recyclerView.setAdapter(adapter);
 
         String userId = null;
         if (getArguments() != null && getArguments().size()!=0)
         {
             userId = ProfileFragmentArgs.fromBundle(getArguments()).getUserId();
-            Log.d("TAGUSER", userId);
         }
-
         if (userId == null)
         {
-            userId = Model.instance.getConnectedUserId();
+            userId = profileViewModel.getConnectedUserId();
         }
 
-        if (userId.equals(Model.instance.getConnectedUserId())){
+        // Restrict edit operations
+        if (userId.equals(profileViewModel.getConnectedUserId())){
+            // Display the edit button
             editProfileBtn.setVisibility(View.VISIBLE);
         }
         else{
@@ -107,11 +106,11 @@ public class ProfileFragment extends Fragment {
 
         profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         progressBar.setVisibility(View.VISIBLE);
-        profileViewModel.getPosts(userId);
+
         profileViewModel.populateUserDetails(userId);
 
         logoutButton.setOnClickListener(view1 -> {
-            Model.instance.logOut();
+            profileViewModel.logOut();
             ((MainActivity)getActivity()).displayAuthenticationActivity(true);
         });
 
@@ -121,23 +120,29 @@ public class ProfileFragment extends Fragment {
                 )
         );
 
-        profileViewModel.getUser().observe(this, userData->{
+        profileImageProgressBar.setVisibility(View.VISIBLE);
+        profileViewModel.getUser().observe(this, userData -> {
             profileUsername.setText(userData.getUsername());
             profileDescription.setText(userData.getDescription());
             progressBar.setVisibility(View.GONE);
+            if(!profileViewModel.isImageLoading()) {
+                if (!userData.getProfileImageURL().isEmpty()) {
+                    Glide.with(this).load(userData.getProfileImageURL()).into(profileImage);
+                } else {
+                    profileImage.setImageResource(R.drawable.profile);
+                }
+                profileImageProgressBar.setVisibility(View.GONE);
+            }
         });
 
-        //TODO add logic for something like pagination
         profileViewModel.getPostsList().observe(this, list -> {
             adapter.setPosts(list);
             profileNumOfPosts.setText("" + list.size());
             progressBar.setVisibility(View.GONE);
         } );
+        profileViewModel.getPosts(userId);
 
 
         return view;
     }
-
-
-
 }

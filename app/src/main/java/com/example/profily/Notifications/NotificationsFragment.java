@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.profily.R;
@@ -60,6 +59,12 @@ public class NotificationsFragment extends Fragment {
             adapter.setNotifications(list);
             progressBar.setVisibility(View.GONE);
         });
+        notificationsViewModel.getNumberOfNotifications().observe(this, size -> {
+            if (size == 0){
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
         notificationsViewModel.getNotifications();
 
         return view;

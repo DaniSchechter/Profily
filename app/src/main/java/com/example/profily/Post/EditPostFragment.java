@@ -1,6 +1,8 @@
 package com.example.profily.Post;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,10 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.profily.Camera.UploadImageActivity;
 import com.example.profily.Model.Schema.Post.Post;
 import com.example.profily.R;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -23,14 +30,15 @@ import com.example.profily.R;
  */
 public class EditPostFragment extends Fragment {
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
     private PostViewModel postViewModel;
 
     //Post vars
     private TextView postCaption;
-    private TextView changePostImgBtn;
     private ImageView postImage;
     private Button savePostBtn;
-
+    private ProgressBar progressBar;
 
     public EditPostFragment() {
         // Required empty public constructor
@@ -48,10 +56,10 @@ public class EditPostFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_post, container, false);
         postCaption = view.findViewById(R.id.edit_post_caption);
-
-        changePostImgBtn = view.findViewById(R.id.edit_post_change_post_pic);
         postImage = view.findViewById(R.id.edit_post_post_image);
         savePostBtn = view.findViewById(R.id.edit_post_save_post_btn);
+        progressBar = view.findViewById(R.id.edit_post_progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
 
         String postId = null;
         if (getArguments() != null && getArguments().size()!=0)
@@ -59,7 +67,11 @@ public class EditPostFragment extends Fragment {
             postId = EditPostFragmentArgs.fromBundle(getArguments()).getPostId();
         }
 
+        postViewModel.getBitmap().observe(this, bitmap -> postImage.setImageBitmap(bitmap));
+        postImage.setOnClickListener(v -> dispatchTakePictureIntent());
+
         postViewModel.populatePostDetails(postId);
+
         postViewModel.getPost().observe(this, postData->{
             if (postData.post.getCaption() != null){
                 postCaption.setText(postData.post.getCaption());
@@ -67,6 +79,9 @@ public class EditPostFragment extends Fragment {
             else{
                 postCaption.setText("");
             }
+
+            Glide.with(postImage.getContext()).load(postData.post.getImageURL()).into(postImage);
+            progressBar.setVisibility(View.GONE);
 
             savePostBtn.setOnClickListener(view1 -> {
                 postViewModel.updatePost(
@@ -84,6 +99,24 @@ public class EditPostFragment extends Fragment {
         return view;
     }
 
+    private void dispatchTakePictureIntent() {
+        Intent intent = new Intent(getActivity(), UploadImageActivity.class);
 
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            this.startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            if(data == null) {
+                return;
+            }
+            Bundle extras = data.getExtras();
+            postViewModel.setBitmap((Bitmap) extras.get(UploadImageActivity.IMAGE_KEY));
+        }
+    }
 
 }

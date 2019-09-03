@@ -1,26 +1,20 @@
 package com.example.profily.Authentication;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.profily.MainActivity;
 import com.example.profily.Model.Model;
 import com.example.profily.Model.Schema.User.User;
-import com.example.profily.Model.Schema.User.UserAsyncDao;
 import com.example.profily.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -194,6 +188,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
+            setResult(RESULT_OK);
             this.finish();
         }
         else {

@@ -15,9 +15,11 @@ import java.util.List;
 public class CommentsViewModel extends ViewModel {
     private MutableLiveData<List<CommentWrapper>> commentsListLiveData;
     private List<CommentWrapper> commentsWrappersList;
+    private MutableLiveData<Integer> numOfCommentsLiveData;
 
     public CommentsViewModel() {
         commentsListLiveData = new MutableLiveData<>();
+        numOfCommentsLiveData = new MutableLiveData<>();
         commentsWrappersList = new LinkedList<>();
     }
 
@@ -25,6 +27,11 @@ public class CommentsViewModel extends ViewModel {
         // Get all comments async
         Model.instance.getAllComments( postId, commentsList -> {
             commentsWrappersList.clear();
+            numOfCommentsLiveData.setValue(commentsList.size());
+
+            if(commentsList != null && commentsList.size() == 0) {
+                this.commentsListLiveData.setValue(commentsWrappersList);
+            }
 
             for(Comment comment: commentsList) {
 
@@ -33,8 +40,8 @@ public class CommentsViewModel extends ViewModel {
                 commentsWrappersList.add(commentWrapper);
 
                 // Get the username of the comment
-                Model.instance.getUserNameById(comment.getUserCreatorId(), username ->  {
-                    commentWrapper.setUsernameForCurrentcomment(username);
+                Model.instance.getUserById(comment.getUserCreatorId(), user ->  {
+                    commentWrapper.setUser(user);
                     this.commentsListLiveData.setValue(commentsWrappersList);
                 });
             }
@@ -43,6 +50,10 @@ public class CommentsViewModel extends ViewModel {
 
     public LiveData<List<CommentWrapper>> getCommentsList() {
         return this.commentsListLiveData;
+    }
+
+    public MutableLiveData<Integer> getNumOfCommentsLiveData() {
+        return numOfCommentsLiveData;
     }
 
     public void addNewComment(String postId, String comment)

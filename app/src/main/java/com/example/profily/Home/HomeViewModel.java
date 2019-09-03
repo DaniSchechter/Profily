@@ -19,16 +19,19 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<PostLikeWrapper>> postsListLiveData;
+    private MutableLiveData<Integer> numOfPostsLiveData;
     private List<PostLikeWrapper> postLikeWrappersList;
 
     public HomeViewModel() {
         postsListLiveData = new MutableLiveData<>();
         postLikeWrappersList = new LinkedList<>();
+        numOfPostsLiveData = new MutableLiveData<>();
 
         // Get all posts async
         Model.instance.getAllPosts(postsList -> {
             Log.d("TAG", "------- Got posts, CLEARING POSTS LIST");
             postLikeWrappersList.clear();
+            setNumOfPostsLiveData(postsList.size());
 
             for(Post post: postsList) {
 
@@ -48,8 +51,8 @@ public class HomeViewModel extends ViewModel {
                     }
 
                     // Get the username of the post
-                    Model.instance.getUserNameById(post.getUserCreatorId(), username ->  {
-                        postLikeWrapper.setUsernameForCurrentUser(username);
+                    Model.instance.getUserById(post.getUserCreatorId(), user ->  {
+                        postLikeWrapper.setUser(user);
 
                         // Get the number of likes of the post
                         Model.instance.getNumberOfLikes(post.getPostId(), numOfLikes ->  {
@@ -113,4 +116,11 @@ public class HomeViewModel extends ViewModel {
         return userId.equals(Model.instance.getConnectedUserId());
     }
 
+    public MutableLiveData<Integer> getNumOfPostsLiveData() {
+        return numOfPostsLiveData;
+    }
+
+    public void setNumOfPostsLiveData(Integer numOfPostsLiveData) {
+        this.numOfPostsLiveData.setValue(numOfPostsLiveData);
+    }
 }

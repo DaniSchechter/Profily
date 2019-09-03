@@ -9,11 +9,15 @@ import com.example.profily.Authentication.AuthenticationActivity;
 import com.example.profily.Model.Model;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int DISPLAY_AUTHENTICATION_ACTIVITY_CODE = 10;
+    private boolean needToRestart = false;
 
     private NavController navController;
     public static Context context;
@@ -24,31 +28,50 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         context = this.getApplicationContext();
-        
+
+        // Starting the app when no user is signed in - Display Authentication activity
         if (Model.instance.getConnectedUserId() == null)
         {
             displayAuthenticationActivity(false);
         }
 
-        setContentView(R.layout.activity_main);
+        else {
+            setContentView(R.layout.activity_main);
 
-        navController = Navigation.findNavController(this, R.id.main_nav_host);
+            navController = Navigation.findNavController(this, R.id.main_nav_host);
 
-        BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
+            BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
 
-        navView.setOnNavigationItemSelectedListener( menuItem -> {
+            navView.setOnNavigationItemSelectedListener( menuItem -> {
                 navController.navigate(menuItem.getItemId());
                 return true;
-        });
+            });
+        }
+
     }
 
     public void displayAuthenticationActivity(Boolean clearBackStack) {
         Intent intent = new Intent(MainActivity.this, AuthenticationActivity.class);
+
+        // Start for result to be able to differ MainActivity restart that origins in:
+        // 1. From Authentication activity
+        // 2. From camera
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            this.startActivityForResult(intent, DISPLAY_AUTHENTICATION_ACTIVITY_CODE);
+        }
+
         if (clearBackStack) {
             clearBackStack();
         }
-        startActivity(intent);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == DISPLAY_AUTHENTICATION_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            needToRestart = true;
+        }
     }
 
     @Override
@@ -57,17 +80,20 @@ public class MainActivity extends AppCompatActivity {
         Log.d("TAG", "on restart");
         if (Model.instance.getConnectedUserId() == null) {
             Log.d("TAG", "finishing");
-
             finish();
-        } else {
-            Log.d("TAG", "start destination id:  " + navController.getGraph().getStartDestination());
-            navController.navigate(navController.getGraph().getStartDestination());
+        }
+        if(needToRestart) {
+            Intent intent = getIntent();
+            Log.d("TAG", "restarting activity");
+            finish();
+            startActivity(intent);
+            needToRestart = false;
         }
     }
 
     private void clearBackStack() {
         Log.d("TAG", "Clearing back stack");
-        Boolean stackNotEmpty;
+        boolean stackNotEmpty;
         do {
             stackNotEmpty = navController.popBackStack();
         } while(stackNotEmpty);

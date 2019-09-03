@@ -10,10 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.Model.Schema.Notification.NotificationWrapper;
 import com.example.profily.R;
-import com.example.profily.Model.Schema.Action.Action;
-import com.example.profily.Model.Schema.Notification.Notification;
 import com.example.profily.Utils.DateTimeUtils;
 
 import java.util.LinkedList;
@@ -49,7 +48,7 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
     static class NotificationRowViewHolder extends RecyclerView.ViewHolder {
 
         ImageView triggeringUserImage;
-        ImageView effectedUserImage;
+        ImageView effectedImage;
         TextView  triggeringUserUsername;
         TextView  description;
         TextView  actionElapsedTime;
@@ -59,20 +58,31 @@ public class NotificationsListAdapter extends RecyclerView.Adapter<Notifications
             super(itemView);
 
             triggeringUserImage = itemView.findViewById(R.id.notification_trigger_user_image);
-            effectedUserImage = itemView.findViewById(R.id.notifications_effected_user_image);
+            effectedImage = itemView.findViewById(R.id.notifications_effected_image);
             triggeringUserUsername = itemView.findViewById(R.id.notification_trigger_user_username);
             description = itemView.findViewById(R.id.notification_description);
             actionElapsedTime = itemView.findViewById(R.id.notifications_elapsed_time);
         }
 
         public void bind(NotificationWrapper notification){
-            triggeringUserUsername.setText(notification.usernameForCurrentnotification()); // TODO change
+            if (notification.getUserForCurrentnotification() == null || notification.getEffectedPost() == null){
+                return;
+            }
+            triggeringUserUsername.setText(notification.getUserForCurrentnotification().getUsername()); // TODO change
             description.setText(notification.notification.getAction().getDescription());
             actionElapsedTime.setText(DateTimeUtils.getFormattedElapsedTime(notification.notification.getActionDateTime()));
 
+            if(!notification.getUserForCurrentnotification().getProfileImageURL().isEmpty()) {
+                Glide.with(triggeringUserImage.getContext()).load(notification.getUserForCurrentnotification().getProfileImageURL()).into(triggeringUserImage);
+            } else {
+                triggeringUserImage.setImageResource(R.drawable.profile);
+            }
+
+            Glide.with(effectedImage.getContext()).load(notification.getEffectedPost().getImageURL()).into(effectedImage);
+
 
             // Navigate to the effected post, if it is not a subscription action
-            effectedUserImage.setOnClickListener(
+            effectedImage.setOnClickListener(
                 Navigation.createNavigateOnClickListener(
                     NotificationsFragmentDirections.actionNotificationsFragmentToPost(
                             notification.notification.getEffectedPostId()

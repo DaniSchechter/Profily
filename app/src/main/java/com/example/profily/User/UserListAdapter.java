@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.profily.R;
 import com.example.profily.Model.Schema.User.User;
 import com.example.profily.Search.SearchFragmentDirections;
@@ -44,7 +45,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
     }
 
     public void setUsers(List<User> usersList){
-        if(usersList != null && usersList.size() >0 ) {
+        if(usersList != null) {
             this.searchList = usersList;
             notifyDataSetChanged(); //TODO need to check exactly what this function does
         }
@@ -66,8 +67,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserRo
 
         public void bind(User user){
 
-            String str = user.getUsername();
-            userUsername.setText(str); // TODO change
+            userUsername.setText(user.getUsername());
+            if(!user.getProfileImageURL().isEmpty()) {
+                Glide.with(userImage.getContext()).load(user.getProfileImageURL()).into(userImage);
+            } else {
+                userImage.setImageResource(R.drawable.profile);
+            }
 
             userUsername.setOnClickListener(
                 Navigation.createNavigateOnClickListener(

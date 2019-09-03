@@ -1,17 +1,19 @@
 package com.example.profily.Model.Schema.Comment;
 
+import com.example.profily.Model.Schema.User.User;
+
 public class CommentWrapper {
     public Comment comment;
-    private String usernameForCurrentcomment;
+    private User user;
 
-    public CommentWrapper(Comment comment, String usernameForCurrentcomment) {
+    public CommentWrapper(Comment comment, User user) {
         this.comment = comment;
-        this.usernameForCurrentcomment = usernameForCurrentcomment;
+        this.user = user;
     }
 
-    public void setUsernameForCurrentcomment(String usernameForCurrentcomment){
-        this.usernameForCurrentcomment = usernameForCurrentcomment;
+    public void setUser(User user){
+        this.user = user;
     }
 
-    public String usernameForCurrentcomment(){ return usernameForCurrentcomment; }
+    public User getUser(){ return user; }
 }

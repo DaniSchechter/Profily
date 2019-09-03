@@ -13,6 +13,7 @@ import java.util.List;
 
 public class NotificationsViewModel extends ViewModel {
     private MutableLiveData<List<NotificationWrapper>> notificationsListLiveData;
+    private MutableLiveData<Integer> numOfNotificationsLiveData;
     private List<NotificationWrapper> notificationsWrappersList;
     private String currentUser;
 
@@ -20,13 +21,15 @@ public class NotificationsViewModel extends ViewModel {
         notificationsListLiveData = new MutableLiveData<>();
         notificationsWrappersList = new LinkedList<>();
         currentUser = Model.instance.getConnectedUserId();
+        numOfNotificationsLiveData = new MutableLiveData<>();
     }
 
     public void getNotifications(){
 
         // Get all notifications async
-        Model.instance.getAllNotifications( currentUser, notificationsList ->{
+        Model.instance.getAllNotifications( currentUser, notificationsList -> {
             notificationsWrappersList.clear();
+            this.numOfNotificationsLiveData.setValue(notificationsList.size());
 
             for(Notification notification: notificationsList) {
 
@@ -35,9 +38,13 @@ public class NotificationsViewModel extends ViewModel {
                 notificationsWrappersList.add(notificationWrapper);
 
                 // Get the username of the comment
-                Model.instance.getUserNameById(notification.getTriggeringUserId(), username ->  {
-                    notificationWrapper.setUsernameForCurrentnotification(username);
-                    this.notificationsListLiveData.setValue(notificationsWrappersList);
+                Model.instance.getUserById(notification.getTriggeringUserId(), user ->  {
+                    notificationWrapper.setUserForCurrentnotification(user);
+
+                    Model.instance.getPostById(notification.getEffectedPostId(), post -> {
+                        notificationWrapper.setEffectedPost(post);
+                        this.notificationsListLiveData.setValue(notificationsWrappersList);
+                    });
                 });
             }
         });
@@ -45,5 +52,9 @@ public class NotificationsViewModel extends ViewModel {
 
     public LiveData<List<NotificationWrapper>> getNotificationsList() {
         return this.notificationsListLiveData;
+    }
+
+    public LiveData<Integer> getNumberOfNotifications(){
+        return this.numOfNotificationsLiveData;
     }
 }

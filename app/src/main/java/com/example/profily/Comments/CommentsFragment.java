@@ -15,10 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.example.profily.Model.Model;
 import com.example.profily.R;
 
 
@@ -42,7 +40,7 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        commentsViewModel = ViewModelProviders.of(this).get(CommentsViewModel.class);
     }
 
     @Override
@@ -67,15 +65,17 @@ public class CommentsFragment extends Fragment {
         {
             String postId = CommentsFragmentArgs.fromBundle(getArguments()).getPostId();
 
-            commentsViewModel = ViewModelProviders.of(this).get(CommentsViewModel.class);
             commentsViewModel.getComments(postId);
             progressBar.setVisibility(View.VISIBLE);
 
-            //TODO add logic for something like pagination
             commentsViewModel.getCommentsList().observe(this, list -> {
                 adapter.setComments(list);
                 progressBar.setVisibility(View.GONE);
-
+            });
+            commentsViewModel.getNumOfCommentsLiveData().observe(this, size -> {
+                if(size == 0) {
+                    progressBar.setVisibility(View.GONE);
+                }
             });
 
             addNewCommentBtn = view.findViewById(R.id.save_comment_btn);
